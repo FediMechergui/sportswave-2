@@ -282,6 +282,12 @@ class MainActivity : Activity() {
         tools.addView(button("＋ Add source",true) { addSource() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
         tools.addView(button("Import catalog") { importCatalog() },LinearLayout.LayoutParams(0,-2,1f))
         padded(body,tools,20)
+        val included=Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }
+        if(included.isNotEmpty()) {
+            section("Included live channels")
+            included.forEach { sourceRow(it) }
+            if(included.any { it.id=="bein-xtra-us" }) padded(body,text("beIN SPORTS XTRA is the English US feed, with its own programming. Availability varies by region.",12,muted),bottom=12)
+        }
         section("Yacine channels",if(providerLoading) "Loading…" else "${providerChannels.size} channels")
         val providerTools=row()
         providerTools.addView(button(channelPackages.firstOrNull { it.id==providerPackageId }?.name ?: "All channels - sports first") { choosePackage(channelPackages) },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
@@ -295,9 +301,6 @@ class MainActivity : Activity() {
         if(visible.size>providerPageSize) padded(body,button("Show more channels (${visible.size-providerPageSize})") { providerPageSize+=40; render(keepScroll=true) },bottom=12)
         if(!providerLoading && providerChannels.isEmpty()) padded(body,text("No channels loaded. Refresh the catalog or check the service address.",12,muted),bottom=10)
         padded(body,button("Service address") { editServiceAddress() },bottom=14)
-        section("Included live channel")
-        Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }.forEach { sourceRow(it) }
-        padded(body,text("Red Bull TV: action sports and event programming. This is not a beIN channel. Availability can vary by region.",12,muted),bottom=12)
         section("Your collection", "${store.custom().size} sources")
         val sources = store.custom().filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }
         if(sources.isEmpty()) empty("Make room for your favorites", "Add an HTTPS channel URL or import a provider catalog. Your sources play here, inside the app.") else sources.forEach { sourceRow(it) }

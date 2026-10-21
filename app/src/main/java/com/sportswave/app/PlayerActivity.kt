@@ -151,7 +151,8 @@ class PlayerActivity : Activity() {
                         playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { original=next; position=0; render(); load() } }
                         return
                     }
-                    status.text="Playback unavailable (${error.errorCodeName}). Retry or check your provider."
+                    val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull()
+                    status.text=if(original?.integration=="yacine" && response?.responseCode==503 && response.responseBody.toString(Charsets.UTF_8).trim()=="No URLs available") "The provider has no feed available for this channel. Try again later." else "Playback unavailable (${response?.responseCode?.let { "HTTP $it" } ?: error.errorCodeName}). Retry or check your provider."
                     retry.visibility=View.VISIBLE
                 }
             })

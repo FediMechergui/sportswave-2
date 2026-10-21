@@ -10,10 +10,16 @@ import org.json.JSONArray
 class CatalogInstrumentation : Instrumentation() {
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     private fun auditPublicStreams() {
-        val sources=Store(targetContext).providerSources().mapNotNull { com.sportswave.app.PublicChannelStreams.resolve(it) }
-        check(sources.size==36) { "Expected the complete cached catalog and 36 replacements, found ${sources.size}." }
+        val catalog=Store(targetContext).all()
+        val sources=if(auditSourceIds.isEmpty()) catalog.mapNotNull { com.sportswave.app.PublicChannelStreams.resolve(it) } else catalog.filter { it.channelId in auditSourceIds }
+        check(sources.size==if(auditSourceIds.isEmpty()) 36 else auditSourceIds.size) { "The complete requested catalog is required for this audit." }
         val results=JSONArray()
-        for(source in sources) {
+        for(candidate in sources) {
+            val source=runCatching { com.sportswave.app.PlaybackResolver.resolve(candidate) }.getOrNull()
+            if(source==null) {
+                results.put(JSONObject().put("id",candidate.channelId).put("name",candidate.name).put("package",candidate.catalogCategory).put("result","resolve_error"))
+                sendStatus(0,Bundle().apply { putString("stream","${candidate.name}: resolve_error\n") }); continue
+            }
             val latch=java.util.concurrent.CountDownLatch(1)
             var player:androidx.media3.exoplayer.ExoPlayer?=null
             var texture:android.graphics.SurfaceTexture?=null
@@ -22,11 +28,12 @@ class CatalogInstrumentation : Instrumentation() {
             runOnMainSync {
                 texture=android.graphics.SurfaceTexture(false)
                 surface=android.view.Surface(texture)
-                player=androidx.media3.exoplayer.ExoPlayer.Builder(targetContext).build().apply {
+                val http=androidx.media3.datasource.DefaultHttpDataSource.Factory().setUserAgent(source.userAgent).setDefaultRequestProperties(source.headers).setConnectTimeoutMs(12000).setReadTimeoutMs(15000).setAllowCrossProtocolRedirects(false)
+                player=androidx.media3.exoplayer.ExoPlayer.Builder(targetContext).setMediaSourceFactory(androidx.media3.exoplayer.source.DefaultMediaSourceFactory(http)).build().apply {
                     setVideoSurface(surface)
                     addListener(object:androidx.media3.common.Player.Listener {
                         override fun onRenderedFirstFrame() { outcome="video_frame"; latch.countDown() }
-                        override fun onPlayerError(error:androidx.media3.common.PlaybackException) { outcome="error_${error.errorCode}"; latch.countDown() }
+                        override fun onPlayerError(error:androidx.media3.common.PlaybackException) { val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull(); outcome="error_${error.errorCode}"+(response?.responseCode?.let { "_http_$it" } ?: ""); latch.countDown() }
                     })
                     setMediaItem(androidx.media3.common.MediaItem.Builder().setUri(source.url).setMimeType(source.mime).build())
                     prepare(); playWhenReady=true
@@ -34,21 +41,22 @@ class CatalogInstrumentation : Instrumentation() {
             }
             latch.await(25,java.util.concurrent.TimeUnit.SECONDS)
             runOnMainSync { player?.release(); surface?.release(); texture?.release() }
-            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("result",outcome))
-            sendStatus(0,Bundle().apply { putString("stream","${source.name}: $outcome\n") })
+            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("package",source.catalogCategory).put("result",outcome))
+            sendStatus(0,Bundle().apply { putString("stream","${source.name} [${source.catalogCategory}]: $outcome\n") })
         }
         java.io.File(targetContext.filesDir,"public-stream-audit.json").writeText(results.toString(2))
         val passed=(0 until results.length()).count { results.getJSONObject(it).getString("result")=="video_frame" }
-        finish(if(passed==sources.size) Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply { putString("stream","Decoded video frames: $passed/${sources.size}\n") })
+        finish(if(passed==sources.size) Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply { putString("stream","Decoded video frames: $passed/${sources.size}\n"); putString("audit",results.toString()) })
     }
     private var sessionCatalog:String?=null
     private var auditPublic=false
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; start() }
+    private var auditSourceIds=emptySet<String>()
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
-            if(auditPublic) { auditPublicStreams(); return }
+            if(auditPublic || auditSourceIds.isNotEmpty()) { auditPublicStreams(); return }
             if(sessionCatalog!=null) {
                 val name=sessionCatalog!!
                 require(name.matches(Regex("[a-zA-Z0-9._-]+")))

@@ -29,6 +29,7 @@ object Catalog {
         Event("nfl-1", "American football", "GRIDIRON SHOWCASE", "Kansas City", "Buffalo", 21, 0, "football.jpg", 1)
     )
     val channels = listOf(
+        Source("bein-xtra-us","beIN SPORTS XTRA (US)","Multi-sport","https://bein-xtra-bein.amagi.tv/playlist.m3u8","application/x-mpegURL",provider="beIN US",channelId="bein-xtra-us",aliases=listOf("beIN SPORTS XTRA US")),
         Source("redbull-live","Red Bull TV","Multi-sport","https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8","application/x-mpegURL",provider="Red Bull TV",channelId="redbull-tv")
     )
     val samples = listOf(

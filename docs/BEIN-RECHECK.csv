@@ -1,0 +1,81 @@
+id,channel,package,checked_utc,delivery_result,stream_results,android_decoder,later_recheck,additional_fresh_process_check,normal_player_ui
+8093614024262419843,beIN SPORTS 1,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024263662330,beIN SPORTS 2,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024264538533,beIN SPORTS 3,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024265220252,beIN SPORTS 4,beIN SPORTS (1080P),2026-10-21T15:15:16Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614024257948855,beIN SPORTS 5,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024259441758,beIN SPORTS 6,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024260675800,beIN SPORTS 7,beIN SPORTS (1080P),2026-10-21T15:15:16Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024261343505,beIN SPORTS 8,beIN SPORTS (1080P),2026-10-21T15:15:16Z,failed,URLError,not_selected,,not_selected,not_selected
+8093614024270801478,beIN SPORTS 9,beIN SPORTS (1080P),2026-10-21T15:15:17Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614024250808790,beIN XTRA 1,beIN SPORTS (1080P),2026-10-21T15:15:17Z,failed,http_404;http_404,not_selected,,not_selected,not_selected
+8093614024251429345,beIN XTRA 2,beIN SPORTS (1080P),2026-10-21T15:15:17Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614024253081192,beIN XTRA 3,beIN SPORTS (1080P),2026-10-21T15:15:18Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614024271440287,beIN France 1,beIN SPORTS (1080P),2026-10-21T15:15:18Z,no_streams,,not_selected,,not_selected,not_selected
+8093614024272959436,beIN France 2,beIN SPORTS (1080P),2026-10-21T15:15:18Z,no_streams,,not_selected,,not_selected,not_selected
+8093614024274451157,beIN France 3,beIN SPORTS (1080P),2026-10-21T15:15:18Z,failed,unsupported_mode;unsupported_mode,not_selected,,not_selected,not_selected
+8093614024266328938,beIN News,beIN SPORTS (1080P),2026-10-21T15:15:18Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614024268023539,beIN SPORTS,beIN SPORTS (1080P),2026-10-21T15:15:18Z,failed,http_404;http_404,not_selected,,not_selected,not_selected
+8093614024321687380,beIN English 1,beIN SPORTS (1080P),2026-10-21T15:15:19Z,no_streams,,not_selected,,not_selected,not_selected
+8093614024323602875,beIN English 2,beIN SPORTS (1080P),2026-10-21T15:15:19Z,no_streams,,not_selected,,not_selected,not_selected
+8093614024324061426,beIN English 3,beIN SPORTS (1080P),2026-10-21T15:15:19Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023570873384,beIN SPORTS 1,beIN SPORTS (720P),2026-10-21T15:15:19Z,available,hls_segment_ok,video_frame,HTTP 503: No URLs available,video_frame,playing at observations 50 seconds apart
+8093614023571318689,beIN SPORTS 2,beIN SPORTS (720P),2026-10-21T15:15:20Z,available,hls_segment_ok,error_2004,,video_frame,not_selected
+8093614023572795286,beIN SPORTS 3,beIN SPORTS (720P),2026-10-21T15:15:20Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023573666863,beIN SPORTS 4,beIN SPORTS (720P),2026-10-21T15:15:20Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023582898564,beIN SPORTS 5,beIN SPORTS (720P),2026-10-21T15:15:20Z,available,hls_segment_ok,video_frame,HTTP 503: No URLs available,not_selected,not_selected
+8093614023584120941,beIN SPORTS 6,beIN SPORTS (720P),2026-10-21T15:15:20Z,available,hls_segment_ok,video_frame,HTTP 503: No URLs available,not_selected,not_selected
+8093614023585474545,beIN SPORTS 7,beIN SPORTS (720P),2026-10-21T15:15:21Z,available,hls_segment_ok,video_frame,HTTP 503: No URLs available,not_selected,not_selected
+8093614023585806136,beIN SPORTS 8,beIN SPORTS (720P),2026-10-21T15:15:21Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023578942207,beIN SPORTS 9,beIN SPORTS (720P),2026-10-21T15:15:21Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023576039269,beIN XTRA 1,beIN SPORTS (720P),2026-10-21T15:15:21Z,available,http_404;hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023576211642,beIN XTRA 2,beIN SPORTS (720P),2026-10-21T15:15:21Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023578114883,beIN XTRA 3,beIN SPORTS (720P),2026-10-21T15:15:21Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023579399846,beIN France 1,beIN SPORTS (720P),2026-10-21T15:15:22Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023581035701,beIN France 2,beIN SPORTS (720P),2026-10-21T15:15:22Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023582347436,beIN France 3,beIN SPORTS (720P),2026-10-21T15:15:22Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023591508947,beIN News,beIN SPORTS (720P),2026-10-21T15:15:22Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023592670922,beIN SPORTS,beIN SPORTS (720P),2026-10-21T15:15:22Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023593946617,beIN English 1,beIN SPORTS (720P),2026-10-21T15:15:22Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023593958464,beIN English 2,beIN SPORTS (720P),2026-10-21T15:15:22Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023587327268,beIN English 3,beIN SPORTS (720P),2026-10-21T15:15:22Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023600141904,beIN SPORTS 1,beIN SPORTS (360P),2026-10-21T15:15:22Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023601056393,beIN SPORTS 2,beIN SPORTS (360P),2026-10-21T15:15:22Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023601624254,beIN SPORTS 3,beIN SPORTS (360P),2026-10-21T15:15:22Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023603285015,beIN SPORTS 4,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023595271036,beIN SPORTS 5,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023596082693,beIN SPORTS 6,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023597576347,beIN SPORTS 7,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023598343762,beIN SPORTS 8,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023607672221,beIN SPORTS 9,beIN SPORTS (360P),2026-10-21T15:15:23Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023588244493,beIN XTRA 1,beIN SPORTS (360P),2026-10-21T15:15:23Z,available,http_404;hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023589269442,beIN XTRA 2,beIN SPORTS (360P),2026-10-21T15:15:24Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023590229579,beIN XTRA 3,beIN SPORTS (360P),2026-10-21T15:15:24Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023608987956,beIN France 1,beIN SPORTS (360P),2026-10-21T15:15:24Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023609989095,beIN France 2,beIN SPORTS (360P),2026-10-21T15:15:24Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023611711950,beIN France 3,beIN SPORTS (360P),2026-10-21T15:15:24Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023603440345,beIN News,beIN SPORTS (360P),2026-10-21T15:15:24Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023604898720,beIN SPORTS,beIN SPORTS (360P),2026-10-21T15:15:24Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023606270515,beIN English 1,beIN SPORTS (360P),2026-10-21T15:15:24Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023606673066,beIN English 2,beIN SPORTS (360P),2026-10-21T15:15:24Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023616563102,beIN English 3,beIN SPORTS (360P),2026-10-21T15:15:24Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023611909154,beIN SPORTS 1,beIN SPORTS (244P),2026-10-21T15:15:24Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023613456939,beIN SPORTS 2,beIN SPORTS (244P),2026-10-21T15:15:24Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023614887684,beIN SPORTS 3,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023615061485,beIN SPORTS 4,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023624707350,beIN SPORTS 5,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023625578927,beIN SPORTS 6,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023627108645,beIN SPORTS 7,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023627790364,beIN SPORTS 8,beIN SPORTS (244P),2026-10-21T15:15:25Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023620795651,beIN SPORTS 9,beIN SPORTS (244P),2026-10-21T15:15:25Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023617167351,beIN XTRA 1,beIN SPORTS (244P),2026-10-21T15:15:26Z,available,http_404;hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023618917296,beIN XTRA 2,beIN SPORTS (244P),2026-10-21T15:15:26Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023620117993,beIN XTRA 3,beIN SPORTS (244P),2026-10-21T15:15:26Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023622038138,beIN France 1,beIN SPORTS (244P),2026-10-21T15:15:26Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023622388065,beIN France 2,beIN SPORTS (244P),2026-10-21T15:15:26Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023624039912,beIN France 3,beIN SPORTS (244P),2026-10-21T15:15:26Z,failed,unsupported_mode;unsupported_mode,not_selected,,not_selected,not_selected
+8093614023633124847,beIN News,beIN SPORTS (244P),2026-10-21T15:15:26Z,failed,http_404,not_selected,,not_selected,not_selected
+8093614023634350422,beIN SPORTS,beIN SPORTS (244P),2026-10-21T15:15:26Z,available,hls_segment_ok,error_2004,,not_selected,not_selected
+8093614023635190317,beIN English 1,beIN SPORTS (244P),2026-10-21T15:15:27Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023636065092,beIN English 2,beIN SPORTS (244P),2026-10-21T15:15:27Z,no_streams,,not_selected,,not_selected,not_selected
+8093614023658213842,beIN English 3,beIN SPORTS (244P),2026-10-21T15:15:27Z,failed,http_404,not_selected,,not_selected,not_selected

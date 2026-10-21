@@ -70,11 +70,15 @@ if __name__=='__main__':
  parser=argparse.ArgumentParser(description='Audit every catalog record without saving signed media URLs. Network delivery checks, not decoded-video tests.')
  parser.add_argument('--catalog',type=Path,help='Optional captured catalog metadata; default fetches the current complete catalog')
  parser.add_argument('--resume',action='store_true',help='Resume the existing report instead of starting a fresh audit')
+ parser.add_argument('--package-prefix',default='',help='Only audit leaf packages whose names start with this prefix')
+ parser.add_argument('--output',type=Path,default=ROOT/'artifacts/channel-audit.jsonl',help='Sanitized JSONL report destination')
  args=parser.parse_args()
  catalog=json.loads(args.catalog.read_text(encoding='utf-8')) if args.catalog else catalog()
+ catalog=[group for group in catalog if group['package']['name'].startswith(args.package_prefix)]
+ if not catalog:raise ValueError('No matching catalog packages')
  (ROOT/'artifacts').mkdir(exist_ok=True)
  items=[{'id':str(c['id']),'name':c['name'],'package':g['package']['name']} for g in catalog for c in g['channels']]
- output=ROOT/'artifacts/channel-audit.jsonl';done={}
+ output=args.output;output.parent.mkdir(parents=True,exist_ok=True);done={}
  if args.resume and output.exists():
   for line in output.read_text().splitlines():
    r=json.loads(line);done[r['id']]=r
