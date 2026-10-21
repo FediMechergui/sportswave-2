@@ -6,12 +6,12 @@ import java.net.URL
 import java.time.Instant
 import javax.net.ssl.HttpsURLConnection
 
-data class FootballMatch(val id: String, val home: String, val away: String, val homeCrest: String, val awayCrest: String, val start: String, val score: String, val status: String, val sport: String = "Football", val competition: String = "Bundesliga")
+data class FootballMatch(val id: String, val home: String, val away: String, val homeCrest: String, val awayCrest: String, val start: String, val score: String, val status: String, val sport: String = "Football", val competition: String = "Bundesliga", val scoreDetail: String = "")
 data class RacePosition(val position: Int, val driver: String, val team: String, val gap: String, val laps: Int)
 data class RaceResult(val title: String, val date: String, val rows: List<RacePosition>)
 
 object SportsFeeds {
-    val leagues = linkedMapOf("Champions League" to "soccer/uefa.champions", "Premier League" to "soccer/eng.1", "LaLiga" to "soccer/esp.1", "Ligue 1" to "soccer/fra.1", "Serie A" to "soccer/ita.1", "Bundesliga" to "openliga", "NBA" to "basketball/nba", "NFL" to "football/nfl")
+    val leagues = linkedMapOf("Champions League" to "soccer/uefa.champions", "All football" to "soccer/all", "Premier League" to "soccer/eng.1", "LaLiga" to "soccer/esp.1", "Ligue 1" to "soccer/fra.1", "Serie A" to "soccer/ita.1", "Bundesliga" to "openliga", "NBA" to "basketball/nba", "NFL" to "football/nfl", "ATP tennis" to "tennis/atp", "WTA tennis" to "tennis/wta")
     private fun read(url: String): String {
         val c = URL(url).openConnection() as HttpsURLConnection
         c.connectTimeout = 12000; c.readTimeout = 15000
@@ -31,7 +31,35 @@ object SportsFeeds {
     fun scoreboard(league: String): List<FootballMatch> {
         val route = requireNotNull(leagues[league])
         if(route == "openliga") return football()
-        return parseScoreboard(JSONObject(read("https://site.api.espn.com/apis/site/v2/sports/$route/scoreboard")),league,if(league=="NBA") "Basketball" else if(league=="NFL") "American football" else "Football")
+        val data=JSONObject(read("https://site.api.espn.com/apis/site/v2/sports/$route/scoreboard?limit=1000"))
+        if(route.startsWith("tennis/")) return parseTennis(data,league)
+        return parseScoreboard(data,league,if(league=="NBA") "Basketball" else if(league=="NFL") "American football" else "Football")
+    }
+    fun parseTennis(data: JSONObject, league: String): List<FootballMatch> {
+        val matches=mutableListOf<FootballMatch>()
+        fun visit(value: Any?) {
+            if(value is JSONObject) {
+                val competitors=value.optJSONArray("competitors")
+                val status=value.optJSONObject("status")
+                if(competitors!=null && competitors.length()==2 && status!=null) {
+                    val players=competitors.objects()
+                    val home=players.firstOrNull { it.optString("homeAway")=="home" } ?: players[0]
+                    val away=players.firstOrNull { it.optString("homeAway")=="away" } ?: players[1]
+                    fun name(p:JSONObject)=p.optJSONObject("athlete")?.optString("displayName") ?: p.optJSONObject("roster")?.optString("displayName") ?: "Unknown player"
+                    fun flag(p:JSONObject)=p.optJSONObject("athlete")?.optJSONObject("flag")?.optString("href") ?: ""
+                    val h=home.optJSONArray("linescores") ?: JSONArray(); val a=away.optJSONArray("linescores") ?: JSONArray()
+                    val count=minOf(h.length(),a.length())
+                    val sets=(0 until count).map { "${h.getJSONObject(it).optInt("value")}–${a.getJSONObject(it).optInt("value")}" }
+                    val type=status.getJSONObject("type"); val state=type.getString("state")
+                    val detail=type.optString("detail").ifBlank { type.optString("description") }
+                    val venue=value.optJSONObject("venue")?.optString("fullName") ?: league
+                    matches.add(FootballMatch("espn-tennis-${value.getString("id")}",name(home),name(away),flag(home),flag(away),java.time.OffsetDateTime.parse(value.getString("date")).toInstant().toString(),
+                        if(state=="pre" || sets.isEmpty()) "—" else sets.last(),if(state=="in") "Live · $detail" else detail,"Tennis",venue,if(sets.isEmpty()) "" else "Sets: ${sets.joinToString("  ")}"))
+                } else value.keys().asSequence().forEach { visit(value.opt(it)) }
+            } else if(value is JSONArray) for(i in 0 until value.length()) visit(value.opt(i))
+        }
+        visit(data)
+        return matches.distinctBy { it.id }.sortedWith(compareBy<FootballMatch> { if(it.status.startsWith("Live")) 0 else if(it.score=="—") 1 else 2 }.thenBy { it.start })
     }
     fun parseScoreboard(data: JSONObject, league: String, sport: String): List<FootballMatch> {
         return (data.optJSONArray("events") ?: JSONArray()).objects().flatMap { e ->

@@ -482,7 +482,7 @@ class MainActivity : Activity() {
         padded(body,text("Scores & race results",28,Color.WHITE,true),bottom=10)
         padded(body,text("Public scores, team crests and Formula 1 classifications.",13,muted),bottom=18)
         val tabs=row()
-        listOf("Football","Motorsport").forEach { name -> tabs.addView(button(if(name=="Football") "Team sports" else name,liveSport==name) { liveSport=name; render(); if(name=="Motorsport") loadRace() else loadFootball() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) }) }
+        listOf("Football","Motorsport").forEach { name -> tabs.addView(button(if(name=="Football") "Matches" else name,liveSport==name) { liveSport=name; render(); if(name=="Motorsport") loadRace() else loadFootball() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) }) }
         padded(body,tabs,bottom=16)
         if(liveSport=="Football") {
             padded(body,button("$scoreLeague · Change competition") {
@@ -502,6 +502,7 @@ class MainActivity : Activity() {
                 listOf(m.home to m.homeCrest,m.away to m.awayCrest).forEach { (name,url) -> val team=row(); team.addView(crest(url,name),LinearLayout.LayoutParams(dp(28),dp(28))); team.addView(text(name,13,Color.WHITE,true).apply { setPadding(dp(10),0,0,0) }); names.addView(team); space(names,8) }
                 teams.addView(names,LinearLayout.LayoutParams(0,-2,1f))
                 teams.addView(text(m.score,20,Color.WHITE,true)); box.addView(teams)
+                if(m.scoreDetail.isNotBlank()) { space(box,10); box.addView(text(m.scoreDetail,12,muted)) }
                 padded(body,box,bottom=10)
             }
             padded(body,text("Updates every 30 seconds while this screen is open. Community data may be delayed; no match clock is inferred.",11,muted),top=8)
