@@ -50,7 +50,8 @@ class MainActivity : Activity() {
     private var providerChannels = emptyList<Source>()
     private var providerLoading = false
     private var providerError = ""
-    private var providerGeneration = 0
+    @Volatile private var providerGeneration = 0
+    private var providerPageSize = 40
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val refreshLive = object : Runnable {
         override fun run() { if(tab == "Live") { if(liveSport == "Football") loadFootball() else loadRace() }; handler.postDelayed(this,30_000) }
@@ -62,8 +63,9 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         store = Store(this)
-        providerPackageId=store.selectedPackage()
-        providerChannels=store.providerChannels(providerPackageId)
+        providerPackageId=""
+        channelPackages=store.providerPackages()
+        providerChannels=ChannelCatalog.sorted(store.providerSources())
         tab = savedInstanceState?.getString("tab") ?: tab
         sport = savedInstanceState?.getString("sport") ?: sport
         day = savedInstanceState?.getLong("day") ?: 0
@@ -282,12 +284,15 @@ class MainActivity : Activity() {
         padded(body,tools,20)
         section("Yacine channels",if(providerLoading) "Loading…" else "${providerChannels.size} channels")
         val providerTools=row()
-        providerTools.addView(button(channelPackages.firstOrNull { it.id==providerPackageId }?.name ?: "Choose package") { choosePackage(channelPackages) },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
-        providerTools.addView(button("Refresh") { loadYacine(); render() },LinearLayout.LayoutParams(-2,-2))
+        providerTools.addView(button(channelPackages.firstOrNull { it.id==providerPackageId }?.name ?: "All channels - sports first") { choosePackage(channelPackages) },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
+        providerTools.addView(button("Refresh") { loadYacine(true); render() },LinearLayout.LayoutParams(-2,-2))
         padded(body,providerTools,bottom=12)
         if(providerError.isNotBlank()) padded(body,text(providerError,12,red),bottom=12)
         if(providerLoading && providerChannels.isEmpty()) padded(body,text("Loading the provider's channel catalog…",12,muted),bottom=12)
-        providerChannels.filter { it.name.contains(query,true) }.forEach { sourceRow(it) }
+        val visible=ChannelCatalog.unique(providerChannels.filter { (providerPackageId.isBlank() || it.catalogCategoryId==providerPackageId) && (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && (it.name+" "+it.catalogCategory).contains(query,true) })
+        padded(body,text("${visible.size} channels in this view - ${channelPackages.size} packages. Sports first; quality variants are available in the player.",11,muted),bottom=12)
+        visible.take(providerPageSize).forEach { sourceRow(it) }
+        if(visible.size>providerPageSize) padded(body,button("Show more channels (${visible.size-providerPageSize})") { providerPageSize+=40; render(keepScroll=true) },bottom=12)
         if(!providerLoading && providerChannels.isEmpty()) padded(body,text("No channels loaded. Refresh the catalog or check the service address.",12,muted),bottom=10)
         padded(body,button("Service address") { editServiceAddress() },bottom=14)
         section("Included live channel")
@@ -301,11 +306,11 @@ class MainActivity : Activity() {
         Catalog.samples.filter { it.name.contains(query,true) }.forEach { sourceRow(it) }
     }
     private fun sourceRow(source: Source) {
-        val card = row().apply { background=shape(panel,15); setPadding(dp(16),dp(17),dp(10),dp(17)); isFocusable=true; setOnClickListener { play(source) } }
+        val card = row().apply { background=shape(panel,15); setPadding(dp(16),dp(17),dp(10),dp(17)); isFocusable=true; setOnClickListener { play(source,if(source.integration=="yacine") ChannelCatalog.alternatives(source,store.providerSources()) else listOf(source)) } }
         if(source.logoUrl.isNotBlank()) card.addView(crest(source.logoUrl,source.name).apply { contentDescription="${source.name} logo" },LinearLayout.LayoutParams(dp(34),dp(34)).apply { marginEnd=dp(8) })
         else card.addView(NavigationIcon(this,"Channels",red),LinearLayout.LayoutParams(dp(28),dp(28)).apply { marginEnd=dp(14) })
         val info=column(); info.addView(text(source.name,15,Color.WHITE,true)); space(info,7)
-        info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.integration=="yacine") "${source.provider} - Fresh session on play" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
+        info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.integration=="yacine") "${source.catalogCategory.ifBlank { source.provider }} - Resolve on play" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
         card.addView(info,LinearLayout.LayoutParams(0,-2,1f))
         if(!source.demo && source.integration.isBlank() && Catalog.channels.none { it.id == source.id }) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
         padded(body,card,bottom=9)
@@ -355,59 +360,38 @@ class MainActivity : Activity() {
             runOnUiThread { if(!isFinishing && !isDestroyed) { result.onSuccess { count -> demoSchedule=false; Toast.makeText(this,"Imported $count items",Toast.LENGTH_LONG).show(); render() }.onFailure { AlertDialog.Builder(this).setTitle("Couldn't import catalog").setMessage(it.message ?: "Check the JSON format.").setPositiveButton("OK",null).show() } } }
         }.start()
     }
-    private fun loadYacine() {
+    private fun loadYacine(force: Boolean = false) {
+        if(!force && providerChannels.isNotEmpty() && channelPackages.isNotEmpty() && System.currentTimeMillis()-store.catalogSyncedAt()<3_600_000) return
         val request=++providerGeneration
         val endpoint=store.providerEndpoint()
-        val requestedPackage=providerPackageId
         providerLoading=true; providerError=""
         Thread {
+            var processed=0
             val result=runCatching {
-                val packages=YacineApi.packages(endpoint)
-                val chosen=packages.firstOrNull { it.id==requestedPackage }
-                    ?: packages.firstOrNull { it.name.contains("720P",true) }
-                    ?: packages.firstOrNull { it.children==0 }
-                    ?: throw IllegalStateException("No channel packages available.")
-                val channels=YacineApi.channels(endpoint,chosen)
-                store.cacheProviderChannels(chosen.id,channels)
-                Triple(packages,chosen,channels)
+                YacineApi.syncCatalog(endpoint) { category,sources ->
+                    if(request!=providerGeneration || isDestroyed) throw java.util.concurrent.CancellationException("Catalog refresh superseded.")
+                    store.cacheProviderChannels(category.id,sources); processed++
+                    if(processed<=2 || processed%4==0) runOnUiThread { if(!isDestroyed && request==providerGeneration) {
+                        providerChannels=ChannelCatalog.sorted(store.providerSources())
+                        if(tab=="Channels") render(keepScroll=true)
+                    } }
+                }.also { store.cacheProviderPackages(it.packages,it.failed.isEmpty()) }
             }
             runOnUiThread { if(!isDestroyed && request==providerGeneration) {
                 providerLoading=false
-                result.onSuccess { (packages,chosen,channels) ->
-                    channelPackages=packages; providerPackageId=chosen.id; providerChannels=channels; store.selectPackage(chosen.id)
-                }.onFailure { providerError="Couldn't refresh Yacine channels. Retry or check the service address.${if(providerChannels.isNotEmpty()) " Showing the cached catalog." else ""}" }
+                providerChannels=ChannelCatalog.sorted(store.providerSources()); channelPackages=store.providerPackages()
+                result.onSuccess { if(it.failed.isNotEmpty()) providerError="${it.failed.size} packages could not refresh. Cached channels remain available; retry Refresh." }
+                    .onFailure { providerError="Couldn't refresh the catalog. Cached channels remain available. Retry or check the service address." }
                 if(tab=="Channels") render(keepScroll=true)
             } }
         }.start()
     }
     private fun choosePackage(packages: List<ChannelPackage>) {
-        if(packages.isEmpty()) { loadYacine(); render(); return }
-        AlertDialog.Builder(this).setTitle("Channel package").setItems(packages.map { it.name }.toTypedArray()) { _,i ->
-            val chosen=packages[i]
-            if(chosen.children>0) {
-                Thread {
-                    val children=runCatching { YacineApi.packages(store.providerEndpoint(),chosen.id) }
-                    runOnUiThread { if(!isDestroyed) children.onSuccess { choosePackage(it) }.onFailure { Toast.makeText(this,"Couldn't load child packages.",Toast.LENGTH_LONG).show() } }
-                }.start()
-            } else {
-                providerPackageId=chosen.id; providerChannels=store.providerChannels(chosen.id)
-                // Keep child packages reachable when the service has a nested catalog.
-                if(channelPackages.none { it.id==chosen.id }) channelPackages=channelPackages+chosen
-                store.selectPackage(chosen.id); loadYacinePackage(chosen); render()
-            }
+        if(packages.isEmpty()) { loadYacine(true); render(); return }
+        AlertDialog.Builder(this).setTitle("Channel package").setItems((listOf("All channels - sports first")+packages.map { it.name }).toTypedArray()) { _,i ->
+            providerPackageId=if(i==0) "" else packages[i-1].id
+            providerPageSize=40; render()
         }.setNegativeButton("Close",null).show()
-    }
-    private fun loadYacinePackage(chosen: ChannelPackage) {
-        val request=++providerGeneration; val endpoint=store.providerEndpoint()
-        providerLoading=true; providerError=""
-        Thread {
-            val result=runCatching { YacineApi.channels(endpoint,chosen).also { store.cacheProviderChannels(chosen.id,it) } }
-            runOnUiThread { if(!isDestroyed && request==providerGeneration) {
-                providerLoading=false
-                result.onSuccess { providerChannels=it }.onFailure { providerError="Couldn't refresh this package. Retry or choose another package." }
-                if(tab=="Channels") render(keepScroll=true)
-            } }
-        }.start()
     }
     private fun editServiceAddress() {
         val field=EditText(this).apply { setSingleLine(true); setText(store.providerEndpoint()); inputType=android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_URI }
@@ -415,7 +399,7 @@ class MainActivity : Activity() {
         dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
             val value=field.text.toString().trim()
             if(!YacineApi.validEndpoint(value)) field.error="Enter an HTTP(S) address ending in /api/, without credentials or query parameters."
-            else { store.setProviderEndpoint(value); providerChannels=emptyList(); channelPackages=emptyList(); dialog.dismiss(); loadYacine(); render() }
+            else { providerGeneration++; store.setProviderEndpoint(value); providerChannels=emptyList(); channelPackages=emptyList(); dialog.dismiss(); loadYacine(true); render() }
         } }
         dialog.show()
     }

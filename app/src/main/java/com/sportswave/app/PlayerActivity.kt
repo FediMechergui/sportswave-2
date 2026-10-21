@@ -38,6 +38,7 @@ class PlayerActivity : Activity() {
     private var stopped = false
     private var generation = 0
     private var automaticRenewals = 0
+    private val attemptedSources = mutableSetOf<String>()
     private val dark = Color.rgb(12,15,20)
     private val red = Color.rgb(255,77,67)
     private val muted = Color.rgb(153,162,176)
@@ -72,11 +73,11 @@ class PlayerActivity : Activity() {
         container.addView(playerView, if(landscape) LinearLayout.LayoutParams(-1,0,1f) else LinearLayout.LayoutParams(-1,dp(238)))
         status=label("Preparing your stream…",12,muted).apply { setPadding(dp(20),dp(12),dp(20),dp(8)) }
         container.addView(status)
-        retry=button("Retry playback") { automaticRenewals=0; position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
+        retry=button("Retry playback") { automaticRenewals=0; attemptedSources.clear(); position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
         container.addView(retry)
         if(alternatives.size>1) container.addView(button("Choose another broadcast") {
-            AlertDialog.Builder(this).setTitle("Event broadcasts").setItems(alternatives.map { "${it.provider} · ${it.name}" }.toTypedArray()) { _,index ->
-                original=alternatives[index]; automaticRenewals=0; position=0; shouldPlay=true; render(); load()
+            AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(alternatives.map { "${it.catalogCategory.ifBlank { it.provider }} · ${it.name}" }.toTypedArray()) { _,index ->
+                original=alternatives[index]; automaticRenewals=0; attemptedSources.clear(); position=0; shouldPlay=true; render(); load()
             }.show()
         })
         if(!landscape) {
@@ -102,6 +103,7 @@ class PlayerActivity : Activity() {
     private fun load() {
         val source=original
         if(source==null) { status.text="This channel is no longer in your collection."; return }
+        attemptedSources.add(source.id)
         generation++
         val request=generation
         playerView.player=null
@@ -139,6 +141,14 @@ class PlayerActivity : Activity() {
                         val failedGeneration=generation
                         status.text="Refreshing the channel session…"
                         playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) load() }
+                        return
+                    }
+                    val unavailable=generateSequence(error as Throwable?) { it.cause }.any { it is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException && it.responseCode in listOf(401,403,404,410,503) }
+                    val next=original?.takeIf { it.integration=="yacine" && unavailable }?.let { ChannelCatalog.nextAlternative(it,alternatives,attemptedSources) }
+                    if(next!=null) {
+                        val failedGeneration=generation
+                        status.text="Trying another quality for this channel…"
+                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { original=next; position=0; render(); load() } }
                         return
                     }
                     status.text="Playback unavailable (${error.errorCodeName}). Retry or check your provider."

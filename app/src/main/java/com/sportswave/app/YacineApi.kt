@@ -9,6 +9,7 @@ import java.time.Instant
 import android.util.Base64
 
 data class ChannelPackage(val id: String, val name: String, val children: Int)
+data class CatalogSync(val packages: List<ChannelPackage>, val failed: List<String>)
 
 /** Provider metadata and fresh playback descriptors; no native APK code is bundled. */
 object YacineApi {
@@ -54,18 +55,35 @@ object YacineApi {
 
     fun channels(endpoint: String, category: ChannelPackage): List<Source> {
         require(category.id.matches(Regex("[0-9]+")))
-        return parseChannels(request(endpoint,"categories/${category.id}/channels").getJSONArray("data"),endpoint,category.name)
+        return parseChannels(request(endpoint,"categories/${category.id}/channels").getJSONArray("data"),endpoint,category.name,category.id)
     }
 
-    fun parseChannels(data: JSONArray, endpoint: String, packageName: String): List<Source> = (0 until data.length()).map { i ->
+    fun parseChannels(data: JSONArray, endpoint: String, packageName: String, categoryId: String = ""): List<Source> = (0 until data.length()).map { i ->
         val channel=data.getJSONObject(i); val id=channel.getString("id"); val name=channel.getString("name")
         require(id.matches(Regex("[0-9]+")))
         val provider=when { name.contains("bein",true) -> "beIN"; name.contains("alkass",true) -> "Alkass"; else -> packageName }
-        Source("yacine-$id",name,"Multi-sport","",provider=provider,channelId=id,aliases=listOf(name),integration="yacine",serviceUrl=endpoint,logoUrl=channel.optString("logo"))
+        val source=Source("yacine-$id",name,"Other","",provider=provider,channelId=id,aliases=listOf(name),integration="yacine",serviceUrl=endpoint,logoUrl=channel.optString("logo"),catalogCategory=packageName,catalogCategoryId=categoryId)
+        source.copy(sport=if(ChannelCatalog.isSports(source)) "Multi-sport" else "Other")
+    }
+
+    fun syncCatalog(endpoint: String, onPackage: (ChannelPackage,List<Source>) -> Unit): CatalogSync {
+        val pending=java.util.ArrayDeque(packages(endpoint).sortedBy { when { it.name.contains("720P",true) -> 0; it.name.contains("ALKASS",true) -> 1; it.name.contains("SPORT",true) -> 2; else -> 3 } })
+        val visited=mutableSetOf<String>(); val leaves=mutableListOf<ChannelPackage>(); val failed=mutableListOf<String>()
+        while(pending.isNotEmpty()) {
+            val category=pending.removeFirst()
+            if(!visited.add(category.id)) continue
+            check(visited.size<=150) { "The provider catalog exceeds the supported package limit." }
+            try {
+                if(category.children>0) packages(endpoint,category.id).forEach { pending.addLast(it.copy(name=category.name+" / "+it.name)) }
+                else { val sources=channels(endpoint,category); onPackage(category,sources); leaves.add(category) }
+            } catch(e: Exception) { if(e is java.util.concurrent.CancellationException) throw e; failed.add(category.name) }
+        }
+        return CatalogSync(leaves,failed)
     }
 
     fun resolve(source: Source): Source {
         require(source.channelId.matches(Regex("[0-9]+"))) { "Invalid Yacine channel ID." }
+        runCatching { AlkassApi.resolve(source) }.getOrNull()?.let { return it }
         val data=request(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT },"channel/${source.channelId}").getJSONArray("data")
         return parsePlayback(data,source)
     }

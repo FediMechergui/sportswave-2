@@ -18,7 +18,7 @@ Download the signed preview APK from this repository?s GitHub Releases. Preview 
 
 ## Verification
 
-The build and nine JVM tests pass. Signed-release checks on a fresh Android 15 emulator verified beIN SPORTS 1 video without companion apps and live ATP tennis set-score updates across automatic refresh. Some other provider channels returned delivery errors. The emulator instrumentation checks catalog/calendar import, rejection of invalid calendars without partial source changes, duplicate-ID updates, broadcast reference matching, resolver configuration, deletion, and persistent favorites. Tests use a separate preferences file. A temporary beIN session rendered video during local testing, with intermittent buffering. That expiring session is not distributed.
+The build and twelve JVM tests pass. Signed v1.0.4 emulator checks loaded 675 channel records across 32 packages and rendered Alkass 1?4 inside SportsWave. Alkass 5?8 were marked locked/premium; not every upstream channel is playable. Signed-release checks on a fresh Android 15 emulator verified beIN SPORTS 1 video without companion apps and live ATP tennis set-score updates across automatic refresh. Some other provider channels returned delivery errors. The emulator instrumentation checks catalog/calendar import, rejection of invalid calendars without partial source changes, duplicate-ID updates, broadcast reference matching, resolver configuration, deletion, and persistent favorites. Tests use a separate preferences file. A temporary beIN session rendered video during local testing, with intermittent buffering. That expiring session is not distributed.
 
 ```powershell
 .\gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:assembleDebugAndroidTest
@@ -36,7 +36,8 @@ The UI smoke script defaults to `emulator-5556`; set `SPORTSWAVE_DEVICE` for ano
 - Public ESPN scoreboards (all football, Champions League, Premier League, LaLiga, Ligue 1, Serie A, NBA, NFL, ATP/WTA tennis), OpenLigaDB Bundesliga fixtures, and PNG/SVG team crests; refreshes every 30 seconds on the Live screen.
 - Tennis player names/country flags, set-by-set scores, and provider-supplied live set status. Nested tournament matches and doubles names are supported; no match clock is invented.
 - OpenF1 latest session classification with driver order, team, gap, and lap count. Public results only; live timing is not connected.
-- Yacine channel-package browsing, cached channel identities/logos, and direct backend resolution on each player opening and Retry. No companion player is needed.
+- Complete recursive Yacine catalog browsing (675 records / 32 leaf packages observed), sports-first ordering, global search, package filtering and cached identities/logos. Quality variants share a row and remain selectable in the player, with bounded same-channel fallback on delivery errors.
+- Fresh official public Alkass 1?4 HLS resolution, verified in the signed release. Locked/premium records remain subject to provider access. Direct backend resolution runs on each player opening and Retry; no companion player is needed.
 - Included Red Bull TV HLS live channel, verified inside the player on 21 October 2026. Availability can vary by region.
 - Sport filters covering football, basketball, tennis, motorsport, rugby, handball, volleyball, American football, padel, cricket, combat, cycling, athletics, swimming, golf, and other sports.
 - Local-time dates, event search, event details, and persistent favorites.
