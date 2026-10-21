@@ -12,6 +12,7 @@ Verified on 21 October 2026.
 | Included live channel | Red Bull TV publisher HLS | Video rendered inside SportsWave in the emulator. Availability may vary by region. |
 | beIN / other Yacine providers | Direct catalog and channel API integration | beIN SPORTS 1 video rendered in the signed release on a fresh emulator without a companion app. Modes 1/3 supported; other channels can fail independently (HTTP 503/404/403 observed). Resolved URLs remain in memory. |
 | Full channel catalog | Recursive Yacine category traversal | 675 records across 32 leaf packages observed, including nested Arabic packages. Sports appear first; duplicate qualities share a row and remain available in the player. This is catalog coverage, not 675 verified video feeds. |
+| Replacement delivery | Verified public channel feeds discovered through country directories | 36 failing catalog records now use tested HTTPS alternatives. Exact channel IDs and the original API endpoint scope the mapping; old provider headers and DRM settings are cleared. See CHANNEL-AUDIT.md and its complete per-channel CSV for coverage and unresolved entries. |
 | Alkass | Official Shoof public live metadata | Alkass 1, 2, 3 and 4 each rendered video inside the signed v1.0.4 APK. Fresh public HLS URLs replace failing Yacine delivery URLs. Alkass 5–8 were marked locked/premium; access is not bypassed. |
 | Event-to-channel routing | Explicit imported broadcast references | Public fixtures do not supply TV broadcast assignments; no channel is guessed from sport or team. |
 

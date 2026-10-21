@@ -8,12 +8,47 @@ import org.json.JSONObject
 import org.json.JSONArray
 
 class CatalogInstrumentation : Instrumentation() {
+    @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+    private fun auditPublicStreams() {
+        val sources=Store(targetContext).providerSources().mapNotNull { com.sportswave.app.PublicChannelStreams.resolve(it) }
+        check(sources.size==36) { "Expected the complete cached catalog and 36 replacements, found ${sources.size}." }
+        val results=JSONArray()
+        for(source in sources) {
+            val latch=java.util.concurrent.CountDownLatch(1)
+            var player:androidx.media3.exoplayer.ExoPlayer?=null
+            var texture:android.graphics.SurfaceTexture?=null
+            var surface:android.view.Surface?=null
+            var outcome="timeout"
+            runOnMainSync {
+                texture=android.graphics.SurfaceTexture(false)
+                surface=android.view.Surface(texture)
+                player=androidx.media3.exoplayer.ExoPlayer.Builder(targetContext).build().apply {
+                    setVideoSurface(surface)
+                    addListener(object:androidx.media3.common.Player.Listener {
+                        override fun onRenderedFirstFrame() { outcome="video_frame"; latch.countDown() }
+                        override fun onPlayerError(error:androidx.media3.common.PlaybackException) { outcome="error_${error.errorCode}"; latch.countDown() }
+                    })
+                    setMediaItem(androidx.media3.common.MediaItem.Builder().setUri(source.url).setMimeType(source.mime).build())
+                    prepare(); playWhenReady=true
+                }
+            }
+            latch.await(25,java.util.concurrent.TimeUnit.SECONDS)
+            runOnMainSync { player?.release(); surface?.release(); texture?.release() }
+            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("result",outcome))
+            sendStatus(0,Bundle().apply { putString("stream","${source.name}: $outcome\n") })
+        }
+        java.io.File(targetContext.filesDir,"public-stream-audit.json").writeText(results.toString(2))
+        val passed=(0 until results.length()).count { results.getJSONObject(it).getString("result")=="video_frame" }
+        finish(if(passed==sources.size) Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply { putString("stream","Decoded video frames: $passed/${sources.size}\n") })
+    }
     private var sessionCatalog:String?=null
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); sessionCatalog=arguments?.getString("sessionCatalog"); start() }
+    private var auditPublic=false
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
+            if(auditPublic) { auditPublicStreams(); return }
             if(sessionCatalog!=null) {
                 val name=sessionCatalog!!
                 require(name.matches(Regex("[a-zA-Z0-9._-]+")))

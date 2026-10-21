@@ -1,0 +1,676 @@
+id,channel,package,checked_utc,original_result,stream_results,replacement,replacement_evidence,web_drm_http_checks,replacement_android_decoder
+8093614024501776641,Alkass 1,ALKASS,2026-10-21T14:51:19Z,failed,http_403,Official Shoof dynamic resolver,https://shoof.alkass.net/,,v1.0.4_UI_verified
+8093614024502918024,Alkass 2,ALKASS,2026-10-21T14:51:19Z,failed,http_403,Official Shoof dynamic resolver,https://shoof.alkass.net/,,v1.0.4_UI_verified
+8093614024503669263,Alkass 3,ALKASS,2026-10-21T14:51:19Z,failed,http_403,Official Shoof dynamic resolver,https://shoof.alkass.net/,,v1.0.4_UI_verified
+8093614024504785142,Alkass 4,ALKASS,2026-10-21T14:51:19Z,failed,http_403,Official Shoof dynamic resolver,https://shoof.alkass.net/,,v1.0.4_UI_verified
+8093614024245803213,Alkass 5,ALKASS,2026-10-21T14:51:19Z,failed,http_403,none_verified,,,not_tested
+8093614025289660283,Alkass 6,ALKASS,2026-10-21T14:51:19Z,failed,http_403,none_verified,,,not_tested
+8093614025291167410,Alkass 7,ALKASS,2026-10-21T14:51:19Z,failed,http_403,none_verified,,,not_tested
+8093614024802061876,Alkass 8,ALKASS,2026-10-21T14:51:20Z,failed,http_403,none_verified,,,not_tested
+8093614023294113152,AL24 News,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024128911338,Al Anis TV‏,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023287943142,Algerie 3,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:16Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023297967605,Algerie 4,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023299279340,Algerie 5,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023300052243,Algerie 6,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023301214218,Algerie 7,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023293052729,Algerie 8,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024131454285,Almagharibia,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,failed,URLError,none_verified,,,not_tested
+8093614024130537060,Awraas TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024117173006,Bahia TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024115450151,Beur TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614023287485503,Canal Algerie,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:16Z,failed,http_404,none_verified,,,not_tested
+8093614023285960824,ENTV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:16Z,available,http_404;hls_segment_ok,not_needed,,,not_tested
+8093614023295877178,Echourouk News,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614023296731843,Echourouk TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024109086242,El Bilad TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,URLError,not_tested
+8093614024128508787,El Fadjr TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,failed,http_404,none_verified,,,not_tested
+8093614024122837620,El Heddaf TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;unsupported_mode,not_needed,,URLError,not_tested
+8093614024935704018,El Watania TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024111130076,Ennahar TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,available,hls_segment_ok;URLError,not_needed,,,not_tested
+8093614024117290009,Samira TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:19Z,failed,http_404,none_verified,,,not_tested
+8093614024107824929,Zahra TV,ARABIC CHANNELS / ALGERIA,2026-10-21T14:52:18Z,failed,http_404,none_verified,,,not_tested
+8093614024074644978,Bahrain FM,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:42Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024076465236,Bahrain Inter,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:43Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024075745469,Bahrain Quran,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:43Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024085928711,Bahrain Sports,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:45Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024087628142,Bahrain Sports 2,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:46Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024074186427,Bahrain TV,ARABIC CHANNELS / BAHRAIN,2026-10-21T14:53:41Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025230070100,Ahly TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:24Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024232505315,Al Kahera Wal Nas,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024224805840,Al Kahera Wal Nas 2,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024202935677,Al Masriyah,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025048277260,Al Masriyah,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024203284014,Al Nahar Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024204730311,Al Nahar TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024200328059,Al Oula EGY,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614025243910917,Al Rahma TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;http_200_html,not_tested
+8093614024201558292,Al Thanya EGY,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614025233649507,AlHadath Alyoum,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023766421683,Alfath,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023768871965,Alghad TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614025228175398,Alhayah Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614025053351399,Alhayah TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024191201376,CBC,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;http_200_html,not_tested
+8093614024191840153,CBC Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024192975722,CBC Sofra,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError;http_200_html,not_tested
+8093614024196966030,DMC,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024198388903,DMC Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614025246542134,El Mehwar TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024225720329,El Sharq,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,available,hls_segment_ok;unsupported_mode,not_needed,,URLError,not_tested
+8093614024212246502,Maspero Zaman,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023764640089,Mekameleen,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025232597309,Misr Quran ,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025229350333,Mix TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025245196412,Moga TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024221889574,Nile Cinema,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614025054025678,Nile Comedy,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024223064509,Nile Culture,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024939468725,Nile Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024223784276,Nile Learning,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,URLError,none_verified,,,not_tested
+8093614024216267848,Nile Life,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025226669183,Nile News,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024217223617,Nile Sport,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025046623253,Nile TV International,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025234173402,Nojoum FM,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024196072029,ON Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024938521034,ON TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,http_200_bytes,not_tested
+8093614024184646418,ON Time Sports,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:24Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614024185976155,ON Time Sports 2,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:24Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024918436197,Omg TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024206870329,Panorama Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024199738034,Panorama Drama 2,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024205833600,Panorama Film,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614025052455328,Panorama Food,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025239339329,Qaf TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,http_404,none_verified,,,not_tested
+8093614024211518648,Rotana +,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,URLError,none_verified,,,not_tested
+8093614024215399980,Rotana Cinema,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614024214088245,Rotana Classic,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,URLError;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024937359059,Rotana Clips,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024212837439,Rotana Comedy,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError;URLError,not_tested
+8093614024207784275,Rotana Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,URLError;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024208946250,Rotana Khalejia,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,URLError;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024220383359,Rotana Kids,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,URLError;unsupported_mode,none_verified,,URLError,not_tested
+8093614024210138481,Rotana Music,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023765775658,Sada El Balad,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode;unsupported_mode,none_verified,,URLError;URLError;http_200_html,not_tested
+8093614024944679347,Sada El Balad 2,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614025246474831,Sada El Balad Drama,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:26Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024230932058,Watan TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:27Z,failed,unsupported_mode,https://rp.tactivemedia.com/watantv_source/live/playlist.m3u8,https://iptv-org.github.io/iptv/countries/eg.m3u,URLError,video_frame
+8093614025222835628,Zamalek TV,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024194670323,eXtra News,ARABIC CHANNELS / EGYPTE,2026-10-21T14:52:25Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;URLError,not_tested
+8093614025044065144,4 Kurd,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:28Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025044525075,Afaq TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:29Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024675847342,Afarin TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:12Z,failed,URLError,https://65f16f0fdfc51.streamlock.net/afarinTV/livestream/playlist.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614024676245063,Al Etejah,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:13Z,failed,URLError,none_verified,,,not_tested
+8093614024069989581,Al Forat,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:03Z,failed,URLError,none_verified,,,not_tested
+8093614024062336060,Al Hurra Iraq,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:01Z,failed,URLError,none_verified,,,not_tested
+8093614024051631001,Al Iraqiya,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:00Z,failed,http_404,none_verified,,,not_tested
+8093614024061050565,Al Iraqiya News,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:01Z,failed,http_404,none_verified,,,not_tested
+8093614024050992224,Al Iraqiya Sports,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:00Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024671252786,Al Janoub TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:16Z,failed,URLError,https://live.alissahost.net/hls/test.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614024065818377,Al Maaref,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:29Z,failed,URLError;unsupported_mode,none_verified,,http_404,not_tested
+8093614025126779041,Al Rabiaa 1,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:00Z,failed,unsupported_mode,none_verified,,http_404,not_tested
+8093614024071629118,Al Rafidain,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:04Z,failed,URLError,none_verified,,,not_tested
+8093614024057620360,Al Rasheed,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:03Z,failed,http_404,none_verified,,,not_tested
+8093614024063372067,Al Sharqiya,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:02Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024056478977,Al Sumaria,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:03Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024059420175,Al Taghier,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:03Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614024063895962,Alsharqiya News,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:02Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025031958335,Amozhgary TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:27Z,failed,unsupported_mode,https://app-live.org/live/3268334b/index.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,http_200_html,video_frame
+8093614024072241303,Dijlah,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:04Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024064903888,Dijlah Tarab,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:06Z,failed,http_404,none_verified,,,not_tested
+8093614025042684977,Gali Kurdistan,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:28Z,failed,http_403,none_verified,,,not_tested
+8093614024070120932,Hona Baghdad,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:04Z,failed,http_403,none_verified,,,not_tested
+8093614025224770506,I News,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:16Z,failed,not_native_media,https://live.i-news.tv/hls/stream.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614025225705683,Iraq 24,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:16Z,failed,http_403,none_verified,,,not_tested
+8093614024078303652,Karbala TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:34Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025031295721,Kurdistan 24,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:27Z,failed,URLError,https://hlspackager.akamaized.net/live/DB/K24/HLS/K24.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614024068623051,Kurdistan TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024079220877,Kurdmax Music,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:34Z,failed,URLError,none_verified,,,not_tested
+8093614025036155706,Kurdmax Show,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:21Z,failed,URLError,none_verified,,,not_tested
+8093614025037010371,Kurdmax Show,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:22Z,failed,URLError,none_verified,,,not_tested
+8093614025034934757,Kurdmax TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:19Z,failed,URLError,none_verified,,,not_tested
+8093614025030095024,Kurdsat News,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:27Z,failed,URLError,https://hlspackager.akamaized.net/live/DB/KURDSAT_NEWS/HLS/KURDSAT_NEWS.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614025034567900,Kurdsat TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:17Z,failed,URLError,none_verified,,,not_tested
+8093614024080253110,Med Muzîk,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:34Z,failed,URLError,none_verified,,,not_tested
+8093614024674327508,NRT News,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:11Z,failed,http_404,none_verified,,,not_tested
+8093614024673607741,Net TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:07Z,failed,URLError,none_verified,,,not_tested
+8093614024664044198,Payam TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:07Z,failed,URLError,https://hlspackager.akamaized.net/live/DB/PAYAM_TV/HLS/PAYAM_TV.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614024662537983,Rudaw TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:06Z,failed,not_native_media,https://hlspackager.akamaized.net/live/DB/RUDAW/HLS/RUDAW.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614024912123203,Samarra TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:06Z,failed,http_403,https://live.bradosti.net/live/samaraweb_playlist.m3u8,https://iptv-org.github.io/iptv/countries/iq.m3u,,video_frame
+8093614025033464550,Speda TV,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:28Z,failed,URLError,none_verified,,,not_tested
+8093614024067662914,Zagros,ARABIC CHANNELS / IRAQ,2026-10-21T14:53:31Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025302169663,A one TV,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:49Z,failed,URLError,none_verified,,,not_tested
+8093614023839699781,Almamlaka,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:48Z,failed,URLError,none_verified,,,not_tested
+8093614023838888124,Amman TV,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:46Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025292987668,Fact International,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:49Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614023844642330,Jordan Sports,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:46Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614023844321504,Jordan TV,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:46Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024159316677,Kaifa TV,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:48Z,failed,http_404,none_verified,,,not_tested
+8093614023850949640,Karameesh,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:48Z,failed,http_404;unsupported_mode,none_verified,,URLError,not_tested
+8093614023841282422,Roya TV,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:48Z,failed,http_404;URLError;http_403,https://live.kwikmotion.com/royatvpublic/royatv.smil/playlist.m3u8,https://iptv-org.github.io/iptv/countries/jo.m3u,,video_frame
+8093614023842263695,Toyor Aljanah,ARABIC CHANNELS / JORDAN,2026-10-21T14:52:48Z,failed,not_native_media,none_verified,,,not_tested
+8093614024672891387,Al Bawadi,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:38Z,failed,URLError,none_verified,,,not_tested
+8093614024097567529,Al Qurain,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:40Z,failed,unsupported_mode,none_verified,,http_200_bytes,not_tested
+8093614024103254417,Alrai TV,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:41Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024096366832,KTV Arabe,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:40Z,failed,unsupported_mode,https://kwtktvata.cdn.mangomolo.com/ktva/smil:tktva.stream.smil/chunklist.m3u8,https://iptv-org.github.io/iptv/countries/kw.m3u,http_200_html,video_frame
+8093614024096149355,KTV Ethraa,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:39Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024094601570,Kuwait News,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:38Z,failed,not_native_media,none_verified,,,not_tested
+8093614024090866910,Kuwait Sport,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:40Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024091471159,Kuwait Sport 2,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:41Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024083948612,Kuwait TV,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:35Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024085170989,Kuwait TV 2,ARABIC CHANNELS / KUWAIT,2026-10-21T14:53:37Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023911636238,Al Iman,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:52Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023895761323,Al Jadeed,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614023904260496,Al Manar,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,failed,URLError;URLError;unsupported_mode,none_verified,,http_200_bytes,not_tested
+8093614023905174985,Al Mayadeen,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,failed,not_native_media,none_verified,,,not_tested
+8093614023899170329,Alittihad,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:52Z,failed,URLError;URLError;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023906656658,Arabica TV,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:53Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023894604072,Future TV,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:49Z,failed,http_404,https://live.kwikmotion.com/futurelive/ftv.smil/playlist.m3u8,https://iptv-org.github.io/iptv/countries/lb.m3u,,video_frame
+8093614023892952225,LBC,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:49Z,failed,URLError;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023883943062,LBCI,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:49Z,failed,http_404,none_verified,,,not_tested
+8093614023890153867,MTV,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,failed,URLError,none_verified,,,not_tested
+8093614023900628704,NBN,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:52Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023897803802,Nabaa,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:51Z,failed,URLError,none_verified,,,not_tested
+8093614023898328483,New Vision,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:51Z,failed,http_404;unsupported_mode,none_verified,,URLError,not_tested
+8093614023909913383,Noble TV,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:52Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025303675878,OTV Lebanon,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:55Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024975325461,One TV LBN,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614023905889243,Seventeen TV,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:53Z,failed,URLError,none_verified,,,not_tested
+8093614023907903377,Taha Kids,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:54Z,failed,URLError;unsupported_mode,none_verified,,URLError,not_tested
+8093614023896310690,Tele Liban,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:50Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614025045687050,VDL 24,ARABIC CHANNELS / LEBANON,2026-10-21T14:52:55Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023861872925,Abnaa Al balad,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:23Z,failed,URLError,none_verified,,,not_tested
+8093614025240480712,Al Masar TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,URLError;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023957732793,Al Wasat,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025242252107,Al Wataniya,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025297952158,Almustaqbal TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,http_404,none_verified,,,not_tested
+8093614024280497496,February TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023860933074,Jamahiriya TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:23Z,failed,URLError;unsupported_mode,none_verified,,http_404,not_tested
+8093614023849252441,Libya Al Ahrar,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:22Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614023850710816,Libya Al Hadath,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:22Z,failed,http_404,none_verified,,,not_tested
+8093614023847412583,Libya Alrasmia,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:22Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023860165659,Libya Channel,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:23Z,failed,URLError;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025305701353,Libya One TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025304500656,Libyan Business TV,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:24Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023863188660,Salam,ARABIC CHANNELS / LIBYA,2026-10-21T14:52:23Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024146974511,2M,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024132569701,Al Aoula,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024135887802,Al Maghribia,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024133251420,Arryadia TV,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024144626337,Assadissa,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024134645315,Athaqafia TV,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024139292485,Laayoune,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025301693421,Medi 1 TV Afrique,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,https://cdn.live.easybroadcast.io/abr_corp/83_medi1tv-afrique_tm7tu45/playlist.m3u8,https://iptv-org.github.io/iptv/countries/ma.m3u,http_200_html,video_frame
+8093614024140651373,Medi 1 TV Arabic,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,https://cdn.live.easybroadcast.io/abr_corp/83_medi1tv-arabic_g90v4ec/playlist.m3u8,https://iptv-org.github.io/iptv/countries/ma.m3u,http_200_html,video_frame
+8093614024965950670,Medi 1 TV Maghreb,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,https://cdn.live.easybroadcast.io/abr_corp/83_medi1tv-maghreb_jnbspmg/playlist.m3u8,https://iptv-org.github.io/iptv/countries/ma.m3u,http_200_html,video_frame
+8093614024146278184,Tamazight TV,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024141526148,Télé Maroc ,ARABIC CHANNELS / MOROCCO,2026-10-21T14:52:19Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025300471044,El Mourabiton TV,ARABIC CHANNELS / Mauritania,2026-10-21T14:53:55Z,failed,drm_required;drm_required;drm_required;drm_required;URLError;URLError;URLError;URLError;drm_required;drm_required;drm_required;URLError;URLError;drm_required;drm_required;drm_required;http_451;drm_required;drm_required;drm_required;drm_required;drm_required;drm_required;drm_required;URLError;drm_required,none_verified,,http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_403;http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_403;http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_200_bytes;http_404,not_tested
+8093614025299604983,Mauritanie 2,ARABIC CHANNELS / Mauritania,2026-10-21T14:53:55Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024932669287,Mauritanie Sport,ARABIC CHANNELS / Mauritania,2026-10-21T14:53:55Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024660681713,Mauritanie TV,ARABIC CHANNELS / Mauritania,2026-10-21T14:53:55Z,failed,not_native_media;unsupported_mode,none_verified,,URLError,not_tested
+8093614024652214862,Al Alam,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:53Z,failed,URLError,none_verified,,,not_tested
+8093614024658002203,Al Arabiya,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:51Z,available,hls_segment_ok;http_404,not_needed,,,not_tested
+8093614024656672466,Al Hadath,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:50Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024645557946,Al Jazeera,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024647126557,Al Jazeera Doc,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:50Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024646345140,Al Jazeera Mubasher ,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:50Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614025039557868,Al Mashhad,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:54Z,failed,http_400;http_400,none_verified,,,not_tested
+8093614024659671897,Al Mayadeen,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:51Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024668959744,Alaraby TV,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:53Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024257048015,Alghad TV,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:55Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024669996473,Alhiwar TV,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:54Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024659033120,Alhurra,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:51Z,failed,URLError,none_verified,,,not_tested
+8093614025223621045,Alqanat 9 ,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:54Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_500,not_tested
+8093614024256066742,Asharq News,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:55Z,failed,http_400;unsupported_mode,https://live-news.asharq.com/asharq.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614024648233079,BBC Arabic,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024282234566,CNBC Arabia,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:55Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024654855052,DW Arabia,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:53Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024650135145,France 24 Ar,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024651031600,RT Arabic,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024649725982,Sky News Arabia,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024644315459,TRT Arabic,ARABIC CHANNELS / NEWS TV,2026-10-21T14:53:49Z,failed,URLError;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023882717487,Istiqama TV,ARABIC CHANNELS / OMAN,2026-10-21T14:53:48Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023880895589,Oman Cultural,ARABIC CHANNELS / OMAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023888407994,Oman Mubashir,ARABIC CHANNELS / OMAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023881577308,Oman Sport,ARABIC CHANNELS / OMAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023887165507,Oman TV,ARABIC CHANNELS / OMAN,2026-10-21T14:53:48Z,failed,unsupported_mode,https://partneta.cdn.mgmlcdn.com/omantv/smil:omantv.stream.smil/chunklist.m3u8,https://iptv-org.github.io/iptv/countries/om.m3u,http_200_html,video_frame
+8093614024041870552,Ajyal  TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:38Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024041685086,Al Fajer 2,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:38Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024033672673,Al Quds TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:36Z,failed,URLError,none_verified,,,not_tested
+8093614024040192183,Al fajr,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:38Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024046781861,Audeh TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:37Z,failed,http_404,none_verified,,,not_tested
+8093614024043586833,Hala TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:44Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024047463580,Maan TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:38Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614024044857082,Makan,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:37Z,failed,http_403,none_verified,,,not_tested
+8093614024053044806,Marah FM,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:45Z,failed,URLError,none_verified,,,not_tested
+8093614024044663171,Musawa TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:37Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025236448497,Nablus Live,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:34Z,failed,http_404,none_verified,,,not_tested
+8093614024033052118,Palestine Live,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:36Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024031826543,Palestine TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:36Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025237713830,Palestine Today,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:34Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025235731512,Palestini TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:34Z,failed,URLError,none_verified,,,not_tested
+8093614024053683615,Radio Orient,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:45Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025238304767,Rajeen TV,ARABIC CHANNELS / PALESTINE,2026-10-21T14:52:34Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023878491690,Al Rayyan,ARABIC CHANNELS / QATAR,2026-10-21T14:53:47Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023880186291,Al Rayyan Qadeem,ARABIC CHANNELS / QATAR,2026-10-21T14:53:47Z,failed,not_native_media,none_verified,,,not_tested
+8093614023876733580,Qatar TV,ARABIC CHANNELS / QATAR,2026-10-21T14:53:46Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023877176725,Qatar TV 2,ARABIC CHANNELS / QATAR,2026-10-21T14:53:46Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024801794717,Qatar TV Quran,ARABIC CHANNELS / QATAR,2026-10-21T14:53:47Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024152011503,Al Ekhbariya,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-al-ekhbaria/297b3ef1cd0633ad9cfba7473a686a06/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614024172108792,Al Khalij TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:30Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024157443875,Al Resalah,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024151139926,Al Saudiya,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-saudi-tv/2ad66056b51fd8c1b624854623112e43/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614024164182273,Al Sunnah,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024159016346,Iqraa,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:30Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024148660292,KSA Sport 2,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:27Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614025216424305,KSA Sport 3,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:27Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024156666731,Ksa Sport 1,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:27Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;http_200_html,not_tested
+8093614024165323656,Makkah TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614025231219924,Nabaa TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024955805039,Noble TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024162996470,Quran TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024149882669,SBC,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-sbc/90e09c0c28db26435799b4a14892a167/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614025038246133,Saudia Alaan,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-ksa-now/71ed3aa814c643306c0a8bc4fcc7d17f/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614024937033755,Thaqafiya TV,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-thaqafeyyah/28c0d2a20dbf1dc049ce15d3973f494b/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614024161880591,Thikrayat,ARABIC CHANNELS / SAUDI ARABIA,2026-10-21T14:52:28Z,failed,unsupported_mode,https://shd-gcp-live.edgenextcdn.net/live/bitmovin-thikrayat/8cfa8fe0c96275735745b89c683b27e3/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,http_200_html,video_frame
+8093614025311124002,Africa TV 1,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025311623211,Africa TV 2,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025313611688,Africa TV 3,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024944033322,Al Istijaba,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025314056993,Ashorooq TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025306887069,Blue Nile TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024942258976,Khartoum TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025310141522,Omdurman TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614025308202804,SSBC TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614024942897753,Sudan Bukra,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023954693392,Sudan TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode,https://cdn-globecast.akamaized.net/live/eds/sudan_tv/hls_roku/index.m3u8,https://iptv-org.github.io/iptv/countries/sd.m3u,URLError,video_frame
+8093614025309374107,Sudania 24 TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;URLError,not_tested
+8093614024682839037,Tayba TV,ARABIC CHANNELS / SUDAN,2026-10-21T14:53:49Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;URLError,not_tested
+8093614023930220126,Alyaum TV,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:59Z,failed,URLError,none_verified,,,not_tested
+8093614023927259864,Halab Today,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023927927569,Lana TV,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,URLError;URLError,https://cdn.streamlane.tv/hls/ltv/master.m3u8,https://iptv-org.github.io/iptv/countries/lb.m3u,,video_frame
+8093614023928727223,Lana TV +,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:58Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614023914256372,Nour El Sham,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,unsupported_mode;unsupported_mode,none_verified,,URLError;http_200_html,not_tested
+8093614023915037789,Sama Syria,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,URLError,none_verified,,,not_tested
+8093614023921548967,Souryana TV,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023916195090,Syria,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023918555744,Syria Drama,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:56Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023919194521,Syria Edu,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:56Z,failed,http_404;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025215232074,Syria Local,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:55Z,failed,http_404,none_verified,,,not_tested
+8093614023917524827,Syria News,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,URLError;unsupported_mode,none_verified,,URLError,not_tested
+8093614023909332824,Syria TV,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:55Z,failed,http_404;not_native_media,https://live.kwikmotion.com/syriatvlive/syriatv.smil/playlist_dvr.m3u8,https://iptv-org.github.io/iptv/countries/sy.m3u,,video_frame
+8093614024662061880,Ugarit TV,ARABIC CHANNELS / SYRIA,2026-10-21T14:52:57Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025050996953,Al Insen TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,http_404,none_verified,,,not_tested
+8093614023978044883,Al Janoubia TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,http_404,none_verified,,,not_tested
+8093614024930352413,Al Mustakillah,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404,none_verified,,,not_tested
+8093614024239323059,Attessia TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404,none_verified,,,not_tested
+8093614023979369132,Carthage TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,http_404,none_verified,,,not_tested
+8093614024238266776,Elhiwar Ettounsi,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024233773196,Hannibal TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023973866751,Jawhara TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:22Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614023977109706,M Tunisia,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,http_404,none_verified,,,not_tested
+8093614023973275814,Mosaique FM,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,URLError,none_verified,,,not_tested
+8093614024233167765,Nessma TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_403,not_tested
+8093614024236375886,Sahel TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,URLError;unsupported_mode,none_verified,,URLError,not_tested
+8093614024234653031,Telvza TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404,none_verified,,,not_tested
+8093614024240774186,Tunisna TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404,none_verified,,,not_tested
+8093614024227420934,Tunsia 1,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404,https://sw1.tanitweb.net/TunisiaTV/_definst_/watania1/chunklist.m3u8,https://iptv-org.github.io/iptv/countries/tn.m3u,,video_frame
+8093614024236837329,Tunsia 2,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:20Z,failed,http_404;URLError,none_verified,,,not_tested
+8093614025295761966,Zitouna TV,ARABIC CHANNELS / TUNISIA,2026-10-21T14:52:21Z,failed,http_404,none_verified,,,not_tested
+8093614024037758437,3eesh Alaan,ARABIC CHANNELS / UEA,2026-10-21T14:52:34Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_200_html;URLError,not_tested
+8093614024001920416,AD Drama,ARABIC CHANNELS / UEA,2026-10-21T14:52:31Z,failed,URLError,none_verified,,,not_tested
+8093614023992500891,Abu Dhabi TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:31Z,failed,URLError,none_verified,,,not_tested
+8093614024016819212,Ajman TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,URLError,none_verified,,,not_tested
+8093614024024861986,Al Dafrah TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,unsupported_mode,none_verified,,http_200_bytes,not_tested
+8093614024025730793,Al Sharqia Kalba,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024026627248,Al Wousta,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024036855966,Alaan,ARABIC CHANNELS / UEA,2026-10-21T14:52:34Z,failed,http_403;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023997163600,B4U Aflam,ARABIC CHANNELS / UEA,2026-10-21T14:52:30Z,no_streams,,none_verified,,,not_tested
+8093614025040628423,Baynounah TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:30Z,failed,http_500;URLError,none_verified,,,not_tested
+8093614024020542943,Dubai One,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024008174275,Dubai Racing 1,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024009416762,Dubai Racing 2,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024018855558,Dubai Racing 3,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024011034605,Dubai Sports 1,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024006653929,Dubai Sports 2,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024007550384,Dubai Sports 3,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024015431594,Dubai TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,URLError,none_verified,,,not_tested
+8093614024021980497,Dubai Zaman,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,URLError,none_verified,,,not_tested
+8093614023992219730,Emarat TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:31Z,failed,URLError,none_verified,,,not_tested
+8093614024039488732,Majid,ARABIC CHANNELS / UEA,2026-10-21T14:52:34Z,failed,URLError,none_verified,,,not_tested
+8093614023999992875,Nat Geo AD,ARABIC CHANNELS / UEA,2026-10-21T14:52:31Z,failed,URLError,none_verified,,,not_tested
+8093614024021312792,Noor Dubai,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614024016077619,Sama dubai,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,URLError,none_verified,,,not_tested
+8093614024023264043,Sharjah 2,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024030111469,Sharjah Sports,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,http_403,none_verified,,,not_tested
+8093614024030986244,Sharjah TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:33Z,failed,http_404,https://live.kwikmotion.com/smc1live/smc1tv.smil/playlist.m3u8,https://iptv-org.github.io/iptv/countries/ae.m3u,,video_frame
+8093614024001590818,Yas TV,ARABIC CHANNELS / UEA,2026-10-21T14:52:32Z,failed,URLError,none_verified,,,not_tested
+8093614023991062429,Zee Aflam,ARABIC CHANNELS / UEA,2026-10-21T14:52:31Z,failed,http_404,none_verified,,,not_tested
+8093614023990281012,Zee Alwan,ARABIC CHANNELS / UEA,2026-10-21T14:52:30Z,failed,http_404,none_verified,,,not_tested
+8093614023932445119,Aden TV,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023737329024,Alerth Alnabawi,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,http_404,none_verified,,,not_tested
+8093614023734128583,Almahriah,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023734779438,Belqees TV,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,not_native_media;unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023736268601,Hadhramaut TV,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023930805606,Yemen Shabab,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:47Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023938364374,Yemen TV,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:47Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025292267901,Yemen Today,ARABIC CHANNELS / YEMEN,2026-10-21T14:53:48Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023563980537,13 Eme Rue,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023561632571,6ter,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023307687406,ACTION HD,FRANCE CHANNELS,2026-10-21T14:51:31Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023329711873,Animaux TV,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok;URLError,not_needed,,,not_tested
+8093614023279877338,Arte,FRANCE CHANNELS,2026-10-21T14:51:27Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025000161950,BFM Alpes,FRANCE CHANNELS,2026-10-21T14:51:28Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025050397519,BFM Alsace,FRANCE CHANNELS,2026-10-21T14:51:29Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025060039233,BFM Business,FRANCE CHANNELS,2026-10-21T14:51:29Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024991133929,BFM H.Provence,FRANCE CHANNELS,2026-10-21T14:51:28Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023555076739,BFM Lille,FRANCE CHANNELS,2026-10-21T14:51:30Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023555779996,BFM Littoral,FRANCE CHANNELS,2026-10-21T14:51:30Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025059083464,BFM Lyon,FRANCE CHANNELS,2026-10-21T14:51:29Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024989933232,BFM Marseille,FRANCE CHANNELS,2026-10-21T14:51:28Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024989108454,BFM Nice,FRANCE CHANNELS,2026-10-21T14:51:27Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024987602239,BFM Normandie,FRANCE CHANNELS,2026-10-21T14:51:27Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023557195429,BFM Paris,FRANCE CHANNELS,2026-10-21T14:51:30Z,failed,http_404,none_verified,,,not_tested
+8093614025048367670,BFM TV,FRANCE CHANNELS,2026-10-21T14:51:29Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024994477693,BFM Toulon,FRANCE CHANNELS,2026-10-21T14:51:27Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023276654657,Bip TV,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,http_404,none_verified,,,not_tested
+8093614023249580475,Boing TV,FRANCE CHANNELS,2026-10-21T14:51:36Z,failed,URLError,none_verified,,,not_tested
+8093614023234823221,Boomerang FR,FRANCE CHANNELS,2026-10-21T14:51:34Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024664631477,C8,FRANCE CHANNELS,2026-10-21T14:51:25Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614023226345960,CANAL J,FRANCE CHANNELS,2026-10-21T14:51:34Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023307799989,CANAL PLUS,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023301740368,CANAL+ CINEMA,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023302654857,CANAL+ DECALE,FRANCE CHANNELS,2026-10-21T14:51:32Z,failed,http_404,none_verified,,,not_tested
+8093614023304271294,CANAL+ FAMILY,FRANCE CHANNELS,2026-10-21T14:51:33Z,failed,http_404,none_verified,,,not_tested
+8093614023304883479,CANAL+ SERIES,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023309111724,CANAL+ SPORT,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok;unsupported_mode,not_needed,,URLError,not_tested
+8093614023316057357,CANALPLAY 1,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023317082306,CANALPLAY 2,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023318042443,CANALPLAY 3,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023309979592,CANALPLAY 4,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023310935361,CANALPLAY 5,FRANCE CHANNELS,2026-10-21T14:51:33Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023305987975,CINE Emotion,FRANCE CHANNELS,2026-10-21T14:51:32Z,failed,http_404,none_verified,,,not_tested
+8093614023565040960,CINE PREMIER,FRANCE CHANNELS,2026-10-21T14:51:32Z,failed,http_404,none_verified,,,not_tested
+8093614024665943212,CNEWS,FRANCE CHANNELS,2026-10-21T14:51:25Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614024666716115,CSTAR,FRANCE CHANNELS,2026-10-21T14:51:26Z,failed,unsupported_mode,none_verified,,http_403,not_tested
+8093614023236924031,Cartoon Network,FRANCE CHANNELS,2026-10-21T14:51:35Z,failed,http_404,none_verified,,,not_tested
+8093614024979099727,Chérie 25,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,URLError,none_verified,,,not_tested
+8093614023259223769,Contact fell,FRANCE CHANNELS,2026-10-21T14:51:36Z,failed,http_400,none_verified,,,not_tested
+8093614023236134956,Disney JR,FRANCE CHANNELS,2026-10-21T14:51:35Z,failed,http_404,none_verified,,,not_tested
+8093614023242264138,Disney XD,FRANCE CHANNELS,2026-10-21T14:51:34Z,failed,http_404,none_verified,,,not_tested
+8093614023559017327,Euronews,FRANCE CHANNELS,2026-10-21T14:51:24Z,failed,URLError;URLError;unsupported_mode,none_verified,,http_403,not_tested
+8093614023550936268,Eurosport 1,FRANCE CHANNELS,2026-10-21T14:51:24Z,failed,http_404,none_verified,,,not_tested
+8093614023551514271,Eurosport 2,FRANCE CHANNELS,2026-10-21T14:51:24Z,failed,http_404,none_verified,,,not_tested
+8093614024979495111,FUN Radio,FRANCE CHANNELS,2026-10-21T14:51:40Z,failed,not_native_media,none_verified,,,not_tested
+8093614023268539564,Fashion TV,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614023528709436,France 2,FRANCE CHANNELS,2026-10-21T14:51:22Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023560863457,France 24,FRANCE CHANNELS,2026-10-21T14:51:25Z,failed,http_404;URLError,https://live.france24.com/hls/live/2037179-b/F24_FR_HI_HLS/master_5000.m3u8,https://iptv-org.github.io/iptv/countries/fr.m3u,,video_frame
+8093614023529521093,France 3,FRANCE CHANNELS,2026-10-21T14:51:23Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023530269338,France 4,FRANCE CHANNELS,2026-10-21T14:51:23Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023531842595,France 5,FRANCE CHANNELS,2026-10-21T14:51:23Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023541726721,France Info,FRANCE CHANNELS,2026-10-21T14:51:23Z,failed,http_404;URLError,none_verified,,,not_tested
+8093614023282741583,Francophonie,FRANCE CHANNELS,2026-10-21T14:51:38Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023269324981,Fuel TV,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024973089754,GONG,FRANCE CHANNELS,2026-10-21T14:51:39Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024981194542,Generations TV,FRANCE CHANNELS,2026-10-21T14:51:40Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023241102163,Gulli,FRANCE CHANNELS,2026-10-21T14:51:34Z,failed,http_404;URLError,none_verified,,,not_tested
+8093614024931246414,IDF1,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614024986271678,KTO,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,http_400,none_verified,,,not_tested
+8093614023549282261,L'Equipe 21,FRANCE CHANNELS,2026-10-21T14:51:23Z,failed,http_404,none_verified,,,not_tested
+8093614023545992664,LCI,FRANCE CHANNELS,2026-10-21T14:51:26Z,failed,http_404,none_verified,,,not_tested
+8093614023277796040,LN 24,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,http_404,none_verified,,,not_tested
+8093614023200002990,Le Figaro IDF,FRANCE CHANNELS,2026-10-21T14:51:34Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614023233587459,Le Figaro Live,FRANCE CHANNELS,2026-10-21T14:51:34Z,failed,URLError,none_verified,,,not_tested
+8093614023275620095,Luxe TV,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614023569154260,M6,FRANCE CHANNELS,2026-10-21T14:51:32Z,failed,URLError,none_verified,,,not_tested
+8093614024977069878,M6 International,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,URLError,none_verified,,,not_tested
+8093614023247982264,MANGAS,FRANCE CHANNELS,2026-10-21T14:51:35Z,failed,http_404,none_verified,,,not_tested
+8093614024981635129,Melody TV,FRANCE CHANNELS,2026-10-21T14:51:40Z,failed,http_404,none_verified,,,not_tested
+8093614023220953740,Monde du Loisir,FRANCE CHANNELS,2026-10-21T14:51:34Z,available,hls_segment_ok;hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024986883863,Museum TV,FRANCE CHANNELS,2026-10-21T14:51:40Z,failed,http_404,none_verified,,,not_tested
+8093614023568434493,NRJ Hits,FRANCE CHANNELS,2026-10-21T14:51:31Z,failed,http_404,none_verified,,,not_tested
+8093614023567382967,NRJ12,FRANCE CHANNELS,2026-10-21T14:51:31Z,failed,URLError,none_verified,,,not_tested
+8093614023340053122,Nat Geo Wild,FRANCE CHANNELS,2026-10-21T14:51:33Z,failed,http_404,none_verified,,,not_tested
+8093614023247650673,Nick JR,FRANCE CHANNELS,2026-10-21T14:51:35Z,failed,http_404,none_verified,,,not_tested
+8093614023238430246,Nickelodeon FR,FRANCE CHANNELS,2026-10-21T14:51:35Z,failed,http_404,none_verified,,,not_tested
+8093614023243922587,Nord-Africaine,FRANCE CHANNELS,2026-10-21T14:51:36Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023565730142,Paris Premier,FRANCE CHANNELS,2026-10-21T14:51:31Z,available,hls_segment_ok;URLError,not_needed,,,not_tested
+8093614023328756104,Planete + CI,FRANCE CHANNELS,2026-10-21T14:51:33Z,failed,http_404,none_verified,,,not_tested
+8093614024667878090,Public Sénat,FRANCE CHANNELS,2026-10-21T14:51:26Z,failed,unsupported_mode;http_404,none_verified,,URLError,not_tested
+8093614023540111466,RMC Decouv,FRANCE CHANNELS,2026-10-21T14:51:24Z,available,hls_segment_ok;URLError,not_needed,,,not_tested
+8093614023542638070,RMC Sport 1,FRANCE CHANNELS,2026-10-21T14:51:23Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023544667919,RMC Sport 2,FRANCE CHANNELS,2026-10-21T14:51:24Z,failed,http_404,none_verified,,,not_tested
+8093614023559369576,RT France,FRANCE CHANNELS,2026-10-21T14:51:25Z,failed,URLError;unsupported_mode,https://rt-fra.rttv.com/dvr/rtfrance/playlist.m3u8,https://iptv-org.github.io/iptv/countries/fr.m3u,http_200_html,video_frame
+8093614023279353443,RTL9,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,URLError,none_verified,,,not_tested
+8093614024993377202,Sport en France,FRANCE CHANNELS,2026-10-21T14:51:42Z,failed,URLError,none_verified,,,not_tested
+8093614024974663011,TECH&CO,FRANCE CHANNELS,2026-10-21T14:51:30Z,available,hls_segment_ok;http_400,not_needed,,,not_tested
+8093614023545611793,TF1,FRANCE CHANNELS,2026-10-21T14:51:26Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023552972614,TF1 Series,FRANCE CHANNELS,2026-10-21T14:51:26Z,failed,URLError,none_verified,,,not_tested
+8093614023547791963,TFX TV,FRANCE CHANNELS,2026-10-21T14:51:27Z,failed,URLError,none_verified,,,not_tested
+8093614023257536416,TMA Caraibes,FRANCE CHANNELS,2026-10-21T14:51:36Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023548559378,TMC TV,FRANCE CHANNELS,2026-10-21T14:51:27Z,failed,URLError,none_verified,,,not_tested
+8093614023261401122,TV3V,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,dash_manifest_only,https://tv3v.live-kd.com/live/tv3v/livestream/index.m3u8,https://iptv-org.github.io/iptv/countries/fr.m3u,,video_frame
+8093614025002680836,TV5MONDE Europe,FRANCE CHANNELS,2026-10-21T14:51:24Z,failed,http_403,none_verified,,,not_tested
+8093614025001814775,TV5MONDE Maghreb,FRANCE CHANNELS,2026-10-21T14:51:24Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024971964225,TV5MONDE Style,FRANCE CHANNELS,2026-10-21T14:51:26Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023553173498,TV5Monde Info,FRANCE CHANNELS,2026-10-21T14:51:25Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023262236961,TV7 Colmar,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,dash_manifest_only,https://tv7.live-kd.com/live/tv7/livestream/playlist.m3u8,https://iptv-org.github.io/iptv/countries/fr.m3u,,video_frame
+8093614023262840232,TV78,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,http_404,none_verified,,,not_tested
+8093614023273046840,TVR Bretagne,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,http_404,none_verified,,,not_tested
+8093614023273763825,TebeSud,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,URLError,none_verified,,,not_tested
+8093614023275029158,Tebeo,FRANCE CHANNELS,2026-10-21T14:51:38Z,failed,URLError,none_verified,,,not_tested
+8093614024984112764,Tele Novela TV,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,URLError,none_verified,,,not_tested
+8093614024971008456,Tivi5MONDE,FRANCE CHANNELS,2026-10-21T14:51:26Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024991870075,Trace Sport,FRANCE CHANNELS,2026-10-21T14:51:41Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024982695552,Trace Urban,FRANCE CHANNELS,2026-10-21T14:51:41Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614023266650605,ViàMATÉLÉ,FRANCE CHANNELS,2026-10-21T14:51:36Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023267525380,ViàMoselle TV,FRANCE CHANNELS,2026-10-21T14:51:37Z,failed,http_404,none_verified,,,not_tested
+8093614023265006494,ViàVosges,FRANCE CHANNELS,2026-10-21T14:51:36Z,failed,dash_manifest_only,none_verified,,,not_tested
+8093614023563139698,W9,FRANCE CHANNELS,2026-10-21T14:51:32Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024984924421,Wild Side TV,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,URLError,none_verified,,,not_tested
+8093614024655298197,africanews,FRANCE CHANNELS,2026-10-21T14:51:39Z,failed,URLError,none_verified,,,not_tested
+8093614023826949840,Almajd Bassma,KIDS CHANNELS,2026-10-21T14:52:07Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023825767177,Almajd Kids,KIDS CHANNELS,2026-10-21T14:52:07Z,failed,unsupported_mode,none_verified,,http_500,not_tested
+8093614023827867466,Almajd Rawda,KIDS CHANNELS,2026-10-21T14:52:07Z,failed,unsupported_mode,none_verified,,URLError,not_tested
+8093614023816298842,Atfal Wa Mawahib,KIDS CHANNELS,2026-10-21T14:52:07Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023831377058,Boing TV,KIDS CHANNELS,2026-10-21T14:52:11Z,failed,URLError,none_verified,,,not_tested
+8093614023485646109,Boomerang AR,KIDS CHANNELS,2026-10-21T14:52:05Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023825673087,Boomerang FR,KIDS CHANNELS,2026-10-21T14:52:10Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023821738284,CANAL J,KIDS CHANNELS,2026-10-21T14:52:09Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023471877481,CN Arabic,KIDS CHANNELS,2026-10-21T14:52:05Z,failed,URLError,none_verified,,,not_tested
+8093614023835351153,Cartoon Network,KIDS CHANNELS,2026-10-21T14:52:11Z,failed,http_404,none_verified,,,not_tested
+8093614023834634168,Disney JR,KIDS CHANNELS,2026-10-21T14:52:10Z,failed,http_404,none_verified,,,not_tested
+8093614023824033574,Disney XD,KIDS CHANNELS,2026-10-21T14:52:10Z,failed,http_404,none_verified,,,not_tested
+8093614023823572277,Gulli,KIDS CHANNELS,2026-10-21T14:52:10Z,failed,http_404;unsupported_mode,none_verified,,URLError,not_tested
+8093614023484864692,Gulli Arabic,KIDS CHANNELS,2026-10-21T14:52:05Z,failed,URLError,none_verified,,,not_tested
+8093614023814738940,Karameesh,KIDS CHANNELS,2026-10-21T14:52:06Z,failed,http_404,none_verified,,,not_tested
+8093614023830827691,MANGAS,KIDS CHANNELS,2026-10-21T14:52:11Z,failed,http_404,none_verified,,,not_tested
+8093614023798633118,MBC 3,KIDS CHANNELS,2026-10-21T14:52:06Z,failed,URLError;URLError;URLError,none_verified,,,not_tested
+8093614023829851219,Majids Kids,KIDS CHANNELS,2026-10-21T14:52:07Z,failed,URLError,none_verified,,,not_tested
+8093614023837280955,Nick JR,KIDS CHANNELS,2026-10-21T14:52:11Z,failed,http_404,none_verified,,,not_tested
+8093614023836690930,Nickelodeon FR,KIDS CHANNELS,2026-10-21T14:52:11Z,failed,http_404,none_verified,,,not_tested
+8093614023798212164,OSN Kids,KIDS CHANNELS,2026-10-21T14:52:05Z,failed,http_404,none_verified,,,not_tested
+8093614023820211663,Rotana Kids,KIDS CHANNELS,2026-10-21T14:52:06Z,failed,URLError,none_verified,,,not_tested
+8093614023478695963,Spacetoon,KIDS CHANNELS,2026-10-21T14:52:05Z,failed,URLError;TimeoutError,none_verified,,,not_tested
+8093614023815774947,Taha Kids,KIDS CHANNELS,2026-10-21T14:52:06Z,failed,URLError,none_verified,,,not_tested
+8093614023813453445,Toyor Aljanah,KIDS CHANNELS,2026-10-21T14:52:06Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023797337389,beIN Baraem,KIDS CHANNELS,2026-10-21T14:52:05Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023803837526,beIN Jeem,KIDS CHANNELS,2026-10-21T14:52:05Z,failed,http_404;unsupported_mode,none_verified,,URLError,not_tested
+8093614023439554821,MBC 1,MBC CHANNELS,2026-10-21T14:51:20Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023448691674,MBC 2,MBC CHANNELS,2026-10-21T14:51:20Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023450264931,MBC 3,MBC CHANNELS,2026-10-21T14:51:20Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023450954064,MBC 4,MBC CHANNELS,2026-10-21T14:51:20Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023451868553,MBC 5,MBC CHANNELS,2026-10-21T14:51:20Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614023444319169,MBC Action,MBC CHANNELS,2026-10-21T14:51:22Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023446211791,MBC Bollywood,MBC CHANNELS,2026-10-21T14:51:22Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023436875855,MBC Drama,MBC CHANNELS,2026-10-21T14:51:21Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023438743164,MBC Drama +,MBC CHANNELS,2026-10-21T14:51:22Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023457279365,MBC FM,MBC CHANNELS,2026-10-21T14:51:22Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614023442416072,MBC IRAQ,MBC CHANNELS,2026-10-21T14:51:21Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023443371841,MBC Maser,MBC CHANNELS,2026-10-21T14:51:21Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023447327670,MBC Maser Drama,MBC CHANNELS,2026-10-21T14:51:22Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023435894582,MBC Masr 2,MBC CHANNELS,2026-10-21T14:51:21Z,available,unsupported_mode;hls_segment_ok,not_needed,,http_200_html,not_tested
+8093614023445460552,MBC Max,MBC CHANNELS,2026-10-21T14:51:22Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614023458564860,Panorama FM,MBC CHANNELS,2026-10-21T14:51:22Z,failed,URLError,https://d6izdil55uftn.cloudfront.net/out/v1/0a06d1d6377c47edbd48721ed724bd08/index.m3u8,https://iptv-org.github.io/iptv/countries/sa.m3u,,video_frame
+8093614023459600867,Wanasah,MBC CHANNELS,2026-10-21T14:51:22Z,no_streams,,none_verified,,,not_tested
+8093614025207662459,Desi Play,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_404,none_verified,,,not_tested
+8093614024934979880,Naser Al Qassaby,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614024921839236,Ragel We Set Settat,SHAHID VIP,2026-10-21T14:52:13Z,failed,http_403,none_verified,,,not_tested
+8093614024913365690,Shahid Aflam,SHAHID VIP,2026-10-21T14:52:13Z,failed,http_403,none_verified,,,not_tested
+8093614025205116970,Shahid Al Asouf,SHAHID VIP,2026-10-21T14:52:16Z,failed,http_403,none_verified,,,not_tested
+8093614025200044391,Shahid Al Meerath,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025203665843,Shahid Bab Al Hara,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614025220374069,Shahid El Kebeer,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614025199164556,Shahid Fareej,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025197510549,Shahid Hassino,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025192812294,Shahid Maraya,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614025210618414,Shahid Masrah Misr,SHAHID VIP,2026-10-21T14:52:16Z,failed,http_403,none_verified,,,not_tested
+8093614024922505643,Shahid Movies,SHAHID VIP,2026-10-21T14:52:13Z,failed,http_403,none_verified,,,not_tested
+8093614025213156153,Shahid Movies Action,SHAHID VIP,2026-10-21T14:52:16Z,failed,http_403,none_verified,,,not_tested
+8093614025212119424,Shahid Movies Thriller,SHAHID VIP,2026-10-21T14:52:16Z,failed,http_403,none_verified,,,not_tested
+8093614025200718670,Shahid Selfie,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025220171839,Shahid Tash,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025202609560,Shahid The Game,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025202228689,Shahid Top Chef,SHAHID VIP,2026-10-21T14:52:15Z,failed,http_403,none_verified,,,not_tested
+8093614025206023858,Shahid WWE,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614025211016135,Shahid Wi Fi,SHAHID VIP,2026-10-21T14:52:14Z,failed,http_403,none_verified,,,not_tested
+8093614025026209384,A Haber,TURKISH CHANNELS,2026-10-21T14:51:53Z,failed,unsupported_mode,https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/ahaber/ahaber.m3u8,https://iptv-org.github.io/iptv/countries/tr.m3u,URLError,video_frame
+8093614025061164762,A Spor,TURKISH CHANNELS,2026-10-21T14:51:55Z,failed,unsupported_mode,none_verified,,http_200_html,not_tested
+8093614025021380264,Akit TV,TURKISH CHANNELS,2026-10-21T14:51:54Z,failed,URLError,none_verified,,,not_tested
+8093614025007411155,Anadolu Agency,TURKISH CHANNELS,2026-10-21T14:51:45Z,failed,http_403,none_verified,,,not_tested
+8093614025014598053,Bbn Türk,TURKISH CHANNELS,2026-10-21T14:51:49Z,failed,ConnectionResetError,none_verified,,,not_tested
+8093614025015548374,Bengü Türk,TURKISH CHANNELS,2026-10-21T14:51:50Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614025010096952,CNN Türk,TURKISH CHANNELS,2026-10-21T14:51:43Z,failed,http_403;URLError,none_verified,,,not_tested
+8093614024997995688,Cartoon Network Turk,TURKISH CHANNELS,2026-10-21T14:51:42Z,failed,ConnectionResetError,none_verified,,,not_tested
+8093614025005589676,DHA,TURKISH CHANNELS,2026-10-21T14:51:44Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025012079270,EKO TÜRK,TURKISH CHANNELS,2026-10-21T14:51:44Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025007524554,Flash Haber,TURKISH CHANNELS,2026-10-21T14:51:46Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614024999489569,Haber Global,TURKISH CHANNELS,2026-10-21T14:51:43Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025020867971,Halk TV,TURKISH CHANNELS,2026-10-21T14:51:48Z,available,hls_segment_ok;URLError,not_needed,,,not_tested
+8093614025018249280,KRT TV,TURKISH CHANNELS,2026-10-21T14:51:47Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025011621631,NTV,TURKISH CHANNELS,2026-10-21T14:51:43Z,failed,http_403;URLError,none_verified,,,not_tested
+8093614025017188857,Sözcü TV,TURKISH CHANNELS,2026-10-21T14:51:46Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025005326517,TBMM TV,TURKISH CHANNELS,2026-10-21T14:51:44Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614025016419951,TGRT Haber,TURKISH CHANNELS,2026-10-21T14:51:52Z,failed,http_404;http_500,https://canli.tgrthaber.com/tgrt.m3u8,https://iptv-org.github.io/iptv/countries/tr.m3u,,video_frame
+8093614024288570592,TRT 1,TURKISH CHANNELS,2026-10-21T14:51:55Z,available,hls_segment_ok;unsupported_mode,not_needed,,http_200_html,not_tested
+8093614024289939994,TRT 2,TURKISH CHANNELS,2026-10-21T14:51:57Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024290464675,TRT Arabic,TURKISH CHANNELS,2026-10-21T14:51:58Z,failed,URLError,none_verified,,,not_tested
+8093614024283137212,TRT Avaz,TURKISH CHANNELS,2026-10-21T14:51:58Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024283948869,TRT Belgesel,TURKISH CHANNELS,2026-10-21T14:51:59Z,failed,http_403,none_verified,,,not_tested
+8093614024285531510,TRT Cocuk,TURKISH CHANNELS,2026-10-21T14:51:59Z,failed,URLError,none_verified,,,not_tested
+8093614024996556578,TRT Diyanet Çocuk,TURKISH CHANNELS,2026-10-21T14:51:42Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024286512783,TRT EBA Ilkokul,TURKISH CHANNELS,2026-10-21T14:52:00Z,failed,http_404,none_verified,,,not_tested
+8093614024296247304,TRT EBA Lise,TURKISH CHANNELS,2026-10-21T14:52:00Z,failed,http_404,none_verified,,,not_tested
+8093614024297203073,TRT EBA Ortaokul,TURKISH CHANNELS,2026-10-21T14:52:01Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024298107138,TRT Haber,TURKISH CHANNELS,2026-10-21T14:52:01Z,available,hls_segment_ok;hls_segment_ok,not_needed,,,not_tested
+8093614024299067275,TRT Kurdi,TURKISH CHANNELS,2026-10-21T14:52:02Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024291943099,TRT Muzik,TURKISH CHANNELS,2026-10-21T14:52:03Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024292401650,TRT Turk,TURKISH CHANNELS,2026-10-21T14:52:03Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024293502141,TRT World,TURKISH CHANNELS,2026-10-21T14:52:04Z,failed,URLError,none_verified,,,not_tested
+8093614025027916002,TV 24,TURKISH CHANNELS,2026-10-21T14:51:53Z,available,hls_segment_ok;http_500,not_needed,,,not_tested
+8093614025026654689,TV NET,TURKISH CHANNELS,2026-10-21T14:51:53Z,failed,ConnectionResetError;URLError,none_verified,,,not_tested
+8093614025008716785,TV100,TURKISH CHANNELS,2026-10-21T14:51:43Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025020013306,Tele1,TURKISH CHANNELS,2026-10-21T14:51:47Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025013182620,Ulusal Kanal,TURKISH CHANNELS,2026-10-21T14:51:48Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025022874145,Yol TV,TURKISH CHANNELS,2026-10-21T14:51:54Z,failed,URLError;URLError,none_verified,,,not_tested
+8093614025028415211,ÜLKE TV,TURKISH CHANNELS,2026-10-21T14:51:53Z,failed,ConnectionResetError;URLError,none_verified,,,not_tested
+8093614024287112217,Smashi,WEYYAK,2026-10-21T14:52:13Z,failed,http_404,none_verified,,,not_tested
+8093614024275398485,Weyyak Action,WEYYAK,2026-10-21T14:52:12Z,failed,http_404,none_verified,,,not_tested
+8093614024276003916,Weyyak Drama,WEYYAK,2026-10-21T14:52:12Z,failed,http_404,none_verified,,,not_tested
+8093614024277359475,Weyyak Mix,WEYYAK,2026-10-21T14:52:12Z,failed,http_404,none_verified,,,not_tested
+8093614024277762026,Weyyak Nawaem,WEYYAK,2026-10-21T14:52:13Z,failed,http_404,none_verified,,,not_tested
+8093614024249583215,beIN BOX OFFICE,beIN ENTERTAINMENT,2026-10-21T14:51:19Z,failed,http_404,none_verified,,,not_tested
+8093614023630881318,beIN Baraem,beIN ENTERTAINMENT,2026-10-21T14:51:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023628899000,beIN Boomerang,beIN ENTERTAINMENT,2026-10-21T14:51:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023641168940,beIN Drama,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023632520831,beIN Fatafeat,beIN ENTERTAINMENT,2026-10-21T14:51:17Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023643002933,beIN Gourmet,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023629615985,beIN Jeem,beIN ENTERTAINMENT,2026-10-21T14:51:17Z,failed,http_404;unsupported_mode,none_verified,,URLError,not_tested
+8093614023637051328,beIN Movies 1,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,failed,http_404,none_verified,,,not_tested
+8093614023638088057,beIN Movies 2,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023639642319,beIN Movies 3,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023640758198,beIN Movies 4,beIN ENTERTAINMENT,2026-10-21T14:51:19Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023644152394,beIN Series 1,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614023645087571,beIN Series 2,beIN ENTERTAINMENT,2026-10-21T14:51:18Z,available,hls_segment_ok,not_needed,,,not_tested
+8093614024321687380,beIN English 1,beIN SPORTS (1080P),2026-10-21T14:51:12Z,no_streams,,none_verified,,,not_tested
+8093614024323602875,beIN English 2,beIN SPORTS (1080P),2026-10-21T14:51:12Z,no_streams,,none_verified,,,not_tested
+8093614024324061426,beIN English 3,beIN SPORTS (1080P),2026-10-21T14:51:13Z,failed,http_404,none_verified,,,not_tested
+8093614024271440287,beIN France 1,beIN SPORTS (1080P),2026-10-21T14:51:12Z,no_streams,,none_verified,,,not_tested
+8093614024272959436,beIN France 2,beIN SPORTS (1080P),2026-10-21T14:51:12Z,no_streams,,none_verified,,,not_tested
+8093614024274451157,beIN France 3,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_404;http_404,not_tested
+8093614024266328938,beIN News,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_503,none_verified,,,not_tested
+8093614024268023539,beIN SPORTS,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_404;http_503,none_verified,,,not_tested
+8093614024262419843,beIN SPORTS 1,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024263662330,beIN SPORTS 2,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024264538533,beIN SPORTS 3,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024265220252,beIN SPORTS 4,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024257948855,beIN SPORTS 5,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024259441758,beIN SPORTS 6,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024260675800,beIN SPORTS 7,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,http_503,none_verified,,,not_tested
+8093614024261343505,beIN SPORTS 8,beIN SPORTS (1080P),2026-10-21T14:51:11Z,failed,URLError,none_verified,,,not_tested
+8093614024270801478,beIN SPORTS 9,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_503,none_verified,,,not_tested
+8093614024250808790,beIN XTRA 1,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_404;http_503,none_verified,,,not_tested
+8093614024251429345,beIN XTRA 2,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_503,none_verified,,,not_tested
+8093614024253081192,beIN XTRA 3,beIN SPORTS (1080P),2026-10-21T14:51:12Z,failed,http_503,none_verified,,,not_tested
+8093614023635190317,beIN English 1,beIN SPORTS (244P),2026-10-21T14:51:17Z,no_streams,,none_verified,,,not_tested
+8093614023636065092,beIN English 2,beIN SPORTS (244P),2026-10-21T14:51:17Z,no_streams,,none_verified,,,not_tested
+8093614023658213842,beIN English 3,beIN SPORTS (244P),2026-10-21T14:51:17Z,failed,http_404,none_verified,,,not_tested
+8093614023622038138,beIN France 1,beIN SPORTS (244P),2026-10-21T14:51:17Z,no_streams,,none_verified,,,not_tested
+8093614023622388065,beIN France 2,beIN SPORTS (244P),2026-10-21T14:51:17Z,no_streams,,none_verified,,,not_tested
+8093614023624039912,beIN France 3,beIN SPORTS (244P),2026-10-21T14:51:17Z,failed,unsupported_mode;unsupported_mode,none_verified,,http_404;http_404,not_tested
+8093614023633124847,beIN News,beIN SPORTS (244P),2026-10-21T14:51:17Z,failed,http_503,none_verified,,,not_tested
+8093614023634350422,beIN SPORTS,beIN SPORTS (244P),2026-10-21T14:51:17Z,failed,http_503,none_verified,,,not_tested
+8093614023611909154,beIN SPORTS 1,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023613456939,beIN SPORTS 2,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023614887684,beIN SPORTS 3,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023615061485,beIN SPORTS 4,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023624707350,beIN SPORTS 5,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023625578927,beIN SPORTS 6,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023627108645,beIN SPORTS 7,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023627790364,beIN SPORTS 8,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023620795651,beIN SPORTS 9,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023617167351,beIN XTRA 1,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_404;http_503,none_verified,,,not_tested
+8093614023618917296,beIN XTRA 2,beIN SPORTS (244P),2026-10-21T14:51:16Z,failed,http_503,none_verified,,,not_tested
+8093614023620117993,beIN XTRA 3,beIN SPORTS (244P),2026-10-21T14:51:17Z,failed,http_503,none_verified,,,not_tested
+8093614023606270515,beIN English 1,beIN SPORTS (360P),2026-10-21T14:51:15Z,no_streams,,none_verified,,,not_tested
+8093614023606673066,beIN English 2,beIN SPORTS (360P),2026-10-21T14:51:15Z,no_streams,,none_verified,,,not_tested
+8093614023616563102,beIN English 3,beIN SPORTS (360P),2026-10-21T14:51:16Z,failed,http_404,none_verified,,,not_tested
+8093614023608987956,beIN France 1,beIN SPORTS (360P),2026-10-21T14:51:15Z,no_streams,,none_verified,,,not_tested
+8093614023609989095,beIN France 2,beIN SPORTS (360P),2026-10-21T14:51:15Z,no_streams,,none_verified,,,not_tested
+8093614023611711950,beIN France 3,beIN SPORTS (360P),2026-10-21T14:51:15Z,no_streams,,none_verified,,,not_tested
+8093614023603440345,beIN News,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023604898720,beIN SPORTS,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023600141904,beIN SPORTS 1,beIN SPORTS (360P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023601056393,beIN SPORTS 2,beIN SPORTS (360P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023601624254,beIN SPORTS 3,beIN SPORTS (360P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023603285015,beIN SPORTS 4,beIN SPORTS (360P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023595271036,beIN SPORTS 5,beIN SPORTS (360P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023596082693,beIN SPORTS 6,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023597576347,beIN SPORTS 7,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023598343762,beIN SPORTS 8,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023607672221,beIN SPORTS 9,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023588244493,beIN XTRA 1,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_404;http_503,none_verified,,,not_tested
+8093614023589269442,beIN XTRA 2,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023590229579,beIN XTRA 3,beIN SPORTS (360P),2026-10-21T14:51:15Z,failed,http_503,none_verified,,,not_tested
+8093614023593946617,beIN English 1,beIN SPORTS (720P),2026-10-21T14:51:14Z,no_streams,,none_verified,,,not_tested
+8093614023593958464,beIN English 2,beIN SPORTS (720P),2026-10-21T14:51:14Z,no_streams,,none_verified,,,not_tested
+8093614023587327268,beIN English 3,beIN SPORTS (720P),2026-10-21T14:51:14Z,failed,http_404,none_verified,,,not_tested
+8093614023579399846,beIN France 1,beIN SPORTS (720P),2026-10-21T14:51:14Z,no_streams,,none_verified,,,not_tested
+8093614023581035701,beIN France 2,beIN SPORTS (720P),2026-10-21T14:51:14Z,no_streams,,none_verified,,,not_tested
+8093614023582347436,beIN France 3,beIN SPORTS (720P),2026-10-21T14:51:14Z,no_streams,,none_verified,,,not_tested
+8093614023591508947,beIN News,beIN SPORTS (720P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023592670922,beIN SPORTS,beIN SPORTS (720P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested
+8093614023570873384,beIN SPORTS 1,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023571318689,beIN SPORTS 2,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023572795286,beIN SPORTS 3,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023573666863,beIN SPORTS 4,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023582898564,beIN SPORTS 5,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023584120941,beIN SPORTS 6,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023585474545,beIN SPORTS 7,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023585806136,beIN SPORTS 8,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023578942207,beIN SPORTS 9,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023576039269,beIN XTRA 1,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_404;http_503,none_verified,,,not_tested
+8093614023576211642,beIN XTRA 2,beIN SPORTS (720P),2026-10-21T14:51:13Z,failed,http_503,none_verified,,,not_tested
+8093614023578114883,beIN XTRA 3,beIN SPORTS (720P),2026-10-21T14:51:14Z,failed,http_503,none_verified,,,not_tested

@@ -83,6 +83,7 @@ object YacineApi {
 
     fun resolve(source: Source): Source {
         require(source.channelId.matches(Regex("[0-9]+"))) { "Invalid Yacine channel ID." }
+        PublicChannelStreams.resolve(source)?.let { return it }
         runCatching { AlkassApi.resolve(source) }.getOrNull()?.let { return it }
         val data=request(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT },"channel/${source.channelId}").getJSONArray("data")
         return parsePlayback(data,source)
