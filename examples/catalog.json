@@ -1,0 +1,25 @@
+{
+  "sources": [
+    {
+      "id": "sample-hls",
+      "name": "Public HLS sample",
+      "sport": "Other",
+      "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+      "mime": "application/x-mpegURL",
+      "userAgent": "SportsWave/1.0",
+      "headers": {}
+    }
+  ],
+  "events": [
+    {
+      "id": "sample-event",
+      "sport": "Other",
+      "competition": "Player demonstration · not a real fixture",
+      "home": "HLS sample video",
+      "away": "Playback demonstration",
+      "startUtc": "2026-10-21T18:00:00Z",
+      "endUtc": "2026-10-21T20:00:00Z",
+      "sourceId": "sample-hls"
+    }
+  ]
+}

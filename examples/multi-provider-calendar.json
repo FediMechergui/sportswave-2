@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {"id":"hls-channel","name":"HLS test channel","provider":"Sample provider A","channelId":"one","sport":"Multi-sport","url":"https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8","aliases":["Sample channel 1"]},
+    {"id":"dash-channel","name":"DASH test channel","provider":"Sample provider B","channelId":"one","sport":"Multi-sport","url":"https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd","mime":"application/dash+xml","aliases":["Sample channel 2"]}
+  ],
+  "events": [
+    {"id":"routing-check","sport":"Other","competition":"Multi-provider demonstration, not a sporting fixture","home":"Calendar routing test","away":"Public sample videos","startUtc":"2026-10-21T18:00:00Z","endUtc":"2026-10-21T20:00:00Z","broadcasts":[{"provider":"Sample provider A","channelId":"one"},{"provider":"Sample provider B","channelName":"Sample channel 2"}]}
+  ]
+}
