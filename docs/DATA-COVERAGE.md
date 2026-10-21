@@ -9,7 +9,7 @@ Verified on 21 October 2026.
 | Team crests | ESPN logos / OpenLigaDB teamIconUrl | PNG/JPEG and SVG rendering, with initials on download failure. No crests assigned to fictional demo teams. |
 | Race classification | OpenF1 latest session + drivers + session_result | Latest available Formula 1 results, including position, gaps, laps and retirements. This is not live timing. |
 | Included live channel | Red Bull TV publisher HLS | Video rendered inside SportsWave in the emulator. Availability may vary by region. |
-| beIN / other Yacine providers | User-imported direct URL or configured HTTPS resolver | No bundled renewable integration. The investigated signed beIN session was temporary and not a permanent source. |
+| beIN / other Yacine providers | Direct catalog and channel API integration | Packages and current playback records load without a companion app. Modes 1/3 supported; media delivery may fail independently (HTTP 503 observed). Resolved URLs remain in memory. |
 | Event-to-channel routing | Explicit imported broadcast references | Public fixtures do not supply TV broadcast assignments; no channel is guessed from sport or team. |
 
 The provider calendar is now the default. The fictional calendar remains explicitly selectable for UI/player demonstrations. Scores refresh every 30 seconds while the Live screen is visible. F1 public results are distinguished from live race order; the latter requires a separate connected feed. No provider account secrets or captured signed URLs are stored in this repository.

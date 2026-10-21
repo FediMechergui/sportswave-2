@@ -45,6 +45,12 @@ class MainActivity : Activity() {
     private val imageWorkers = java.util.concurrent.Executors.newFixedThreadPool(3)
     private val crestCache = android.util.LruCache<String, android.graphics.Bitmap>(48)
     private val missingCrests = mutableSetOf<String>()
+    private var channelPackages = emptyList<ChannelPackage>()
+    private var providerPackageId = ""
+    private var providerChannels = emptyList<Source>()
+    private var providerLoading = false
+    private var providerError = ""
+    private var providerGeneration = 0
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
     private val refreshLive = object : Runnable {
         override fun run() { if(tab == "Live") { if(liveSport == "Football") loadFootball() else loadRace() }; handler.postDelayed(this,30_000) }
@@ -56,6 +62,8 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         store = Store(this)
+        providerPackageId=store.selectedPackage()
+        providerChannels=store.providerChannels(providerPackageId)
         tab = savedInstanceState?.getString("tab") ?: tab
         sport = savedInstanceState?.getString("sport") ?: sport
         day = savedInstanceState?.getLong("day") ?: 0
@@ -66,6 +74,7 @@ class MainActivity : Activity() {
         window.decorView.systemUiVisibility = 0
         render()
         loadFootball()
+        loadYacine()
     }
     override fun onResume() { super.onResume(); handler.postDelayed(refreshLive,30_000) }
     override fun onPause() { handler.removeCallbacks(refreshLive); super.onPause() }
@@ -271,6 +280,16 @@ class MainActivity : Activity() {
         tools.addView(button("＋ Add source",true) { addSource() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
         tools.addView(button("Import catalog") { importCatalog() },LinearLayout.LayoutParams(0,-2,1f))
         padded(body,tools,20)
+        section("Yacine channels",if(providerLoading) "Loading…" else "${providerChannels.size} channels")
+        val providerTools=row()
+        providerTools.addView(button(channelPackages.firstOrNull { it.id==providerPackageId }?.name ?: "Choose package") { choosePackage(channelPackages) },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
+        providerTools.addView(button("Refresh") { loadYacine(); render() },LinearLayout.LayoutParams(-2,-2))
+        padded(body,providerTools,bottom=12)
+        if(providerError.isNotBlank()) padded(body,text(providerError,12,red),bottom=12)
+        if(providerLoading && providerChannels.isEmpty()) padded(body,text("Loading the provider's channel catalog…",12,muted),bottom=12)
+        providerChannels.filter { it.name.contains(query,true) }.forEach { sourceRow(it) }
+        if(!providerLoading && providerChannels.isEmpty()) padded(body,text("No channels loaded. Refresh the catalog or check the service address.",12,muted),bottom=10)
+        padded(body,button("Service address") { editServiceAddress() },bottom=14)
         section("Included live channel")
         Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }.forEach { sourceRow(it) }
         padded(body,text("Red Bull TV: action sports and event programming. This is not a beIN channel. Availability can vary by region.",12,muted),bottom=12)
@@ -283,11 +302,12 @@ class MainActivity : Activity() {
     }
     private fun sourceRow(source: Source) {
         val card = row().apply { background=shape(panel,15); setPadding(dp(16),dp(17),dp(10),dp(17)); isFocusable=true; setOnClickListener { play(source) } }
-        card.addView(text("▷",26,red,true),LinearLayout.LayoutParams(dp(42),-2))
+        if(source.logoUrl.isNotBlank()) card.addView(crest(source.logoUrl,source.name).apply { contentDescription="${source.name} logo" },LinearLayout.LayoutParams(dp(34),dp(34)).apply { marginEnd=dp(8) })
+        else card.addView(NavigationIcon(this,"Channels",red),LinearLayout.LayoutParams(dp(28),dp(28)).apply { marginEnd=dp(14) })
         val info=column(); info.addView(text(source.name,15,Color.WHITE,true)); space(info,7)
-        info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
+        info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.integration=="yacine") "${source.provider} - Fresh session on play" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
         card.addView(info,LinearLayout.LayoutParams(0,-2,1f))
-        if(!source.demo && Catalog.channels.none { it.id == source.id }) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
+        if(!source.demo && source.integration.isBlank() && Catalog.channels.none { it.id == source.id }) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
         padded(body,card,bottom=9)
     }
     private fun saved() {
@@ -334,6 +354,70 @@ class MainActivity : Activity() {
             }
             runOnUiThread { if(!isFinishing && !isDestroyed) { result.onSuccess { count -> demoSchedule=false; Toast.makeText(this,"Imported $count items",Toast.LENGTH_LONG).show(); render() }.onFailure { AlertDialog.Builder(this).setTitle("Couldn't import catalog").setMessage(it.message ?: "Check the JSON format.").setPositiveButton("OK",null).show() } } }
         }.start()
+    }
+    private fun loadYacine() {
+        val request=++providerGeneration
+        val endpoint=store.providerEndpoint()
+        val requestedPackage=providerPackageId
+        providerLoading=true; providerError=""
+        Thread {
+            val result=runCatching {
+                val packages=YacineApi.packages(endpoint)
+                val chosen=packages.firstOrNull { it.id==requestedPackage }
+                    ?: packages.firstOrNull { it.name.contains("720P",true) }
+                    ?: packages.firstOrNull { it.children==0 }
+                    ?: throw IllegalStateException("No channel packages available.")
+                val channels=YacineApi.channels(endpoint,chosen)
+                store.cacheProviderChannels(chosen.id,channels)
+                Triple(packages,chosen,channels)
+            }
+            runOnUiThread { if(!isDestroyed && request==providerGeneration) {
+                providerLoading=false
+                result.onSuccess { (packages,chosen,channels) ->
+                    channelPackages=packages; providerPackageId=chosen.id; providerChannels=channels; store.selectPackage(chosen.id)
+                }.onFailure { providerError="Couldn't refresh Yacine channels. Retry or check the service address.${if(providerChannels.isNotEmpty()) " Showing the cached catalog." else ""}" }
+                if(tab=="Channels") render(keepScroll=true)
+            } }
+        }.start()
+    }
+    private fun choosePackage(packages: List<ChannelPackage>) {
+        if(packages.isEmpty()) { loadYacine(); render(); return }
+        AlertDialog.Builder(this).setTitle("Channel package").setItems(packages.map { it.name }.toTypedArray()) { _,i ->
+            val chosen=packages[i]
+            if(chosen.children>0) {
+                Thread {
+                    val children=runCatching { YacineApi.packages(store.providerEndpoint(),chosen.id) }
+                    runOnUiThread { if(!isDestroyed) children.onSuccess { choosePackage(it) }.onFailure { Toast.makeText(this,"Couldn't load child packages.",Toast.LENGTH_LONG).show() } }
+                }.start()
+            } else {
+                providerPackageId=chosen.id; providerChannels=store.providerChannels(chosen.id)
+                // Keep child packages reachable when the service has a nested catalog.
+                if(channelPackages.none { it.id==chosen.id }) channelPackages=channelPackages+chosen
+                store.selectPackage(chosen.id); loadYacinePackage(chosen); render()
+            }
+        }.setNegativeButton("Close",null).show()
+    }
+    private fun loadYacinePackage(chosen: ChannelPackage) {
+        val request=++providerGeneration; val endpoint=store.providerEndpoint()
+        providerLoading=true; providerError=""
+        Thread {
+            val result=runCatching { YacineApi.channels(endpoint,chosen).also { store.cacheProviderChannels(chosen.id,it) } }
+            runOnUiThread { if(!isDestroyed && request==providerGeneration) {
+                providerLoading=false
+                result.onSuccess { providerChannels=it }.onFailure { providerError="Couldn't refresh this package. Retry or choose another package." }
+                if(tab=="Channels") render(keepScroll=true)
+            } }
+        }.start()
+    }
+    private fun editServiceAddress() {
+        val field=EditText(this).apply { setSingleLine(true); setText(store.providerEndpoint()); inputType=android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_URI }
+        val dialog=AlertDialog.Builder(this).setTitle("Yacine service address").setMessage("The provider can change its API host. Enter the current base address ending in /api/.").setView(field).setNegativeButton("Cancel",null).setPositiveButton("Save",null).create()
+        dialog.setOnShowListener { dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            val value=field.text.toString().trim()
+            if(!YacineApi.validEndpoint(value)) field.error="Enter an HTTP(S) address ending in /api/, without credentials or query parameters."
+            else { store.setProviderEndpoint(value); providerChannels=emptyList(); channelPackages=emptyList(); dialog.dismiss(); loadYacine(); render() }
+        } }
+        dialog.show()
     }
     private fun crest(url:String,name:String): FrameLayout {
         val box=FrameLayout(this).apply { contentDescription="$name crest" }

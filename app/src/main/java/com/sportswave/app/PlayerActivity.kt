@@ -37,6 +37,7 @@ class PlayerActivity : Activity() {
     private var shouldPlay = true
     private var stopped = false
     private var generation = 0
+    private var automaticRenewals = 0
     private val dark = Color.rgb(12,15,20)
     private val red = Color.rgb(255,77,67)
     private val muted = Color.rgb(153,162,176)
@@ -71,11 +72,11 @@ class PlayerActivity : Activity() {
         container.addView(playerView, if(landscape) LinearLayout.LayoutParams(-1,0,1f) else LinearLayout.LayoutParams(-1,dp(238)))
         status=label("Preparing your stream…",12,muted).apply { setPadding(dp(20),dp(12),dp(20),dp(8)) }
         container.addView(status)
-        retry=button("Retry playback") { load() }.apply { visibility=View.GONE; setTextColor(red) }
+        retry=button("Retry playback") { automaticRenewals=0; position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
         container.addView(retry)
         if(alternatives.size>1) container.addView(button("Choose another broadcast") {
             AlertDialog.Builder(this).setTitle("Event broadcasts").setItems(alternatives.map { "${it.provider} · ${it.name}" }.toTypedArray()) { _,index ->
-                original=alternatives[index]; position=0; shouldPlay=true; render(); load()
+                original=alternatives[index]; automaticRenewals=0; position=0; shouldPlay=true; render(); load()
             }.show()
         })
         if(!landscape) {
@@ -106,7 +107,7 @@ class PlayerActivity : Activity() {
         playerView.player=null
         player?.release(); player=null
         retry.visibility=View.GONE
-        status.text=if(source.resolverUrl.isNotBlank()) "Requesting a fresh playback session…" else "Connecting to your source…"
+        status.text=if(source.resolverUrl.isNotBlank() || source.integration=="yacine") "Requesting a fresh playback session…" else "Connecting to your source…"
         executor.execute {
             val result=runCatching { PlaybackResolver.resolve(source) }
             runOnUiThread {
@@ -130,6 +131,16 @@ class PlayerActivity : Activity() {
                 override fun onPlaybackStateChanged(playbackState:Int) { updateStatus() }
                 override fun onIsPlayingChanged(isPlaying:Boolean) { updateStatus() }
                 override fun onPlayerError(error:PlaybackException) {
+                    val expired=generateSequence(error as Throwable?) { it.cause }.any {
+                        it is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException && it.responseCode in listOf(401,403,410,503)
+                    }
+                    if(original?.integration=="yacine" && automaticRenewals<1 && (expired || error.errorCode==PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW)) {
+                        automaticRenewals++; position=0
+                        val failedGeneration=generation
+                        status.text="Refreshing the channel session…"
+                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) load() }
+                        return
+                    }
                     status.text="Playback unavailable (${error.errorCodeName}). Retry or check your provider."
                     retry.visibility=View.VISIBLE
                 }
@@ -146,6 +157,7 @@ class PlayerActivity : Activity() {
     private fun updateStatus() {
         if(!::status.isInitialized) return
         val p=player ?: return
+        if(p.playerError!=null) return // Preserve the actionable failure message and retry button.
         status.text=when(p.playbackState) {
             Player.STATE_BUFFERING -> "Buffering…"
             Player.STATE_READY -> if(p.isPlaying) "Playing inside SportsWave" else "Paused"

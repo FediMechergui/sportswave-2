@@ -9,7 +9,14 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     fun saved(): Set<String> = prefs.getStringSet("saved", emptySet())!!.toSet()
     fun toggle(id: String) { val set = saved().toMutableSet(); if (!set.add(id)) set.remove(id); prefs.edit().putStringSet("saved", set).apply() }
     fun custom(): List<Source> = runCatching { parse(prefs.getString("sources", "[]")!!) }.getOrDefault(emptyList())
-    fun all(): List<Source> = (custom() + Catalog.channels + Catalog.samples).distinctBy { it.id }
+    fun all(): List<Source> = (custom() + providerSources() + Catalog.channels + Catalog.samples).distinctBy { it.id }
+    fun providerEndpoint(): String = prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!
+    fun setProviderEndpoint(value: String) { require(YacineApi.validEndpoint(value)); val editor=prefs.edit().putString("yacine_endpoint",value); prefs.all.keys.filter { it.startsWith("yacine_channels_") }.forEach { editor.remove(it) }; editor.apply() }
+    fun selectedPackage(): String = prefs.getString("yacine_package","")!!
+    fun selectPackage(id: String) { prefs.edit().putString("yacine_package",id).apply() }
+    fun providerChannels(id: String): List<Source> = runCatching { parse(prefs.getString("yacine_channels_$id","[]")!!) }.getOrDefault(emptyList())
+    fun cacheProviderChannels(id: String, sources: List<Source>) { require(id.matches(Regex("[0-9]+"))); prefs.edit().putString("yacine_channels_$id",JSONArray(sources.map { json(it) }).toString()).apply() }
+    private fun providerSources(): List<Source> = prefs.all.keys.filter { it.startsWith("yacine_channels_") }.flatMap { providerChannels(it.removePrefix("yacine_channels_")) }.distinctBy { it.id }
     fun events(): List<Event> = runCatching {
         val a = JSONArray(prefs.getString("events", "[]"))
         (0 until a.length()).map { i ->
@@ -50,7 +57,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
         check(editor.commit()) { "Couldn't save the imported catalog." }
         return incoming.size + (events?.length() ?: 0)
     }
-    private fun json(s: Source) = JSONObject().put("id", s.id).put("name", s.name).put("sport", s.sport).put("url", s.url).put("mime", s.mime).put("userAgent", s.userAgent).put("headers", JSONObject(s.headers)).put("licenseUrl", s.licenseUrl).put("licenseHeaders", JSONObject(s.licenseHeaders)).put("resolverUrl", s.resolverUrl).put("resolverHeaders", JSONObject(s.resolverHeaders)).put("provider",s.provider).put("channelId",s.channelId).put("aliases",JSONArray(s.aliases)).put("allowHttp",s.allowHttp).put("sessionSnapshot",s.sessionSnapshot)
+    private fun json(s: Source) = JSONObject().put("id", s.id).put("name", s.name).put("sport", s.sport).put("url", s.url).put("mime", s.mime).put("userAgent", s.userAgent).put("headers", JSONObject(s.headers)).put("licenseUrl", s.licenseUrl).put("licenseHeaders", JSONObject(s.licenseHeaders)).put("resolverUrl", s.resolverUrl).put("resolverHeaders", JSONObject(s.resolverHeaders)).put("provider",s.provider).put("channelId",s.channelId).put("aliases",JSONArray(s.aliases)).put("allowHttp",s.allowHttp).put("sessionSnapshot",s.sessionSnapshot).put("integration",s.integration).put("serviceUrl",s.serviceUrl).put("logoUrl",s.logoUrl)
     private fun parse(text: String): List<Source> {
         val a = JSONArray(text)
         require(a.length() <= 500) { "Import up to 500 sources at a time." }
@@ -58,13 +65,17 @@ class Store(context: Context, preferenceName: String = "sportswave") {
             val o = a.getJSONObject(i)
             val url = o.optString("url")
             val resolver = o.optString("resolverUrl")
-            require((url.isNotBlank() && Catalog.validMediaUrl(url,o.optBoolean("allowHttp"))) || (resolver.isNotBlank() && Catalog.validUrl(resolver))) { "Source ${i + 1} needs a valid media URL or HTTPS resolver." }
+            val integration=o.optString("integration")
+            require(integration.isBlank() || integration=="yacine") { "Unknown source integration." }
+            val nativeProvider=integration=="yacine" && o.optString("channelId").matches(Regex("[0-9]+")) && YacineApi.validEndpoint(o.optString("serviceUrl"))
+            require(integration!="yacine" || nativeProvider) { "Yacine sources need a numeric channel ID and a valid service address." }
+            require(nativeProvider || (url.isNotBlank() && Catalog.validMediaUrl(url,o.optBoolean("allowHttp"))) || (resolver.isNotBlank() && Catalog.validUrl(resolver))) { "Source ${i + 1} needs a valid media URL or HTTPS resolver." }
             require(resolver.isEmpty() || Catalog.validUrl(resolver)) { "Resolver URLs must use HTTPS." }
             val license = o.optString("licenseUrl")
             require(license.isEmpty() || Catalog.validUrl(license)) { "License URLs must use HTTPS." }
             fun map(key: String): Map<String, String> { val obj = o.optJSONObject(key) ?: return emptyMap(); return obj.keys().asSequence().associateWith { obj.getString(it) } }
             val aliases=o.optJSONArray("aliases") ?: JSONArray()
-            Source(o.optString("id").ifBlank { "custom-${(url+resolver).hashCode()}" }, o.getString("name").also { require(it.isNotBlank()) { "Every source needs a name." } }, o.optString("sport", "Other"), url, o.optString("mime"), o.optString("userAgent", "SportsWave/1.0"), map("headers"), licenseUrl = license, licenseHeaders = map("licenseHeaders"), resolverUrl = resolver, resolverHeaders = map("resolverHeaders"), provider=o.optString("provider"),channelId=o.optString("channelId"),aliases=(0 until aliases.length()).map { aliases.getString(it) },allowHttp=o.optBoolean("allowHttp"),sessionSnapshot=o.optBoolean("sessionSnapshot"))
+            Source(o.optString("id").ifBlank { "custom-${(url+resolver).hashCode()}" }, o.getString("name").also { require(it.isNotBlank()) { "Every source needs a name." } }, o.optString("sport", "Other"), url, o.optString("mime"), o.optString("userAgent", "SportsWave/1.0"), map("headers"), licenseUrl = license, licenseHeaders = map("licenseHeaders"), resolverUrl = resolver, resolverHeaders = map("resolverHeaders"), provider=o.optString("provider"),channelId=o.optString("channelId"),aliases=(0 until aliases.length()).map { aliases.getString(it) },allowHttp=o.optBoolean("allowHttp"),sessionSnapshot=o.optBoolean("sessionSnapshot"),integration=integration,serviceUrl=o.optString("serviceUrl"),logoUrl=o.optString("logoUrl"))
         }
     }
 }
