@@ -32,7 +32,23 @@ class MainActivity : Activity() {
     private var sport = "All sports"
     private var query = ""
     private var day = 0L
-    private var demoSchedule = true
+    private var demoSchedule = false
+    private var football = emptyList<FootballMatch>()
+    private var scoreLeague = "Champions League"
+    private var footballError = ""
+    private var footballLoading = false
+    private var footballUpdated = ""
+    private var race: RaceResult? = null
+    private var raceError = ""
+    private var raceLoading = false
+    private var liveSport = "Football"
+    private val imageWorkers = java.util.concurrent.Executors.newFixedThreadPool(3)
+    private val crestCache = android.util.LruCache<String, android.graphics.Bitmap>(48)
+    private val missingCrests = mutableSetOf<String>()
+    private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val refreshLive = object : Runnable {
+        override fun run() { if(tab == "Live") { if(liveSport == "Football") loadFootball() else loadRace() }; handler.postDelayed(this,30_000) }
+    }
     private val bitmaps = mutableMapOf<String, Drawable?>()
     private val today get() = LocalDate.now()
     private val timeFormat = DateTimeFormatter.ofPattern("HH:mm")
@@ -44,12 +60,16 @@ class MainActivity : Activity() {
         sport = savedInstanceState?.getString("sport") ?: sport
         day = savedInstanceState?.getLong("day") ?: 0
         query = savedInstanceState?.getString("query") ?: ""
-        demoSchedule = store.events().isEmpty()
+        demoSchedule = false
         window.statusBarColor = bg
         window.navigationBarColor = bg
         window.decorView.systemUiVisibility = 0
         render()
+        loadFootball()
     }
+    override fun onResume() { super.onResume(); handler.postDelayed(refreshLive,30_000) }
+    override fun onPause() { handler.removeCallbacks(refreshLive); super.onPause() }
+    override fun onDestroy() { handler.removeCallbacksAndMessages(null); imageWorkers.shutdownNow(); super.onDestroy() }
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString("tab", tab); outState.putString("sport", sport); outState.putLong("day", day); outState.putString("query", query)
         super.onSaveInstanceState(outState)
@@ -80,7 +100,8 @@ class MainActivity : Activity() {
         setBackgroundColor(panel)
         importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
-    private fun render() {
+    private fun render(keepScroll: Boolean = false) {
+        val previousY = if(keepScroll && ::body.isInitialized) (body.parent as? ScrollView)?.scrollY ?: 0 else 0
         val root = column().apply { setBackgroundColor(bg) }
         root.setOnApplyWindowInsetsListener { view, insets -> view.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop, insets.systemWindowInsetRight, insets.systemWindowInsetBottom); insets }
         setContentView(root)
@@ -89,11 +110,11 @@ class MainActivity : Activity() {
         scroll.addView(body)
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         nav = row().apply { setPadding(dp(8), dp(10), dp(8), dp(10)); background = shape(bg, 0) }
-        listOf("Discover" to "⌂", "Schedule" to "▦", "Channels" to "▷", "Saved" to "♡").forEach { (name, icon) ->
-            val item = column().apply { gravity = Gravity.CENTER; setPadding(0, dp(7), 0, dp(7)); isClickable = true; isFocusable = true; contentDescription = name }
-            item.addView(text(icon, 22, if (tab == name) red else muted, true))
+        listOf("Discover", "Schedule", "Live", "Channels", "Saved").forEach { name ->
+            val item = column().apply { gravity = Gravity.CENTER; setPadding(0, dp(7), 0, dp(7)); isClickable = true; isFocusable = true; contentDescription = name; isSelected = tab == name }
+            item.addView(NavigationIcon(this,name,if(tab == name) red else muted),LinearLayout.LayoutParams(dp(24),dp(24)))
             item.addView(text(name, 10, if (tab == name) Color.WHITE else muted, tab == name).apply { setPadding(0, dp(5), 0, 0) })
-            item.setOnClickListener { tab = name; query = ""; render() }
+            item.setOnClickListener { tab = name; query = ""; render(); if(name == "Live" && liveSport == "Motorsport" && race == null) loadRace() }
             nav.addView(item, LinearLayout.LayoutParams(0, -2, 1f))
         }
         root.addView(nav)
@@ -101,10 +122,12 @@ class MainActivity : Activity() {
         when(tab) {
             "Discover" -> discover()
             "Schedule" -> schedule()
+            "Live" -> liveScores()
             "Channels" -> channels()
             "Saved" -> saved()
         }
         space(body, 24)
+        if(keepScroll) scroll.post { scroll.scrollTo(0,previousY) }
     }
     private fun header() {
         val header = row()
@@ -123,7 +146,7 @@ class MainActivity : Activity() {
         val scroll = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
         val line = row().apply { setPadding(dp(22), 0, dp(14), 0) }
         Catalog.sports.forEach { s ->
-            line.addView(button("${s.symbol}  ${s.name}", sport == s.name) { sport = s.name; render() }, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
+            line.addView(button(s.name, sport == s.name) { sport = s.name; render() }, LinearLayout.LayoutParams(-2, -2).apply { marginEnd = dp(8) })
         }
         scroll.addView(line); body.addView(scroll)
     }
@@ -156,9 +179,11 @@ class MainActivity : Activity() {
         space(note, 14); note.addView(button("Try the built-in player  ▷", true) { play(Catalog.samples.first()) })
         padded(body, note)
     }
-    private fun eventList() = if (demoSchedule) Catalog.events else store.events()
+    private fun eventList(): List<Event> = if (demoSchedule) Catalog.events else store.events() + football.map { m ->
+        Event("openliga-${m.id}",m.sport,m.competition,m.home,m.away,0,0,"football.jpg",startUtc=m.start,demo=false,homeCrest=m.homeCrest,awayCrest=m.awayCrest,score=m.score,status=m.status)
+    }
     private fun demoNotice() {
-        padded(body, text(if (demoSchedule) "DEMO SCHEDULE · Illustrative events, not live listings" else "IMPORTED CALENDAR · Times shown on your device", 10, muted, true), bottom = 12)
+        padded(body, text(if (demoSchedule) "DEMO SCHEDULE · Illustrative events, not live listings" else "PROVIDER FIXTURES · $scoreLeague + imported events", 10, muted, true), bottom = 12)
     }
     private fun search(hint: String, refresh: () -> Unit) {
         val field = EditText(this).apply {
@@ -189,10 +214,12 @@ class MainActivity : Activity() {
         padded(body, tools, bottom = 18)
         demoNotice()
         val selected = today.plusDays(day)
+        if(!demoSchedule && footballLoading && football.isEmpty()) padded(body,text("Loading provider fixtures…",12,muted),bottom=12)
+        if(!demoSchedule && footballError.isNotBlank()) padded(body,button("Fixture feed unavailable · Retry") { loadFootball() },bottom=12)
         val events = eventList().filter { it.kickoff(today).toLocalDate() == selected && (sport == "All sports" || it.sport == sport) && "${it.home} ${it.away} ${it.competition} ${it.sport}".contains(query.trim(),true) }.sortedBy { it.kickoff(today) }
         if (events.isEmpty()) empty("A quiet day on this court", "Try another date or sport, or import your event calendar.") else events.forEach { eventRow(it) }
         padded(body, text("${java.time.ZoneId.systemDefault().id} · Calendar and broadcast availability vary by region.", 11, muted), 17)
-        if (store.events().isNotEmpty()) padded(body, button(if(demoSchedule) "Show imported calendar" else "Explore demo calendar") { demoSchedule = !demoSchedule; render() }, 16)
+        padded(body, button(if(demoSchedule) "Show provider calendar" else "Explore illustrative calendar") { demoSchedule = !demoSchedule; render() }, 16)
     }
     private fun eventRow(event: Event) {
         val matches=BroadcastRouting.matches(event,store.all())
@@ -202,9 +229,15 @@ class MainActivity : Activity() {
         left.addView(text(event.kickoff(today).format(timeFormat), 15, Color.WHITE, true))
         card.addView(left, LinearLayout.LayoutParams(dp(86), -2))
         val details = column()
+        if(event.homeCrest.isNotBlank() || event.awayCrest.isNotBlank()) {
+            val crests=row(); crests.addView(crest(event.homeCrest,event.home),LinearLayout.LayoutParams(dp(28),dp(28)))
+            crests.addView(text(event.score.ifBlank { "vs" },14,Color.WHITE,true).apply { setPadding(dp(10),0,dp(10),0) })
+            crests.addView(crest(event.awayCrest,event.away),LinearLayout.LayoutParams(dp(28),dp(28)))
+            details.addView(crests); space(details,9)
+        }
         details.addView(text(event.home, 15, Color.WHITE, true)); space(details, 5)
         details.addView(text(event.away.ifBlank { event.competition }, 14, 0xFFD7DCE4.toInt())); space(details, 8)
-        details.addView(text(event.competition, 9, muted))
+        details.addView(text(event.competition + if(event.status.isNotBlank()) " ? ${event.status}" else "", 9, muted))
         if(matches.isNotEmpty()) { space(details,7); details.addView(text("▷ ${matches.first().name}${if(matches.size>1) " · +${matches.size-1}" else ""}",10,red,true)) }
         card.addView(details, LinearLayout.LayoutParams(0,-2,1f))
         card.addView(iconButton(if(store.saved().contains(event.id)) "♥" else "♡", "Save ${event.home}") { store.toggle(event.id); render() }.apply { setTextColor(if(store.saved().contains(event.id)) red else muted) }, LinearLayout.LayoutParams(dp(44),dp(44)))
@@ -238,6 +271,9 @@ class MainActivity : Activity() {
         tools.addView(button("＋ Add source",true) { addSource() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
         tools.addView(button("Import catalog") { importCatalog() },LinearLayout.LayoutParams(0,-2,1f))
         padded(body,tools,20)
+        section("Included live channel")
+        Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }.forEach { sourceRow(it) }
+        padded(body,text("Red Bull TV: action sports and event programming. This is not a beIN channel. Availability can vary by region.",12,muted),bottom=12)
         section("Your collection", "${store.custom().size} sources")
         val sources = store.custom().filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }
         if(sources.isEmpty()) empty("Make room for your favorites", "Add an HTTPS channel URL or import a provider catalog. Your sources play here, inside the app.") else sources.forEach { sourceRow(it) }
@@ -251,13 +287,13 @@ class MainActivity : Activity() {
         val info=column(); info.addView(text(source.name,15,Color.WHITE,true)); space(info,7)
         info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
         card.addView(info,LinearLayout.LayoutParams(0,-2,1f))
-        if(!source.demo) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
+        if(!source.demo && Catalog.channels.none { it.id == source.id }) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
         padded(body,card,bottom=9)
     }
     private fun saved() {
         padded(body,text("Worth coming back for.",30,Color.WHITE,true),bottom=10)
         padded(body,text("Your saved events, all in one place.",13,muted),bottom=22)
-        val selected=(store.events()+Catalog.events).distinctBy { it.id }.filter { store.saved().contains(it.id) }
+        val selected=(eventList()+store.events()+Catalog.events).distinctBy { it.id }.filter { store.saved().contains(it.id) }
         if(selected.isEmpty()) empty("Your front-row collection", "Tap the heart on any event to save it here.") else selected.forEach { eventRow(it) }
     }
     private fun empty(title: String, message: String) {
@@ -296,8 +332,116 @@ class MainActivity : Activity() {
                 val bytes=contentResolver.openInputStream(uri)!!.use { input -> val out=java.io.ByteArrayOutputStream(); val buffer=ByteArray(8192); while(true) { val count=input.read(buffer); if(count<0) break; out.write(buffer,0,count); require(out.size()<=2_000_000) { "Catalog files must be smaller than 2 MB." } }; out.toByteArray() }
                 store.import(bytes.toString(Charsets.UTF_8))
             }
-            runOnUiThread { if(!isFinishing && !isDestroyed) { result.onSuccess { count -> demoSchedule=store.events().isEmpty(); Toast.makeText(this,"Imported $count items",Toast.LENGTH_LONG).show(); render() }.onFailure { AlertDialog.Builder(this).setTitle("Couldn't import catalog").setMessage(it.message ?: "Check the JSON format.").setPositiveButton("OK",null).show() } } }
+            runOnUiThread { if(!isFinishing && !isDestroyed) { result.onSuccess { count -> demoSchedule=false; Toast.makeText(this,"Imported $count items",Toast.LENGTH_LONG).show(); render() }.onFailure { AlertDialog.Builder(this).setTitle("Couldn't import catalog").setMessage(it.message ?: "Check the JSON format.").setPositiveButton("OK",null).show() } } }
         }.start()
+    }
+    private fun crest(url:String,name:String): FrameLayout {
+        val box=FrameLayout(this).apply { contentDescription="$name crest" }
+        val initials=text(name.split(" ").take(2).mapNotNull { it.firstOrNull() }.joinToString(""),10,muted,true).apply { gravity=Gravity.CENTER }
+        box.addView(initials,FrameLayout.LayoutParams(-1,-1))
+        val image=ImageView(this).apply { scaleType=ImageView.ScaleType.FIT_CENTER; importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+        box.addView(image,FrameLayout.LayoutParams(-1,-1))
+        fun show(bitmap:android.graphics.Bitmap) { image.setImageBitmap(bitmap); initials.visibility=View.GONE }
+        val cached=crestCache.get(url)
+        if(cached!=null) show(cached)
+        else if(Catalog.validUrl(url) && !missingCrests.contains(url)) imageWorkers.execute {
+            val bitmap=runCatching {
+                val connection=java.net.URL(url).openConnection() as javax.net.ssl.HttpsURLConnection
+                connection.connectTimeout=8000; connection.readTimeout=8000
+                try {
+                    check(connection.responseCode in 200..299)
+                    val bytes=connection.inputStream.use { input ->
+                        val out=java.io.ByteArrayOutputStream(); val buffer=ByteArray(8192)
+                        while(true) { val n=input.read(buffer); if(n<0) break; out.write(buffer,0,n); check(out.size()<=1_000_000) }; out.toByteArray()
+                    }
+                    val bounds=android.graphics.BitmapFactory.Options().apply { inJustDecodeBounds=true }
+                    android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,bounds)
+                    val options=android.graphics.BitmapFactory.Options().apply { inSampleSize=(maxOf(bounds.outWidth,bounds.outHeight)/128).coerceAtLeast(1) }
+                    android.graphics.BitmapFactory.decodeByteArray(bytes,0,bytes.size,options) ?: run {
+                        val svg=com.caverock.androidsvg.SVG.getFromString(bytes.toString(Charsets.UTF_8))
+                        svg.setDocumentWidth(128f); svg.setDocumentHeight(128f)
+                        android.graphics.Bitmap.createBitmap(128,128,android.graphics.Bitmap.Config.ARGB_8888).also { svg.renderToCanvas(android.graphics.Canvas(it)) }
+                    }
+                } finally { connection.disconnect() }
+            }.getOrNull()
+            runOnUiThread { if(!isDestroyed) { if(bitmap!=null) { crestCache.put(url,bitmap); show(bitmap) } else missingCrests.add(url) } }
+        }
+        return box
+    }
+    private fun loadFootball() {
+        if(footballLoading) return
+        footballLoading=true
+        val requestedLeague=scoreLeague
+        Thread {
+            val result=runCatching { SportsFeeds.scoreboard(requestedLeague) }
+            runOnUiThread { if(!isDestroyed) {
+                footballLoading=false
+                if(requestedLeague!=scoreLeague) { loadFootball(); return@runOnUiThread }
+                result.onSuccess { football=it; footballError=""; footballUpdated=java.time.LocalTime.now().format(timeFormat) }.onFailure { footballError="Football provider unavailable. Retry shortly." }
+                if(tab=="Live" || (tab=="Schedule" && !demoSchedule)) render(keepScroll=true)
+            } }
+        }.start()
+    }
+    private fun loadRace() {
+        if(raceLoading) return
+        raceLoading=true
+        Thread {
+            val result=runCatching { SportsFeeds.race() }
+            runOnUiThread { if(!isDestroyed) {
+                raceLoading=false
+                result.onSuccess { race=it; raceError="" }.onFailure { raceError="Race results unavailable. The provider may still be processing this session." }
+                if(tab=="Live") render(keepScroll=true)
+            } }
+        }.start()
+    }
+    private fun liveScores() {
+        padded(body,text("Scores & race results",28,Color.WHITE,true),bottom=10)
+        padded(body,text("Public scores, team crests and Formula 1 classifications.",13,muted),bottom=18)
+        val tabs=row()
+        listOf("Football","Motorsport").forEach { name -> tabs.addView(button(if(name=="Football") "Team sports" else name,liveSport==name) { liveSport=name; render(); if(name=="Motorsport") loadRace() else loadFootball() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) }) }
+        padded(body,tabs,bottom=16)
+        if(liveSport=="Football") {
+            padded(body,button("$scoreLeague · Change competition") {
+                val choices=SportsFeeds.leagues.keys.toTypedArray()
+                AlertDialog.Builder(this).setTitle("Score competition").setItems(choices) { _,i -> scoreLeague=choices[i]; football=emptyList(); footballError=""; loadFootball(); render() }.setNegativeButton("Cancel",null).show()
+            },bottom=12)
+            padded(body,text("$scoreLeague · ${if(scoreLeague=="Bundesliga") "OpenLigaDB" else "ESPN"} · ${if(footballLoading) "Refreshing…" else "Checked $footballUpdated"}",11,muted),bottom=12)
+            padded(body,button("Refresh scores") { loadFootball(); render() },bottom=12)
+            if(footballError.isNotBlank()) padded(body,text("$footballError${if(football.isNotEmpty()) " Showing the last fetched scores." else ""}",13,red),bottom=12)
+            if(football.isEmpty()) empty(if(footballLoading) "Loading the current matchday" else "No matches available","The provider may have no games for its current date. Try another competition.")
+            football.forEach { m ->
+                val box=column().apply { background=shape(panel,14); setPadding(dp(16),dp(16),dp(16),dp(16)) }
+                val local=java.time.Instant.parse(m.start).atZone(java.time.ZoneId.systemDefault())
+                box.addView(text("${local.format(DateTimeFormatter.ofPattern("EEE d MMM · HH:mm"))} · ${m.status}",10,muted)); space(box,14)
+                val teams=row()
+                val names=column()
+                listOf(m.home to m.homeCrest,m.away to m.awayCrest).forEach { (name,url) -> val team=row(); team.addView(crest(url,name),LinearLayout.LayoutParams(dp(28),dp(28))); team.addView(text(name,13,Color.WHITE,true).apply { setPadding(dp(10),0,0,0) }); names.addView(team); space(names,8) }
+                teams.addView(names,LinearLayout.LayoutParams(0,-2,1f))
+                teams.addView(text(m.score,20,Color.WHITE,true)); box.addView(teams)
+                padded(body,box,bottom=10)
+            }
+            padded(body,text("Updates every 30 seconds while this screen is open. Community data may be delayed; no match clock is inferred.",11,muted),top=8)
+        } else {
+            padded(body,text("Formula 1 · OpenF1 · Latest available classification",11,muted),bottom=12)
+            padded(body,button(if(raceLoading) "Refreshing results…" else "Refresh classification") { loadRace(); render() },bottom=12)
+            padded(body,text("Public access provides session results. Live positions and timing are not connected; these rows are not a live leaderboard.",12,muted),bottom=16)
+            if(raceError.isNotBlank()) padded(body,text(raceError,13,red),bottom=12)
+            val data=race
+            if(data==null) empty(if(raceLoading) "Loading race classification" else "No classification loaded","Select Refresh to load the latest available session results.")
+            else {
+                section(data.title)
+                padded(body,text(java.time.OffsetDateTime.parse(data.date).atZoneSameInstant(java.time.ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("d MMM yyyy · HH:mm")),12,muted),bottom=16)
+                if(data.rows.isEmpty()) empty("Results not published yet","Refresh once the provider has published this session's classification.")
+                data.rows.forEach { r ->
+                    val line=row().apply { setPadding(dp(14),dp(14),dp(14),dp(14)); background=shape(panel,10) }
+                    line.addView(text(if(r.position==99) "—" else r.position.toString(),20,red,true),LinearLayout.LayoutParams(dp(34),-2))
+                    val driver=column(); driver.addView(text(r.driver,14,Color.WHITE,true)); space(driver,5); driver.addView(text(r.team,11,muted))
+                    line.addView(driver,LinearLayout.LayoutParams(0,-2,1f))
+                    val timing=column().apply { gravity=Gravity.END }; timing.addView(text(r.gap,12,Color.WHITE,true).apply { maxLines=2; ellipsize=android.text.TextUtils.TruncateAt.END }); space(timing,5); timing.addView(text("${r.laps} laps",10,muted)); line.addView(timing,LinearLayout.LayoutParams(dp(84),-2))
+                    padded(body,line,bottom=7)
+                }
+            }
+        }
     }
     private fun openGuide() { startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://www.beinsports.com/en-mena/tv-guide"))) }
     private fun chooseBroadcast(sources:List<Source>) { AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(sources.map { "${it.provider.ifBlank { "Channel" }} · ${it.name}" }.toTypedArray()) { _,index -> play(sources[index],sources) }.setNegativeButton("Cancel",null).show() }

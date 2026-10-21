@@ -38,6 +38,12 @@ def capture(name):
     run('shell', 'screencap', '-p', '/sdcard/sportswave-qa.png')
     run('pull', '/sdcard/sportswave-qa.png', str(artifacts / name))
 
+def reveal(value):
+    for attempt in range(8):
+        if contains(value): return
+        run('shell','input','swipe','540','1800','540','700','500')
+    raise AssertionError(f'Content not found: {value}')
+
 def dash_check():
     for attempt in range(4):
         if any(n.get('text')=='DASH playback test' for n in nodes()): break
@@ -69,6 +75,9 @@ assert contains('Every sport.')
 capture('discover.png')
 tap('Schedule', desc=True)
 assert contains('The schedule')
+assert contains('PROVIDER FIXTURES')
+reveal('Explore illustrative calendar')
+tap('Explore illustrative calendar')
 assert contains('DEMO SCHEDULE')
 capture('schedule.png')
 # Save the first visible event, then verify it appears on the Saved page.
@@ -86,6 +95,7 @@ assert contains(event)
 capture('saved.png')
 print('PASS: discovery, schedule, and persistent favorites', flush=True)
 tap('Channels', desc=True)
+reveal('HLS playback test')
 assert contains('HLS playback test')
 capture('channels.png')
 tap('HLS playback test')

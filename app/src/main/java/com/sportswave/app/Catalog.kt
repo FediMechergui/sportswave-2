@@ -7,7 +7,7 @@ import java.time.ZonedDateTime
 
 data class Sport(val name: String, val symbol: String)
 data class Broadcast(val provider: String = "", val channelId: String = "", val channelName: String = "", val sourceId: String = "")
-data class Event(val id: String, val sport: String, val competition: String, val home: String, val away: String, val hour: Int, val minute: Int, val image: String, val day: Long = 0, val startUtc: String = "", val endUtc: String = "", val sourceId: String = "", val demo: Boolean = true, val broadcasts: List<Broadcast> = emptyList()) {
+data class Event(val id: String, val sport: String, val competition: String, val home: String, val away: String, val hour: Int, val minute: Int, val image: String, val day: Long = 0, val startUtc: String = "", val endUtc: String = "", val sourceId: String = "", val demo: Boolean = true, val broadcasts: List<Broadcast> = emptyList(), val homeCrest: String = "", val awayCrest: String = "", val score: String = "", val status: String = "") {
     fun kickoff(base: LocalDate): ZonedDateTime = if (startUtc.isNotBlank()) java.time.Instant.parse(startUtc).atZone(ZoneId.systemDefault()) else base.plusDays(day).atTime(hour, minute).atZone(ZoneId.systemDefault())
 }
 data class Source(val id: String, val name: String, val sport: String, val url: String, val mime: String = "", val userAgent: String = "SportsWave/1.0", val headers: Map<String, String> = emptyMap(), val demo: Boolean = false, val licenseUrl: String = "", val licenseHeaders: Map<String, String> = emptyMap(), val resolverUrl: String = "", val resolverHeaders: Map<String, String> = emptyMap(), val provider: String = "", val channelId: String = "", val aliases: List<String> = emptyList(), val allowHttp: Boolean = false, val sessionSnapshot: Boolean = false)
@@ -27,6 +27,9 @@ object Catalog {
         Event("handball-1", "Handball", "HANDBALL SHOWCASE", "Paris", "Nantes", 19, 0, "basketball.jpg"),
         Event("padel-1", "Padel", "PADEL SHOWCASE", "Center court", "Doubles session", 15, 0, "tennis.jpg"),
         Event("nfl-1", "American football", "GRIDIRON SHOWCASE", "Kansas City", "Buffalo", 21, 0, "football.jpg", 1)
+    )
+    val channels = listOf(
+        Source("redbull-live","Red Bull TV","Multi-sport","https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master_3360.m3u8","application/x-mpegURL",provider="Red Bull TV",channelId="redbull-tv")
     )
     val samples = listOf(
         Source("demo-hls", "HLS playback test", "Other", "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", "application/x-mpegURL", demo = true),

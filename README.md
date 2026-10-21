@@ -32,14 +32,17 @@ The UI smoke script defaults to `emulator-5556`; set `SPORTSWAVE_DEVICE` for ano
 
 ## Included behavior
 
-- Discover, Schedule, Channels, and Saved navigation.
+- Discover, Schedule, Live, Channels, and Saved navigation with consistent drawn icons.
+- Public ESPN scoreboards (Champions League, Premier League, LaLiga, Ligue 1, Serie A, NBA, NFL), OpenLigaDB Bundesliga fixtures, and PNG/SVG team crests; refreshes every 30 seconds on the Live screen.
+- OpenF1 latest session classification with driver order, team, gap, and lap count. Public results only; live timing is not connected.
+- Included Red Bull TV HLS live channel, verified inside the player on 21 October 2026. Availability can vary by region.
 - Sport filters covering football, basketball, tennis, motorsport, rugby, handball, volleyball, American football, padel, cricket, combat, cycling, athletics, swimming, golf, and other sports.
 - Local-time dates, event search, event details, and persistent favorites.
 - Direct HTTPS source entry, source removal, and JSON catalog/calendar import through Android's file picker.
 - Internal HLS, DASH, and progressive playback; buffering, pause/seek, retry, quality cap, speed, fit/fill, fullscreen, and optional Widevine configuration.
 - Provider-neutral HTTPS resolver support for fetching fresh playback sessions rather than hardcoding expiring URLs.
 
-The bundled calendar is explicitly illustrative. The included HLS and DASH sources are public playback tests, not broadcasts of the illustrative fixtures. No live scores or production sports broadcasts are claimed. An official beIN guide link is available from Schedule. The official MENA/France guide was researched for the breadth of sports; its listings were not copied into a purported live feed.
+The default provider calendar combines the selected competition?s public fixtures with imported events. The separate illustrative calendar remains available through an explicit toggle. No broadcast channel is guessed for public fixtures. The bundled demo calendar is explicitly illustrative. The included HLS and DASH sources are public playback tests, not broadcasts of the illustrative fixtures. Public scoreboards can be delayed or unavailable. ESPN endpoints are public website feeds without a guaranteed integration contract; Bundesliga scores use OpenLigaDB. Red Bull TV is included; beIN and other Yacine channels still require a renewable source integration, which is not implemented. An official beIN guide link is available from Schedule. The official MENA/France guide was researched for the breadth of sports; its listings were not copied into a purported live feed.
 
 ## Add real sources and events
 
@@ -89,6 +92,11 @@ The Yacine investigation established a rotating API → redirect → HLS chain, 
 
 ## References and assets
 
+- ESPN public scoreboard example: https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.champions/scoreboard
+- OpenLigaDB: https://github.com/OpenLigaDB/OpenLigaDB-Samples
+- OpenF1: https://openf1.org/docs/ (public session results; real-time data requires subscription)
+- AndroidSVG: https://bigbadaboom.github.io/androidsvg/ (Apache 2.0, team crest rendering)
+- Red Bull live events: https://www.redbull.com/us-en/live-events
 - Media3: https://developer.android.com/media/media3/exoplayer/hello-world
 - beIN MENA guide: https://www.beinsports.com/en-mena/tv-guide
 - beIN France guide: https://www.beinsports.com/fr-fr/tv-guide

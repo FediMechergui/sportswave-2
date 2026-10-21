@@ -9,7 +9,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     fun saved(): Set<String> = prefs.getStringSet("saved", emptySet())!!.toSet()
     fun toggle(id: String) { val set = saved().toMutableSet(); if (!set.add(id)) set.remove(id); prefs.edit().putStringSet("saved", set).apply() }
     fun custom(): List<Source> = runCatching { parse(prefs.getString("sources", "[]")!!) }.getOrDefault(emptyList())
-    fun all(): List<Source> = custom() + Catalog.samples
+    fun all(): List<Source> = (custom() + Catalog.channels + Catalog.samples).distinctBy { it.id }
     fun events(): List<Event> = runCatching {
         val a = JSONArray(prefs.getString("events", "[]"))
         (0 until a.length()).map { i ->
