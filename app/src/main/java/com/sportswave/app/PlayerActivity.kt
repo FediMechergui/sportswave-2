@@ -29,7 +29,10 @@ class PlayerActivity : Activity() {
     private lateinit var playerView: PlayerView
     private lateinit var status: TextView
     private lateinit var retry: TextView
-    private lateinit var container: LinearLayout
+    private lateinit var container: FrameLayout
+    private var fullscreen=false
+    private var resizeMode=AspectRatioFrameLayout.RESIZE_MODE_FIT
+    private var feedbackView: View?=null
     private val executor = Executors.newSingleThreadExecutor()
     private var original: Source? = null
     private var alternatives: List<Source> = emptyList()
@@ -51,54 +54,102 @@ class PlayerActivity : Activity() {
         super.onCreate(savedInstanceState)
         window.statusBarColor=dark; window.navigationBarColor=dark
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        original=Store(this).all().firstOrNull { it.id==intent.getStringExtra("sourceId") }
+        original=Store(this).all().firstOrNull { it.id==(savedInstanceState?.getString("selectedSource") ?: intent.getStringExtra("sourceId")) }
         val ids=intent.getStringArrayExtra("alternatives")?.toSet() ?: emptySet()
         alternatives=Store(this).all().filter { it.id in ids }
         position=savedInstanceState?.getLong("position") ?: 0L
         shouldPlay=savedInstanceState?.getBoolean("play") ?: true
+        fullscreen=savedInstanceState?.getBoolean("fullscreen") ?: (resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE)
         render()
     }
+    private fun icon(name:String,description:String,action:()->Unit):FrameLayout = FrameLayout(this).apply {
+        contentDescription=description; isClickable=true; isFocusable=true; minimumWidth=dp(48); minimumHeight=dp(48)
+        val style=obtainStyledAttributes(intArrayOf(android.R.attr.selectableItemBackgroundBorderless)); foreground=style.getDrawable(0); style.recycle()
+        addView(NavigationIcon(this@PlayerActivity,name,Color.WHITE),FrameLayout.LayoutParams(dp(24),dp(24),Gravity.CENTER))
+        setOnClickListener { action() }
+    }
     private fun render() {
-        if(::playerView.isInitialized) playerView.player=null
-        container=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setBackgroundColor(dark) }
-        container.setOnApplyWindowInsetsListener { v,i -> v.setPadding(i.systemWindowInsetLeft,i.systemWindowInsetTop,i.systemWindowInsetRight,i.systemWindowInsetBottom); i }
+        if(::playerView.isInitialized) (playerView.parent as? android.view.ViewGroup)?.removeView(playerView)
+        else playerView=PlayerView(this).apply {
+            setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING); setShowSubtitleButton(true)
+            setBackgroundColor(Color.BLACK); contentDescription="Video player"; controllerShowTimeoutMs=3000
+            setFullscreenButtonClickListener { toggleFullscreen() }
+        }
+        playerView.resizeMode=resizeMode
+        playerView.player=player
+        container=FrameLayout(this).apply { setBackgroundColor(if(fullscreen) Color.BLACK else dark) }
+        container.setOnApplyWindowInsetsListener { v,i ->
+            v.setPadding(if(fullscreen) 0 else i.systemWindowInsetLeft,if(fullscreen) 0 else i.systemWindowInsetTop,if(fullscreen) 0 else i.systemWindowInsetRight,if(fullscreen) 0 else i.systemWindowInsetBottom); i
+        }
         setContentView(container)
-        val bar=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL; setPadding(dp(5),dp(3),dp(8),dp(3)) }
-        bar.addView(button("‹ Back") { finish() })
-        bar.addView(label(original?.name ?: "Source unavailable",16,Color.WHITE,true),LinearLayout.LayoutParams(0,-2,1f))
-        bar.addView(button("⛶") { toggleFullscreen() }.apply { contentDescription="Toggle fullscreen" })
-        container.addView(bar)
-        playerView=PlayerView(this).apply { player=this@PlayerActivity.player; setShowBuffering(PlayerView.SHOW_BUFFERING_WHEN_PLAYING); setShowSubtitleButton(true); resizeMode=AspectRatioFrameLayout.RESIZE_MODE_FIT; setBackgroundColor(Color.BLACK) }
-        val landscape=resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE
-        container.addView(playerView, if(landscape) LinearLayout.LayoutParams(-1,0,1f) else LinearLayout.LayoutParams(-1,dp(238)))
-        status=label("Preparing your stream…",12,muted).apply { setPadding(dp(20),dp(12),dp(20),dp(8)) }
-        container.addView(status)
+        val bar=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL; setBackgroundColor(if(fullscreen) 0x99000000.toInt() else dark) }
+        bar.addView(icon("Back","Back") { if(fullscreen) exitFullscreen() else finish() })
+        bar.addView(label(original?.name ?: "Source unavailable",16,Color.WHITE,true).apply { maxLines=1; ellipsize=android.text.TextUtils.TruncateAt.END },LinearLayout.LayoutParams(0,-2,1f))
+        bar.addView(icon(if(fullscreen) "Collapse" else "Fullscreen","Toggle fullscreen") { toggleFullscreen() })
+        status=label("Preparing your stream…",12,muted).apply { setPadding(dp(20),dp(12),dp(20),dp(8)); accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE }
         retry=button("Retry playback") { automaticRenewals=0; attemptedSources.clear(); position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
-        container.addView(retry)
-        if(alternatives.size>1) container.addView(button("Choose another broadcast") {
-            AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(alternatives.map { "${it.catalogCategory.ifBlank { it.provider }} · ${it.name}" }.toTypedArray()) { _,index ->
-                original=alternatives[index]; automaticRenewals=0; attemptedSources.clear(); position=0; shouldPlay=true; render(); load()
-            }.show()
-        })
-        if(!landscape) {
+        val feedback=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; addView(status); addView(retry) }
+        feedbackView=feedback
+        if(fullscreen) {
+            container.addView(playerView,FrameLayout.LayoutParams(-1,-1))
+            container.addView(bar,FrameLayout.LayoutParams(-1,dp(52),Gravity.TOP))
+            feedback.setBackgroundColor(0xAA000000.toInt())
+            container.addView(feedback,FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM).apply { bottomMargin=dp(78) })
+            playerView.setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+                bar.visibility=visibility
+                feedback.visibility=if(visibility==View.VISIBLE || player?.playerError!=null || retry.visibility==View.VISIBLE) View.VISIBLE else View.GONE
+            })
+        } else {
+            playerView.setControllerVisibilityListener(null as PlayerView.ControllerVisibilityListener?)
+            val scroll=ScrollView(this).apply { isFillViewport=true }
+            val content=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL }
+            scroll.addView(content); container.addView(scroll,FrameLayout.LayoutParams(-1,-1))
+            content.addView(bar,LinearLayout.LayoutParams(-1,dp(56)))
+            val width=resources.displayMetrics.widthPixels/resources.displayMetrics.density
+            content.addView(playerView,LinearLayout.LayoutParams(-1,dp((width*9f/16f).toInt())))
+            content.addView(feedback)
+            if(alternatives.size>1) content.addView(button("Choose another broadcast") { chooseBroadcast() })
             val options=LinearLayout(this)
             options.addView(button("Quality") { quality() },LinearLayout.LayoutParams(0,-2,1f))
             options.addView(button("Speed") { speed() },LinearLayout.LayoutParams(0,-2,1f))
-            options.addView(button("Fit / fill") { playerView.resizeMode=if(playerView.resizeMode==AspectRatioFrameLayout.RESIZE_MODE_FIT) AspectRatioFrameLayout.RESIZE_MODE_ZOOM else AspectRatioFrameLayout.RESIZE_MODE_FIT },LinearLayout.LayoutParams(0,-2,1f))
-            container.addView(options)
-            val info=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(dp(23),dp(24),dp(23),dp(16)) }
-            info.addView(label(if(original?.demo==true) "DEMO PLAYBACK" else if(original?.sessionSnapshot==true) "TEMPORARY SESSION · ${original?.provider}" else original?.provider?.uppercase()?.ifBlank { "YOUR CHANNEL" } ?: "YOUR CHANNEL",10,red,true))
-            info.addView(label(original?.name ?: "No source selected",25,Color.WHITE,true).apply { setPadding(0,dp(13),0,dp(12)) })
-            info.addView(label(if(original?.demo==true) "A public sample stream to test SportsWave's built-in player. This video is not the broadcast of a scheduled event." else if(original?.sessionSnapshot==true) "This captured playback session can expire. Retry cannot renew it without a connected provider resolver." else "Playback stays inside SportsWave. Stream quality and availability depend on your source provider.",14,muted))
-            info.addView(label("SPORTSWAVE  /  ALL IN PLAY",10,muted,true).apply { setPadding(0,dp(36),0,0) })
-            container.addView(info)
+            options.addView(button("Fit / fill") { resizeMode=if(resizeMode==AspectRatioFrameLayout.RESIZE_MODE_FIT) AspectRatioFrameLayout.RESIZE_MODE_ZOOM else AspectRatioFrameLayout.RESIZE_MODE_FIT; playerView.resizeMode=resizeMode },LinearLayout.LayoutParams(0,-2,1f))
+            content.addView(options)
+            val info=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(dp(22),dp(24),dp(22),dp(24)) }
+            val eventTitle=intent.getStringExtra("eventTitle").orEmpty()
+            info.addView(label(if(original?.demo==true) "PLAYER TEST" else original?.provider?.ifBlank { "Your channel" } ?: "Your channel",11,red,true))
+            info.addView(label(eventTitle.ifBlank { original?.name ?: "No source selected" },24,Color.WHITE,true).apply { setPadding(0,dp(12),0,dp(10)) })
+            info.addView(label(if(original?.demo==true) "Public sample video." else "${original?.name.orEmpty()} · Playback stays inside SportsWave.",14,muted))
+            content.addView(info)
         }
-        updateStatus()
+        applySystemBars(); updateStatus()
+    }
+    private fun chooseBroadcast() {
+        AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(alternatives.map { "${it.catalogCategory.ifBlank { it.provider }} · ${it.name}" }.toTypedArray()) { _,index ->
+            original=alternatives[index]; automaticRenewals=0; attemptedSources.clear(); position=0; shouldPlay=true; render(); load()
+        }.show()
+    }
+    private fun applySystemBars() {
+        @Suppress("DEPRECATION")
+        window.decorView.systemUiVisibility=if(fullscreen) View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE else 0
+        if(android.os.Build.VERSION.SDK_INT>=30) {
+            window.setDecorFitsSystemWindows(!fullscreen)
+            window.insetsController?.apply {
+                systemBarsBehavior=android.view.WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                if(fullscreen) hide(android.view.WindowInsets.Type.systemBars()) else show(android.view.WindowInsets.Type.systemBars())
+            }
+        }
+        container.requestApplyInsets()
     }
     private fun toggleFullscreen() {
-        requestedOrientation=if(resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE) ActivityInfo.SCREEN_ORIENTATION_PORTRAIT else ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        fullscreen=!fullscreen
+        requestedOrientation=if(fullscreen) ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        render()
     }
-    override fun onConfigurationChanged(newConfig:Configuration) { super.onConfigurationChanged(newConfig); render() }
+    private fun exitFullscreen() { if(fullscreen) toggleFullscreen() }
+    @Deprecated("Back exits fullscreen before leaving playback")
+    override fun onBackPressed() { if(fullscreen) exitFullscreen() else super.onBackPressed() }
+    override fun onWindowFocusChanged(hasFocus:Boolean) { super.onWindowFocusChanged(hasFocus); if(hasFocus && ::container.isInitialized) applySystemBars() }
+    override fun onConfigurationChanged(newConfig:Configuration) { super.onConfigurationChanged(newConfig); fullscreen=newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE; render() }
     override fun onStart() { super.onStart(); stopped=false; if(player==null) load() }
     private fun load() {
         val source=original
@@ -109,6 +160,7 @@ class PlayerActivity : Activity() {
         playerView.player=null
         player?.release(); player=null
         retry.visibility=View.GONE
+        feedbackView?.visibility=View.VISIBLE
         status.text=if(source.resolverUrl.isNotBlank() || source.integration=="yacine") "Requesting a fresh playback session…" else "Connecting to your source…"
         executor.execute {
             val result=runCatching { PlaybackResolver.resolve(source) }
@@ -117,6 +169,7 @@ class PlayerActivity : Activity() {
                 result.onSuccess { prepare(it) }.onFailure {
                     status.text="Couldn't resolve playback. Check your provider or connection."
                     retry.visibility=View.VISIBLE
+                    feedbackView?.visibility=View.VISIBLE
                 }
             }
         }
@@ -153,6 +206,7 @@ class PlayerActivity : Activity() {
                     val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull()
                     status.text=if(original?.integration=="yacine" && response?.responseCode==503 && response.responseBody.toString(Charsets.UTF_8).trim()=="No URLs available") "The provider has no feed available for this channel. Try again later." else "Playback unavailable (${response?.responseCode?.let { "HTTP $it" } ?: error.errorCodeName}). Retry or check your provider."
                     retry.visibility=View.VISIBLE
+                    feedbackView?.visibility=View.VISIBLE
                 }
             })
             val item=MediaItem.Builder().setUri(source.url)
@@ -162,7 +216,7 @@ class PlayerActivity : Activity() {
             instance.setMediaItem(item.build())
             if(position>0) instance.seekTo(position)
             instance.prepare(); instance.playWhenReady=shouldPlay
-        } catch(e:Exception) { player?.release(); player=null; status.text="Couldn't initialize this stream. Check its format and provider settings."; retry.visibility=View.VISIBLE }
+        } catch(e:Exception) { player?.release(); player=null; status.text="Couldn't initialize this stream. Check its format and provider settings."; feedbackView?.visibility=View.VISIBLE; retry.visibility=View.VISIBLE }
     }
     private fun updateStatus() {
         if(!::status.isInitialized) return
@@ -186,10 +240,10 @@ class PlayerActivity : Activity() {
         }.show()
     }
     private fun speed() { AlertDialog.Builder(this).setTitle("Playback speed").setItems(arrayOf("0.75×","1× · Normal","1.25×","1.5×","2×")) { _,i -> player?.setPlaybackSpeed(floatArrayOf(.75f,1f,1.25f,1.5f,2f)[i]) }.show() }
-    override fun onSaveInstanceState(outState:Bundle) { outState.putLong("position",player?.currentPosition ?: position); outState.putBoolean("play",player?.playWhenReady ?: shouldPlay); super.onSaveInstanceState(outState) }
+    override fun onSaveInstanceState(outState:Bundle) { outState.putString("selectedSource",original?.id); outState.putBoolean("fullscreen",fullscreen); outState.putLong("position",if(player?.isCurrentMediaItemLive==true) 0 else player?.currentPosition ?: position); outState.putBoolean("play",player?.playWhenReady ?: shouldPlay); super.onSaveInstanceState(outState) }
     override fun onStop() {
         stopped=true; generation++
-        player?.let { position=it.currentPosition; shouldPlay=it.playWhenReady; it.release() }
+        player?.let { position=if(it.isCurrentMediaItemLive) 0 else it.currentPosition; shouldPlay=it.playWhenReady; it.release() }
         player=null; if(::playerView.isInitialized) playerView.player=null
         super.onStop()
     }

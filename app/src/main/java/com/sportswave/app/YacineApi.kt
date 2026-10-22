@@ -16,6 +16,8 @@ object YacineApi {
     const val DEFAULT_ENDPOINT = "http://def67.ycnapi.com/api/"
     private const val RESPONSE_PREFIX = "c!xZj+N9&G@Ev@vw"
 
+    fun events(endpoint: String): List<Event> = ScheduleFeeds.parseYacine(request(endpoint,"events").getJSONArray("data"))
+
     fun validEndpoint(value: String): Boolean = runCatching {
         val uri=URI(value)
         uri.scheme in listOf("https","http") && !uri.host.isNullOrBlank() && uri.userInfo==null && uri.query==null && uri.fragment==null && uri.path.endsWith("/api/")

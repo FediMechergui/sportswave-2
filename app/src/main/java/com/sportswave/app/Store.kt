@@ -8,6 +8,14 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     private val prefs = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
     fun saved(): Set<String> = prefs.getStringSet("saved", emptySet())!!.toSet()
     fun toggle(id: String) { val set = saved().toMutableSet(); if (!set.add(id)) set.remove(id); prefs.edit().putStringSet("saved", set).apply() }
+    fun savedEvents(): List<Event> = runCatching {
+        val a=JSONArray(prefs.getString("saved_event_details","[]")); (0 until a.length()).map { ScheduleFeeds.eventFromJson(a.getJSONObject(it)) }
+    }.getOrDefault(emptyList())
+    fun toggleEvent(event: Event) {
+        val ids=saved().toMutableSet(); val details=savedEvents().filter { it.id!=event.id }.toMutableList()
+        if(ids.add(event.id)) details.add(event) else ids.remove(event.id)
+        prefs.edit().putStringSet("saved",ids).putString("saved_event_details",JSONArray(details.map { ScheduleFeeds.eventJson(it) }).toString()).apply()
+    }
     fun custom(): List<Source> = runCatching { parse(prefs.getString("sources", "[]")!!) }.getOrDefault(emptyList())
     fun all(): List<Source> = (custom() + providerSources() + Catalog.channels + Catalog.samples).distinctBy { it.id }
     fun providerEndpoint(): String = prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!
@@ -40,6 +48,19 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     }.getOrDefault(emptyList())
     private fun imageFor(sport: String) = when(sport) { "Basketball", "Handball", "Combat" -> "basketball.jpg"; "Tennis", "Padel", "Volleyball" -> "tennis.jpg"; "Motorsport", "Cycling" -> "racing.jpg"; else -> "football.jpg" }
     fun clearEvents() { prefs.edit().remove("events").apply() }
+    fun schedule(date: java.time.LocalDate): List<Event> = runCatching {
+        val rows=JSONArray(prefs.getString("guide_$date","[]"))
+        (0 until rows.length()).map { i -> ScheduleFeeds.eventFromJson(rows.getJSONObject(i)) }
+    }.getOrDefault(emptyList())
+    fun scheduleUpdated(date: java.time.LocalDate): Long = prefs.getLong("guide_time_$date",0)
+    fun cacheSchedule(date: java.time.LocalDate, events: List<Event>) {
+        val editor=prefs.edit().putString("guide_$date",JSONArray(events.map { ScheduleFeeds.eventJson(it) }).toString()).putLong("guide_time_$date",System.currentTimeMillis())
+        prefs.all.keys.filter { it.startsWith("guide_") && !it.startsWith("guide_time_") }.forEach { key ->
+            val old=runCatching { java.time.LocalDate.parse(key.removePrefix("guide_")) }.getOrNull()
+            if(old!=null && (old<date.minusDays(7) || old>date.plusDays(7))) editor.remove(key).remove("guide_time_$old")
+        }
+        editor.apply()
+    }
     fun put(source: Source) { persist(custom().filter { it.id != source.id } + source) }
     fun remove(id: String) { persist(custom().filter { it.id != id }) }
     private fun persist(sources: List<Source>) { prefs.edit().putString("sources", JSONArray(sources.map { json(it) }).toString()).apply() }

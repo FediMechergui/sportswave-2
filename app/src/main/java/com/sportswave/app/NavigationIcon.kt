@@ -21,6 +21,10 @@ class NavigationIcon(context: Context, private val name: String, color: Int) : V
             canvas.drawPath(p, pen)
         }
         when (name) {
+            "Fullscreen" -> { path(9f,3f,3f,3f,3f,9f); path(15f,3f,21f,3f,21f,9f); path(3f,15f,3f,21f,9f,21f); path(21f,15f,21f,21f,15f,21f) }
+            "Collapse" -> { path(3f,9f,9f,9f,9f,3f); path(15f,3f,15f,9f,21f,9f); path(3f,15f,9f,15f,9f,21f); path(15f,21f,15f,15f,21f,15f) }
+            "Back" -> { path(14f,5f,7f,12f,14f,19f); path(7f,12f,21f,12f) }
+            "Add" -> { path(12f,5f,12f,19f); path(5f,12f,19f,12f) }
             "Discover" -> { path(3f, 10f, 12f, 3f, 21f, 10f); path(5f, 9f, 5f, 21f, 19f, 21f, 19f, 9f); path(10f, 21f, 10f, 15f, 14f, 15f, 14f, 21f) }
             "Schedule" -> { canvas.drawRoundRect(3f, 5f, 21f, 21f, 2f, 2f, pen); path(3f, 10f, 21f, 10f); path(8f, 3f, 8f, 7f); path(16f, 3f, 16f, 7f); for (x in listOf(8f, 12f, 16f)) canvas.drawPoint(x, 15f, pen) }
             "Live" -> { path(3f, 12f, 7f, 12f, 10f, 5f, 14f, 19f, 17f, 12f, 21f, 12f) }

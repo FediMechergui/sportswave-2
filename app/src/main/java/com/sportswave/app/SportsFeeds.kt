@@ -28,10 +28,11 @@ object SportsFeeds {
         } finally { c.disconnect() }
     }
     private fun get(url: String) = JSONArray(read(url))
-    fun scoreboard(league: String): List<FootballMatch> {
+    fun scoreboard(league: String, date: java.time.LocalDate = java.time.LocalDate.now()): List<FootballMatch> {
         val route = requireNotNull(leagues[league])
         if(route == "openliga") return football()
-        val data=JSONObject(read("https://site.api.espn.com/apis/site/v2/sports/$route/scoreboard?limit=1000"))
+        val dates=date.format(java.time.format.DateTimeFormatter.BASIC_ISO_DATE)
+        val data=JSONObject(read("https://site.api.espn.com/apis/site/v2/sports/$route/scoreboard?limit=1000&dates=$dates"))
         if(route.startsWith("tennis/")) return parseTennis(data,league)
         return parseScoreboard(data,league,if(league=="NBA") "Basketball" else if(league=="NFL") "American football" else "Football")
     }

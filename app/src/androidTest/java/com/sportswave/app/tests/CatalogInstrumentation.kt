@@ -51,12 +51,22 @@ class CatalogInstrumentation : Instrumentation() {
     }
     private var sessionCatalog:String?=null
     private var auditPublic=false
+    private var auditCalendar=false
+    private var uiFixtureMode:String?=null
     private var auditSourceIds=emptySet<String>()
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCalendar=arguments?.getString("auditCalendar")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
+            if(uiFixtureMode!=null) { CalendarUiFixtures.apply(targetContext,uiFixtureMode!!); finish(Activity.RESULT_OK,Bundle().apply { putString("stream","UI fixtures: $uiFixtureMode") }); return }
+            if(auditCalendar) {
+                val data=com.sportswave.app.ScheduleFeeds.load(java.time.LocalDate.now(),Store(targetContext).providerEndpoint())
+                check(data.events.isNotEmpty()) { "No live calendar data returned" }
+                val report=JSONObject().put("count",data.events.size).put("errors",JSONArray(data.errors)).put("sports",JSONArray(data.events.map { it.sport }.distinct())).put("listings",JSONArray(data.events.take(12).map { com.sportswave.app.ScheduleFeeds.eventJson(it) }))
+                java.io.File(targetContext.filesDir,"calendar-audit.json").writeText(report.toString(2))
+                finish(Activity.RESULT_OK,Bundle().apply { putString("stream",report.toString()) }); return
+            }
             if(auditPublic || auditSourceIds.isNotEmpty()) { auditPublicStreams(); return }
             if(sessionCatalog!=null) {
                 val name=sessionCatalog!!
@@ -68,6 +78,17 @@ class CatalogInstrumentation : Instrumentation() {
             }
             prefs.edit().clear().commit()
             val store=Store(targetContext,"sportswave-tests")
+            val raceListing=JSONObject().put("id","race").put("title","Grand Prix qualifying").put("channelId","mena").put("channel",JSONObject().put("name","beIN SPORTS 6")).put("startDate","2026-10-22T18:00:00Z").put("endDate","2026-10-22T19:00:00Z").put("live",true)
+            val parsed=com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(raceListing),setOf("mena")).single()
+            check(parsed.sport=="Motorsport" && parsed.broadcasts.single().channelName=="beIN SPORTS 6")
+            check(com.sportswave.app.ScheduleFeeds.sport("Tennis ATP 250 Grand Prix Auvergne")=="Tennis")
+            store.toggleEvent(parsed)
+            check(Store(targetContext,"sportswave-tests").savedEvents().single()==parsed)
+            store.toggleEvent(parsed)
+            check(com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(raceListing),setOf("other-region")).isEmpty())
+            check(com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(JSONObject(raceListing.toString()).put("live",false)),setOf("mena")).isEmpty())
+            store.cacheSchedule(java.time.LocalDate.of(2026,10,22),listOf(parsed))
+            check(store.schedule(java.time.LocalDate.of(2026,10,22)).single()==parsed)
             val source=JSONObject().put("id","test").put("name","Test source").put("sport","Tennis").put("url","https://example.com/test.m3u8").put("headers",JSONObject().put("X-Playback","sample"))
             val event=JSONObject().put("id","event-test").put("sport","Tennis").put("home","Center court").put("startUtc","2026-10-21T18:00:00Z").put("endUtc","2026-10-21T20:00:00Z").put("sourceId","test")
             val catalog=JSONObject().put("sources",JSONArray().put(source)).put("events",JSONArray().put(event))
