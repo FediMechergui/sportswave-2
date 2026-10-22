@@ -18,6 +18,8 @@ Download the signed preview APK from this repository?s GitHub Releases. Preview 
 
 ## Verification
 
+The [calendar and fullscreen update](docs/CALENDAR-PLAYER-UPDATE.md) records selected-date broadcast fetching, airing-window routing, 23 passing JVM tests, Android data checks, six-sport sample routing, and repeated fullscreen/Back verification in the signed APK.
+
 The [22 October original-app comparison](docs/BEIN-ORIGINAL-APP.md) distinguishes individual Yacine UI observations from SportsWave's 95-entry native decoder audit. SportsWave rendered video on 47 entries in that snapshot. Version 1.0.7 adds bounded session recovery for failed CDN redirects, connection failures and timeouts. Signed-APK UI checks also verified beIN Sports 1 and 8 playback; upstream failures remain.
 
 The complete 675-record delivery audit and 36 verified public replacements are documented in [docs/CHANNEL-AUDIT.md](docs/CHANNEL-AUDIT.md), with a per-channel CSV. This audit does not establish that every catalog channel plays: 465 failed records still lack a verified replacement after the new alternatives and existing Alkass resolver are accounted for.

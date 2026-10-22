@@ -274,7 +274,7 @@ class MainActivity : Activity() {
         if(!demoSchedule && calendarError.isNotBlank()) padded(body,text(calendarError,12,red),bottom=12)
         if(!demoSchedule && footballLoading && football.isEmpty()) padded(body,text("Loading provider fixtures…",12,muted),bottom=12)
         if(!demoSchedule && footballError.isNotBlank()) padded(body,button("Fixture feed unavailable · Retry") { loadFootball() },bottom=12)
-        val events = eventList().filter { it.kickoff(today).toLocalDate() == selected && (sport == "All sports" || it.sport == sport) && "${it.home} ${it.away} ${it.competition} ${it.sport}".contains(query.trim(),true) }.sortedBy { it.kickoff(today) }
+        val events = eventList().filter { it.kickoff(today).toLocalDate() == selected && (sport == "All sports" || it.sport == sport) && "${it.home} ${it.away} ${it.competition} ${it.sport}".contains(query.trim(),true) }.sortedWith(compareBy<Event> { if(selected==today) when(EventSchedule.phase(it)) { AiringPhase.AIRING -> 0; AiringPhase.UPCOMING -> 1; AiringPhase.ENDED -> 2 } else 0 }.thenBy { it.kickoff(today) })
         if (events.isEmpty()) empty(if(calendarLoading) "Loading the calendar" else "No events for this selection", "Try another date or sport. Listings appear when a broadcaster publishes them.") else events.take(eventPageSize).forEach { eventRow(it) }
         if(events.size>eventPageSize) padded(body,button("Show more events (${events.size-eventPageSize})") { eventPageSize+=40; render(keepScroll=true) },bottom=12)
         padded(body, text("${java.time.ZoneId.systemDefault().id} · Calendar and broadcast availability vary by region.", 11, muted), 17)

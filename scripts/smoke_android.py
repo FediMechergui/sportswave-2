@@ -39,7 +39,7 @@ def capture(name):
     run('pull', '/sdcard/sportswave-qa.png', str(artifacts / name))
 
 def reveal(value):
-    for attempt in range(8):
+    for attempt in range(40):
         if contains(value): return
         run('shell','input','swipe','540','1800','540','700','500')
     raise AssertionError(f'Content not found: {value}')

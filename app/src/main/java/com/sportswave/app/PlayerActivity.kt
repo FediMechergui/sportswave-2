@@ -95,10 +95,12 @@ class PlayerActivity : Activity() {
             container.addView(bar,FrameLayout.LayoutParams(-1,dp(52),Gravity.TOP))
             feedback.setBackgroundColor(0xAA000000.toInt())
             container.addView(feedback,FrameLayout.LayoutParams(-1,-2,Gravity.BOTTOM).apply { bottomMargin=dp(78) })
-            playerView.setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+            val overlays: (Int)->Unit = { visibility ->
                 bar.visibility=visibility
                 feedback.visibility=if(visibility==View.VISIBLE || player?.playerError!=null || retry.visibility==View.VISIBLE) View.VISIBLE else View.GONE
-            })
+            }
+            playerView.setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { overlays(it) })
+            overlays(if(playerView.isControllerFullyVisible) View.VISIBLE else View.GONE)
         } else {
             playerView.setControllerVisibilityListener(null as PlayerView.ControllerVisibilityListener?)
             val scroll=ScrollView(this).apply { isFillViewport=true }
@@ -116,9 +118,10 @@ class PlayerActivity : Activity() {
             content.addView(options)
             val info=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; setPadding(dp(22),dp(24),dp(22),dp(24)) }
             val eventTitle=intent.getStringExtra("eventTitle").orEmpty()
-            info.addView(label(if(original?.demo==true) "PLAYER TEST" else original?.provider?.ifBlank { "Your channel" } ?: "Your channel",11,red,true))
+            info.addView(label(if(original?.demo==true) "PLAYER TEST" else if(eventTitle.isNotBlank()) "SCHEDULED EVENT" else original?.provider?.ifBlank { "Your channel" } ?: "Your channel",11,red,true))
             info.addView(label(eventTitle.ifBlank { original?.name ?: "No source selected" },24,Color.WHITE,true).apply { setPadding(0,dp(12),0,dp(10)) })
             info.addView(label(if(original?.demo==true) "Public sample video." else "${original?.name.orEmpty()} · Playback stays inside SportsWave.",14,muted))
+            if(eventTitle.isNotBlank() && original?.demo!=true) info.addView(label("Channel programming may differ from the published schedule.",12,muted).apply { setPadding(0,dp(12),0,0) })
             content.addView(info)
         }
         applySystemBars(); updateStatus()
