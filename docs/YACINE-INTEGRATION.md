@@ -6,7 +6,7 @@ The app now connects directly to the observed backend. It does not launch Yacine
 2. Cache channel IDs, names, logos, and the service address in app-private preferences. Do not cache resolved media URLs or stream-specific headers.
 3. For channels without a verified public alternative, request `channel/{id}` on player opening or Retry and decode the response using its `t` header. The inspected transformation is Base64 followed by repeating XOR with the protocol prefix and timestamp.
 4. Pass the returned native stream URL, user agent and request headers directly to Media3. Playback modes 1 and 3 are supported. Unsupported web/YouTube/token-generation modes and DRM records are rejected explicitly.
-5. On an expired authorization response, unavailable redirect (HTTP 503), or a lost live window, attempt one automatic re-resolution. Delivery failures can then try an unused quality variant of the exact same provider/channel name. Attempts are bounded; unrelated channels are never substituted.
+5. On HTTP 401, 403, 404, 410, 502, 503, a network connection failure/timeout, or a lost live window, attempt up to two automatic re-resolutions, delayed by one and two seconds. Delivery failures can then try an unused quality variant of the exact same provider/channel name. Attempts are bounded; unrelated channels are never substituted.
 
 The default catalog shows all packages, with sports first, global search and incremental rows. Quality variants share a channel row and remain selectable inside the player. The package picker can restrict the list. Metadata is cached; Refresh synchronizes the complete catalog again.
 

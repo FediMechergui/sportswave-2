@@ -34,7 +34,7 @@ object YacineApi {
         val connection=URL(endpoint+route).openConnection() as HttpURLConnection
         connection.connectTimeout=12000; connection.readTimeout=18000
         connection.setRequestProperty("Accept","application/json")
-        connection.setRequestProperty("User-Agent","okhttp/4.9.0")
+        connection.setRequestProperty("User-Agent","okhttp/4.12.0")
         connection.useCaches=false
         try {
             check(connection.responseCode in 200..299) { "Yacine service unavailable (${connection.responseCode})." }

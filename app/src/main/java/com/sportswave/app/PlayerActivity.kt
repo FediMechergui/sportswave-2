@@ -133,17 +133,16 @@ class PlayerActivity : Activity() {
                 override fun onPlaybackStateChanged(playbackState:Int) { updateStatus() }
                 override fun onIsPlayingChanged(isPlaying:Boolean) { updateStatus() }
                 override fun onPlayerError(error:PlaybackException) {
-                    val expired=generateSequence(error as Throwable?) { it.cause }.any {
-                        it is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException && it.responseCode in listOf(401,403,410,503)
-                    }
-                    if(original?.integration=="yacine" && automaticRenewals<1 && (expired || error.errorCode==PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW)) {
+                    val failedResponse=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull()
+                    val networkUnavailable=error.errorCode in listOf(PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
+                    if(original?.integration=="yacine" && ProviderRecovery.shouldRetry(failedResponse?.responseCode,error.errorCode==PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW,automaticRenewals,networkUnavailable)) {
                         automaticRenewals++; position=0
                         val failedGeneration=generation
                         status.text="Refreshing the channel session…"
-                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) load() }
+                        playerView.postDelayed({ if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) load() },ProviderRecovery.delayMs(automaticRenewals))
                         return
                     }
-                    val unavailable=generateSequence(error as Throwable?) { it.cause }.any { it is androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException && it.responseCode in listOf(401,403,404,410,503) }
+                    val unavailable=networkUnavailable || failedResponse?.responseCode in listOf(401,403,404,410,502,503)
                     val next=original?.takeIf { it.integration=="yacine" && unavailable }?.let { ChannelCatalog.nextAlternative(it,alternatives,attemptedSources) }
                     if(next!=null) {
                         val failedGeneration=generation

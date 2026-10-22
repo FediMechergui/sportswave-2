@@ -25,6 +25,7 @@ class CatalogInstrumentation : Instrumentation() {
             var texture:android.graphics.SurfaceTexture?=null
             var surface:android.view.Surface?=null
             var outcome="timeout"
+            var liveTimeline=false
             runOnMainSync {
                 texture=android.graphics.SurfaceTexture(false)
                 surface=android.view.Surface(texture)
@@ -32,8 +33,8 @@ class CatalogInstrumentation : Instrumentation() {
                 player=androidx.media3.exoplayer.ExoPlayer.Builder(targetContext).setMediaSourceFactory(androidx.media3.exoplayer.source.DefaultMediaSourceFactory(http)).build().apply {
                     setVideoSurface(surface)
                     addListener(object:androidx.media3.common.Player.Listener {
-                        override fun onRenderedFirstFrame() { outcome="video_frame"; latch.countDown() }
-                        override fun onPlayerError(error:androidx.media3.common.PlaybackException) { val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull(); outcome="error_${error.errorCode}"+(response?.responseCode?.let { "_http_$it" } ?: ""); latch.countDown() }
+                        override fun onRenderedFirstFrame() { outcome="video_frame"; liveTimeline=player?.isCurrentMediaItemLive ?: false; latch.countDown() }
+                        override fun onPlayerError(error:androidx.media3.common.PlaybackException) { val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull(); if(outcome!="video_frame") outcome="error_${error.errorCode}"+(response?.responseCode?.let { "_http_$it" } ?: ""); latch.countDown() }
                     })
                     setMediaItem(androidx.media3.common.MediaItem.Builder().setUri(source.url).setMimeType(source.mime).build())
                     prepare(); playWhenReady=true
@@ -41,8 +42,8 @@ class CatalogInstrumentation : Instrumentation() {
             }
             latch.await(25,java.util.concurrent.TimeUnit.SECONDS)
             runOnMainSync { player?.release(); surface?.release(); texture?.release() }
-            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("package",source.catalogCategory).put("result",outcome))
-            sendStatus(0,Bundle().apply { putString("stream","${source.name} [${source.catalogCategory}]: $outcome\n") })
+            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("package",source.catalogCategory).put("result",outcome).put("liveTimeline",liveTimeline))
+            sendStatus(0,Bundle().apply { putString("stream","${source.name} [${source.catalogCategory}]: $outcome; liveTimeline=$liveTimeline\n") })
         }
         java.io.File(targetContext.filesDir,"public-stream-audit.json").writeText(results.toString(2))
         val passed=(0 until results.length()).count { results.getJSONObject(it).getString("result")=="video_frame" }
