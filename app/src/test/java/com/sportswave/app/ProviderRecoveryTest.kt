@@ -18,4 +18,12 @@ class ProviderRecoveryTest {
         assertTrue(ProviderRecovery.shouldRetry(null,true,0))
         assertFalse(ProviderRecovery.shouldRetry(null,true,2))
     }
+    @Test fun failedPublicAlternativeCanReturnToItsProviderOnlyOnce() {
+        val source=Source("f24","France 24","Other","",integration="yacine",channelId="8093614023560863457",serviceUrl=YacineApi.DEFAULT_ENDPOINT)
+        val url=PublicChannelStreams.resolve(source)!!.url
+        assertTrue(ProviderRecovery.shouldTryOriginalProvider(source,url,emptySet()))
+        assertFalse(ProviderRecovery.shouldTryOriginalProvider(source,url,setOf(source.id)))
+        assertFalse(ProviderRecovery.shouldTryOriginalProvider(source,"https://example.com/unrelated.m3u8",emptySet()))
+        assertFalse(ProviderRecovery.shouldTryOriginalProvider(source.copy(serviceUrl="https://example.com/api/"),url,emptySet()))
+    }
 }

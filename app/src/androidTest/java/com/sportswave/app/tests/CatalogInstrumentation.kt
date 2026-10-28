@@ -10,12 +10,31 @@ import org.json.JSONArray
 class CatalogInstrumentation : Instrumentation() {
     @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
     private fun auditPublicStreams() {
-        val catalog=Store(targetContext).all()
-        val sources=if(auditSourceIds.isEmpty()) catalog.mapNotNull { com.sportswave.app.PublicChannelStreams.resolve(it) } else catalog.filter { it.channelId in auditSourceIds }
-        check(sources.size==if(auditSourceIds.isEmpty()) 36 else auditSourceIds.size) { "The complete requested catalog is required for this audit." }
+        val catalog=auditCatalog?.let { name ->
+            require(name.matches(Regex("[a-zA-Z0-9_-]{1,60}\\.json")))
+            val file=java.io.File(targetContext.filesDir,name)
+            require(file.length() in 1..1_000_000)
+            val groups=JSONArray(file.readText())
+            (0 until groups.length()).flatMap { index ->
+                val group=groups.getJSONObject(index)
+                if(group.has("sources")) {
+                    val direct=group.getJSONArray("sources")
+                    return@flatMap (0 until direct.length()).map { j ->
+                        val row=direct.getJSONObject(j)
+                        require(com.sportswave.app.Catalog.validUrl(row.getString("url")))
+                        com.sportswave.app.Source(row.getString("id"),row.getString("name"),"Multi-sport",row.getString("url"),mime="application/x-mpegURL",channelId=row.getString("id"))
+                    }
+                }
+                val category=group.getJSONObject("package")
+                com.sportswave.app.YacineApi.parseChannels(group.getJSONArray("channels"),com.sportswave.app.YacineApi.DEFAULT_ENDPOINT,category.getString("name"),category.getString("id"))
+            }.also { require(it.size in 1..100) }
+        } ?: Store(targetContext).all()
+        val publicSportsIds=com.sportswave.app.PublicChannelStreams.sports.map { it.channelId }.toSet()
+        val sources=if(auditCatalog!=null && auditSourceIds.isEmpty()) catalog else if(auditSourceIds.isEmpty()) catalog.mapNotNull { com.sportswave.app.PublicChannelStreams.resolve(it) ?: it.takeIf { it.channelId in publicSportsIds } } else catalog.filter { it.channelId in auditSourceIds }
+        check(sources.size==if(auditCatalog!=null && auditSourceIds.isEmpty()) catalog.size else if(auditSourceIds.isEmpty()) com.sportswave.app.PublicChannelStreams.replacementCount else auditSourceIds.size) { "The complete requested catalog is required for this audit." }
         val results=JSONArray()
         for(candidate in sources) {
-            val source=runCatching { com.sportswave.app.PlaybackResolver.resolve(candidate) }.getOrNull()
+            val source=runCatching { com.sportswave.app.PlaybackResolver.resolve(candidate,streamIndex=auditStreamIndex) }.getOrNull()
             if(source==null) {
                 results.put(JSONObject().put("id",candidate.channelId).put("name",candidate.name).put("package",candidate.catalogCategory).put("result","resolve_error"))
                 sendStatus(0,Bundle().apply { putString("stream","${candidate.name}: resolve_error\n") }); continue
@@ -41,8 +60,24 @@ class CatalogInstrumentation : Instrumentation() {
                 }
             }
             latch.await(25,java.util.concurrent.TimeUnit.SECONDS)
+            var frameImage=""
+            if(outcome=="video_frame" && auditCatalog!=null) {
+                val copied=java.util.concurrent.CountDownLatch(1)
+                val bitmap=android.graphics.Bitmap.createBitmap(960,540,android.graphics.Bitmap.Config.ARGB_8888)
+                runOnMainSync {
+                    runCatching { android.view.PixelCopy.request(surface!!,bitmap,{ code ->
+                        if(code==android.view.PixelCopy.SUCCESS) {
+                            val name="audit-frame-${candidate.channelId.replace(Regex("[^a-zA-Z0-9_-]"),"")}.png"
+                            java.io.File(targetContext.filesDir,name).outputStream().use { bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it) }
+                            frameImage=name
+                        }
+                        copied.countDown()
+                    },android.os.Handler(android.os.Looper.getMainLooper())) }.onFailure { copied.countDown() }
+                }
+                copied.await(3,java.util.concurrent.TimeUnit.SECONDS)
+            }
             runOnMainSync { player?.release(); surface?.release(); texture?.release() }
-            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("package",source.catalogCategory).put("result",outcome).put("liveTimeline",liveTimeline))
+            results.put(JSONObject().put("id",source.channelId).put("name",source.name).put("package",source.catalogCategory).put("result",outcome).put("liveTimeline",liveTimeline).put("frameImage",frameImage))
             sendStatus(0,Bundle().apply { putString("stream","${source.name} [${source.catalogCategory}]: $outcome; liveTimeline=$liveTimeline\n") })
         }
         java.io.File(targetContext.filesDir,"public-stream-audit.json").writeText(results.toString(2))
@@ -51,14 +86,31 @@ class CatalogInstrumentation : Instrumentation() {
     }
     private var sessionCatalog:String?=null
     private var auditPublic=false
+    private var auditCatalog:String?=null
     private var auditCalendar=false
+    private var auditStreamIndex=0
+    private var auditScores=false
     private var uiFixtureMode:String?=null
     private var auditSourceIds=emptySet<String>()
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCalendar=arguments?.getString("auditCalendar")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
+            if(auditScores) {
+                val rows=JSONArray(); var failures=0
+                val today=java.time.LocalDate.now()
+                for((league,date) in listOf("All football" to today,"Bundesliga" to today,"Bundesliga" to today.plusDays(1),"NBA" to today,"ATP tennis" to today)) {
+                    val row=JSONObject().put("league",league).put("date",date.toString())
+                    runCatching { com.sportswave.app.SportsFeeds.scoreboard(league,date) }.onSuccess { matches ->
+                        if(league=="Bundesliga") check(matches.all { java.time.Instant.parse(it.start).atZone(java.time.ZoneId.systemDefault()).toLocalDate()==date })
+                        row.put("count",matches.size)
+                    }.onFailure { failures++; row.put("error",it.javaClass.simpleName) }
+                    rows.put(row)
+                }
+                runCatching { com.sportswave.app.SportsFeeds.race() }.onSuccess { rows.put(JSONObject().put("sport","Motorsport").put("session",it.title).put("date",it.date).put("positions",it.rows.size)) }.onFailure { failures++; rows.put(JSONObject().put("sport","Motorsport").put("error",it.javaClass.simpleName)) }
+                finish(if(failures==0) Activity.RESULT_OK else Activity.RESULT_CANCELED,Bundle().apply { putString("stream",rows.toString()) }); return
+            }
             if(uiFixtureMode!=null) { CalendarUiFixtures.apply(targetContext,uiFixtureMode!!); finish(Activity.RESULT_OK,Bundle().apply { putString("stream","UI fixtures: $uiFixtureMode") }); return }
             if(auditCalendar) {
                 val data=com.sportswave.app.ScheduleFeeds.load(java.time.LocalDate.now(),Store(targetContext).providerEndpoint())
@@ -67,7 +119,7 @@ class CatalogInstrumentation : Instrumentation() {
                 java.io.File(targetContext.filesDir,"calendar-audit.json").writeText(report.toString(2))
                 finish(Activity.RESULT_OK,Bundle().apply { putString("stream",report.toString()) }); return
             }
-            if(auditPublic || auditSourceIds.isNotEmpty()) { auditPublicStreams(); return }
+            if(auditPublic || auditCatalog!=null || auditSourceIds.isNotEmpty()) { auditPublicStreams(); return }
             if(sessionCatalog!=null) {
                 val name=sessionCatalog!!
                 require(name.matches(Regex("[a-zA-Z0-9._-]+")))
@@ -94,6 +146,20 @@ class CatalogInstrumentation : Instrumentation() {
             val catalog=JSONObject().put("sources",JSONArray().put(source)).put("events",JSONArray().put(event))
             check(store.import(catalog.toString())==2)
             check(store.custom().single().headers["X-Playback"]=="sample")
+            val checkedSource=store.custom().single()
+            check(store.playbackCheck(checkedSource)==null)
+            store.recordPlayback(checkedSource,true)
+            check(store.playbackCheck(checkedSource)==true)
+            store.recordPlayback(checkedSource,false)
+            check(store.playbackCheck(checkedSource)==false)
+            check(store.playbackCheck(checkedSource.copy(url="https://example.com/different.m3u8"))==null)
+            val descriptors=JSONArray().put(JSONObject().put("url","https://example.com/first.m3u8")).put(JSONObject().put("url","https://example.com/second.m3u8"))
+            val second=com.sportswave.app.YacineApi.parsePlayback(descriptors,checkedSource,1)
+            check(second.url=="https://example.com/second.m3u8" && second.playbackIndex==1 && second.playbackCount==2)
+            check(runCatching { com.sportswave.app.YacineApi.parsePlayback(descriptors,checkedSource,2) }.isFailure)
+            val bundled=com.sportswave.app.PublicChannelStreams.sports.first()
+            store.recordPlayback(bundled,true)
+            check(store.playbackCheck(bundled.copy(integration="yacine",url="",serviceUrl=com.sportswave.app.YacineApi.DEFAULT_ENDPOINT))==true)
             check(store.events().single().sourceId=="test")
             event.put("sourceId","").put("broadcasts",JSONArray().put(JSONObject().put("provider","Example broadcaster").put("channelName","Test source")))
             source.put("provider","Example broadcaster").put("aliases",JSONArray().put("Channel One"))

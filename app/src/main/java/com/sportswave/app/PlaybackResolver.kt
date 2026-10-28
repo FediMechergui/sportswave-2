@@ -5,8 +5,8 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
 object PlaybackResolver {
-    fun resolve(source: Source): Source {
-        if(source.integration=="yacine") return YacineApi.resolve(source)
+    fun resolve(source: Source, usePublicAlternatives: Boolean = true, streamIndex: Int = 0): Source {
+        if(source.integration=="yacine") return YacineApi.resolve(source,usePublicAlternatives,streamIndex)
         if (source.resolverUrl.isBlank()) return source
         require(Catalog.validUrl(source.resolverUrl)) { "Invalid playback resolver." }
         val connection = URL(source.resolverUrl).openConnection() as HttpsURLConnection

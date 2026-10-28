@@ -1,0 +1,33 @@
+﻿package,id,name,sourceMode,result
+117,147,bein sport 9,413,URLError
+118,162,bein sport 9 SD,413,URLError
+119,172,bein sport 9 LOW,413,URLError
+120,173,bein sport max 1,413,InvalidURL
+120,174,bein sport max 2,413,InvalidURL
+120,175,bein sport max 3,413,InvalidURL
+120,176,bein sport max 4,413,InvalidURL
+261,1993,beIN 9HD,413,TimeoutError
+261,1994,beIN 9 SD,413,URLError
+261,1995,beIN 9Low,413,URLError
+261,2259,MAX 2 SD,413,URLError
+261,2265,MAX 2HD (backup),413,URLError
+261,2267,MAX 4HD (backup),413,URLError
+261,2268,MAX 1HD (backup),413,URLError
+261,2269,MAX 3HD (backup),413,URLError
+261,2274,beIN MAX 3HD,413,URLError
+261,2275,beIN MAX 4HD,413,URLError
+261,2278,beIN MAX 1HD,413,URLError
+261,2279,beIN MAX 2HD,413,URLError
+261,2287,MAX 1 SD,413,URLError
+262,2007,beIN 9HD,413,URLError
+263,2017,beIN 9 SD,413,URLError
+276,2134,beIN MAX 1HD,413,URLError
+276,2135,beIN MAX 2HD,413,URLError
+276,2136,beIN MAX 3HD,413,URLError
+276,2137,beIN MAX 4HD,413,URLError
+283,154726,بي ان سبورت 9,413,http_403
+331,4962,بي ان سبورت 9,413,http_403
+332,3961,بي ان سبورت 9,413,http_403
+333,4967,بي ان سبورت 9,413,http_403
+478,5367,Bein 9 720,413,URLError
+479,5626,Bein 9 480,413,URLError

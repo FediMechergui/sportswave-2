@@ -87,7 +87,7 @@ class MainActivity : Activity() {
         loadCalendar()
         loadYacine()
     }
-    override fun onResume() { super.onResume(); handler.postDelayed(refreshLive,30_000) }
+    override fun onResume() { super.onResume(); if(::body.isInitialized && tab=="Channels") render(keepScroll=true); handler.postDelayed(refreshLive,30_000) }
     override fun onPause() { handler.removeCallbacks(refreshLive); super.onPause() }
     override fun onDestroy() { handler.removeCallbacksAndMessages(null); imageWorkers.shutdownNow(); super.onDestroy() }
     override fun onSaveInstanceState(outState: Bundle) {
@@ -339,21 +339,21 @@ class MainActivity : Activity() {
         dialog.show()
     }
     private fun channels() {
-        padded(body, text("Your channels",32,Color.WHITE,true), bottom=8)
-        padded(body,text("A direct line to the sports you love.",13,muted),bottom=21)
+        padded(body, text("Your channels",28,Color.WHITE,true), bottom=6)
+        padded(body,text("Live channels and provider listings.",13,muted),bottom=14)
         search("Search channels") { render() }
         sports()
         val tools = row()
         tools.addView(button("＋ Add source",true) { addSource() },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
         tools.addView(button("Import catalog") { importCatalog() },LinearLayout.LayoutParams(0,-2,1f))
-        padded(body,tools,20)
-        val included=Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }
+        padded(body,tools,8)
+        val included=Catalog.channels.filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && (it.aliases+it.name).any { name -> name.contains(query,true) } }
         if(included.isNotEmpty()) {
-            section("Included live channels")
+            section("Included channels")
             included.forEach { sourceRow(it) }
             if(included.any { it.id=="bein-xtra-us" }) padded(body,text("beIN SPORTS XTRA is the English US feed, with its own programming. Availability varies by region.",12,muted),bottom=12)
         }
-        section("Yacine channels",if(providerLoading) "Loading…" else "${providerChannels.size} channels")
+        section("Yacine channels",if(providerLoading) "Loading…" else "${providerChannels.size} listings")
         val providerTools=row()
         providerTools.addView(button(channelPackages.firstOrNull { it.id==providerPackageId }?.name ?: "All channels - sports first") { choosePackage(channelPackages) },LinearLayout.LayoutParams(0,-2,1f).apply { marginEnd=dp(8) })
         providerTools.addView(button("Refresh") { loadYacine(true); render() },LinearLayout.LayoutParams(-2,-2))
@@ -361,24 +361,28 @@ class MainActivity : Activity() {
         if(providerError.isNotBlank()) padded(body,text(providerError,12,red),bottom=12)
         if(providerLoading && providerChannels.isEmpty()) padded(body,text("Loading the provider's channel catalog…",12,muted),bottom=12)
         val visible=ChannelCatalog.unique(providerChannels.filter { (providerPackageId.isBlank() || it.catalogCategoryId==providerPackageId) && (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && (it.name+" "+it.catalogCategory).contains(query,true) })
-        padded(body,text("${visible.size} channels in this view - ${channelPackages.size} packages. Sports first; quality variants are available in the player.",11,muted),bottom=12)
+        padded(body,text("${visible.size} channel${if(visible.size==1) "" else "s"} in this view · ${channelPackages.size} packages. Quality variants are available in the player.",11,muted),bottom=12)
         visible.take(providerPageSize).forEach { sourceRow(it) }
         if(visible.size>providerPageSize) padded(body,button("Show more channels (${visible.size-providerPageSize})") { providerPageSize+=40; render(keepScroll=true) },bottom=12)
         if(!providerLoading && providerChannels.isEmpty()) padded(body,text("No channels loaded. Refresh the catalog or check the service address.",12,muted),bottom=10)
         padded(body,button("Service address") { editServiceAddress() },bottom=14)
-        section("Your collection", "${store.custom().size} sources")
         val sources = store.custom().filter { (sport=="All sports" || it.sport==sport || it.sport=="Multi-sport") && it.name.contains(query,true) }
-        if(sources.isEmpty()) empty("Make room for your favorites", "Add an HTTPS channel URL or import a provider catalog. Your sources play here, inside the app.") else sources.forEach { sourceRow(it) }
-        section("Player test streams")
-        padded(body,text("Public sample videos for testing HLS and DASH. These are not live sports channels.",12,muted),bottom=14)
-        Catalog.samples.filter { it.name.contains(query,true) }.forEach { sourceRow(it) }
+        if(sources.isNotEmpty()) { section("Your collection", "${sources.size} sources"); sources.forEach { sourceRow(it) } }
+        val samples=Catalog.samples.filter { it.name.contains(query,true) }
+        if(samples.isNotEmpty()) {
+            section("Player test streams")
+            padded(body,text("Public sample videos for testing HLS and DASH. These are not live sports channels.",12,muted),bottom=14)
+            samples.forEach { sourceRow(it) }
+        }
     }
     private fun sourceRow(source: Source) {
-        val card = row().apply { background=shape(panel,15); setPadding(dp(16),dp(17),dp(10),dp(17)); isFocusable=true; setOnClickListener { play(source,if(source.integration=="yacine") ChannelCatalog.alternatives(source,store.providerSources()) else listOf(source)) } }
+        val card = row().apply { background=android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x22FFFFFF),shape(panel,13),null); setPadding(dp(14),dp(12),dp(10),dp(12)); minimumHeight=dp(58); isFocusable=true; setOnClickListener { play(source,if(source.integration=="yacine") ChannelCatalog.alternatives(source,store.providerSources()) else listOf(source)) } }
         if(source.logoUrl.isNotBlank()) card.addView(crest(source.logoUrl,source.name).apply { contentDescription="${source.name} logo" },LinearLayout.LayoutParams(dp(34),dp(34)).apply { marginEnd=dp(8) })
         else card.addView(NavigationIcon(this,"Channels",red),LinearLayout.LayoutParams(dp(28),dp(28)).apply { marginEnd=dp(14) })
-        val info=column(); info.addView(text(source.name,15,Color.WHITE,true)); space(info,7)
-        info.addView(text(if(source.demo) "DEMO VIDEO · ${if(source.id.contains("hls")) "HLS" else "DASH"}" else if(source.integration=="yacine") "${source.catalogCategory.ifBlank { source.provider }} - Watch channel" else if(source.sessionSnapshot) "${source.provider} · Temporary playback session" else "${source.provider.ifBlank { source.sport }} · ${if(source.resolverUrl.isNotBlank()) "Provider playback" else "Direct stream"}",10,muted))
+        val info=column(); info.addView(text(source.name,14,Color.WHITE,true)); space(info,4)
+        val check=store.playbackCheck(source)
+        val subtitle=when { source.demo -> "Player test · ${if(source.id.contains("hls")) "HLS" else "DASH"}"; check==true -> "${source.provider.ifBlank { source.sport }} · Last playback worked"; check==false -> "Last attempt failed · Tap to retry"; source.integration=="yacine" -> "${source.catalogCategory.ifBlank { source.provider }} · Not checked yet"; else -> "${source.provider.ifBlank { source.sport }} · Open channel" }
+        info.addView(text(subtitle,11,if(check==false) red else muted))
         card.addView(info,LinearLayout.LayoutParams(0,-2,1f))
         if(!source.demo && source.integration.isBlank() && Catalog.channels.none { it.id == source.id }) card.addView(iconButton("×","Remove ${source.name}") { AlertDialog.Builder(this).setTitle("Remove channel?").setMessage(source.name).setNegativeButton("Cancel",null).setPositiveButton("Remove") { _,_ -> store.remove(source.id); render() }.show() })
         padded(body,card,bottom=9)

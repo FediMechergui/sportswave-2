@@ -1,0 +1,81 @@
+﻿id,name,package,delivery_result,android_result,visible_brand,identity_result
+8093614024262419843,beIN SPORTS 1,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 1,numbered_watermark_matches
+8093614024263662330,beIN SPORTS 2,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 2,numbered_watermark_matches
+8093614024264538533,beIN SPORTS 3,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 3,numbered_watermark_matches
+8093614024265220252,beIN SPORTS 4,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 4,numbered_watermark_matches
+8093614024257948855,beIN SPORTS 5,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 5,numbered_watermark_matches
+8093614024259441758,beIN SPORTS 6,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 6,numbered_watermark_matches
+8093614024260675800,beIN SPORTS 7,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 7,numbered_watermark_matches
+8093614024261343505,beIN SPORTS 8,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614024270801478,beIN SPORTS 9,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614024250808790,beIN XTRA 1,beIN SPORTS (1080P),available,error_2004_http_404,,unverified_no_video
+8093614024251429345,beIN XTRA 2,beIN SPORTS (1080P),available,video_frame,beIN SPORTS 7,mismatch
+8093614024253081192,beIN XTRA 3,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614024271440287,beIN France 1,beIN SPORTS (1080P),no_streams,resolve_error,,unverified_no_video
+8093614024272959436,beIN France 2,beIN SPORTS (1080P),no_streams,resolve_error,,unverified_no_video
+8093614024274451157,beIN France 3,beIN SPORTS (1080P),failed,resolve_error,,unverified_no_video
+8093614024266328938,beIN News,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614024268023539,beIN SPORTS,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614024321687380,beIN English 1,beIN SPORTS (1080P),no_streams,resolve_error,,unverified_no_video
+8093614024323602875,beIN English 2,beIN SPORTS (1080P),no_streams,resolve_error,,unverified_no_video
+8093614024324061426,beIN English 3,beIN SPORTS (1080P),failed,error_2004_http_404,,unverified_no_video
+8093614023570873384,beIN SPORTS 1,beIN SPORTS (720P),available,video_frame,beIN SPORTS 1,numbered_watermark_matches
+8093614023571318689,beIN SPORTS 2,beIN SPORTS (720P),available,video_frame,beIN SPORTS 2,numbered_watermark_matches
+8093614023572795286,beIN SPORTS 3,beIN SPORTS (720P),available,video_frame,beIN SPORTS 3,numbered_watermark_matches
+8093614023573666863,beIN SPORTS 4,beIN SPORTS (720P),available,video_frame,beIN SPORTS 4,numbered_watermark_matches
+8093614023582898564,beIN SPORTS 5,beIN SPORTS (720P),available,video_frame,beIN SPORTS 5,numbered_watermark_matches
+8093614023584120941,beIN SPORTS 6,beIN SPORTS (720P),available,video_frame,beIN SPORTS 6,numbered_watermark_matches
+8093614023585474545,beIN SPORTS 7,beIN SPORTS (720P),available,video_frame,beIN SPORTS 7,numbered_watermark_matches
+8093614023585806136,beIN SPORTS 8,beIN SPORTS (720P),available,video_frame,beIN SPORTS 8,numbered_watermark_matches
+8093614023578942207,beIN SPORTS 9,beIN SPORTS (720P),failed,error_2004_http_404,,unverified_no_video
+8093614023576039269,beIN XTRA 1,beIN SPORTS (720P),available,error_2004_http_404,,unverified_no_video
+8093614023576211642,beIN XTRA 2,beIN SPORTS (720P),available,video_frame,beIN SPORTS 7,mismatch
+8093614023578114883,beIN XTRA 3,beIN SPORTS (720P),failed,error_2004_http_404,,unverified_no_video
+8093614023579399846,beIN France 1,beIN SPORTS (720P),no_streams,resolve_error,,unverified_no_video
+8093614023581035701,beIN France 2,beIN SPORTS (720P),no_streams,resolve_error,,unverified_no_video
+8093614023582347436,beIN France 3,beIN SPORTS (720P),no_streams,resolve_error,,unverified_no_video
+8093614023591508947,beIN News,beIN SPORTS (720P),failed,error_2004_http_404,,unverified_no_video
+8093614023592670922,beIN SPORTS,beIN SPORTS (720P),available,video_frame,beIN SPORTS 7,generic_label_ambiguous
+8093614023593946617,beIN English 1,beIN SPORTS (720P),no_streams,resolve_error,,unverified_no_video
+8093614023593958464,beIN English 2,beIN SPORTS (720P),no_streams,resolve_error,,unverified_no_video
+8093614023587327268,beIN English 3,beIN SPORTS (720P),failed,error_2004_http_404,,unverified_no_video
+8093614023600141904,beIN SPORTS 1,beIN SPORTS (360P),available,video_frame,beIN SPORTS 1,numbered_watermark_matches
+8093614023601056393,beIN SPORTS 2,beIN SPORTS (360P),available,video_frame,beIN SPORTS 2,numbered_watermark_matches
+8093614023601624254,beIN SPORTS 3,beIN SPORTS (360P),available,video_frame,beIN SPORTS 3,numbered_watermark_matches
+8093614023603285015,beIN SPORTS 4,beIN SPORTS (360P),available,video_frame,beIN SPORTS 4,numbered_watermark_matches
+8093614023595271036,beIN SPORTS 5,beIN SPORTS (360P),available,video_frame,beIN SPORTS 5,numbered_watermark_matches
+8093614023596082693,beIN SPORTS 6,beIN SPORTS (360P),available,video_frame,beIN SPORTS 6,numbered_watermark_matches
+8093614023597576347,beIN SPORTS 7,beIN SPORTS (360P),available,video_frame,beIN SPORTS 7,numbered_watermark_matches
+8093614023598343762,beIN SPORTS 8,beIN SPORTS (360P),available,video_frame,beIN SPORTS 8,numbered_watermark_matches
+8093614023607672221,beIN SPORTS 9,beIN SPORTS (360P),failed,error_2004_http_404,,unverified_no_video
+8093614023588244493,beIN XTRA 1,beIN SPORTS (360P),available,error_2004_http_404,,unverified_no_video
+8093614023589269442,beIN XTRA 2,beIN SPORTS (360P),failed,error_2004_http_404,,unverified_no_video
+8093614023590229579,beIN XTRA 3,beIN SPORTS (360P),failed,error_2004_http_404,,unverified_no_video
+8093614023608987956,beIN France 1,beIN SPORTS (360P),no_streams,resolve_error,,unverified_no_video
+8093614023609989095,beIN France 2,beIN SPORTS (360P),no_streams,resolve_error,,unverified_no_video
+8093614023611711950,beIN France 3,beIN SPORTS (360P),no_streams,resolve_error,,unverified_no_video
+8093614023603440345,beIN News,beIN SPORTS (360P),failed,error_2004_http_404,,unverified_no_video
+8093614023604898720,beIN SPORTS,beIN SPORTS (360P),available,video_frame,beIN SPORTS 7,generic_label_ambiguous
+8093614023606270515,beIN English 1,beIN SPORTS (360P),no_streams,resolve_error,,unverified_no_video
+8093614023606673066,beIN English 2,beIN SPORTS (360P),no_streams,resolve_error,,unverified_no_video
+8093614023616563102,beIN English 3,beIN SPORTS (360P),failed,error_2004_http_404,,unverified_no_video
+8093614023611909154,beIN SPORTS 1,beIN SPORTS (244P),available,video_frame,beIN SPORTS 1,numbered_watermark_matches
+8093614023613456939,beIN SPORTS 2,beIN SPORTS (244P),available,video_frame,beIN SPORTS 2,numbered_watermark_matches
+8093614023614887684,beIN SPORTS 3,beIN SPORTS (244P),available,video_frame,beIN SPORTS 3,numbered_watermark_matches
+8093614023615061485,beIN SPORTS 4,beIN SPORTS (244P),available,video_frame,beIN SPORTS 4,numbered_watermark_matches
+8093614023624707350,beIN SPORTS 5,beIN SPORTS (244P),available,video_frame,beIN SPORTS 5,numbered_watermark_matches
+8093614023625578927,beIN SPORTS 6,beIN SPORTS (244P),available,video_frame,beIN SPORTS 6,numbered_watermark_matches
+8093614023627108645,beIN SPORTS 7,beIN SPORTS (244P),available,video_frame,beIN SPORTS 7,numbered_watermark_matches
+8093614023627790364,beIN SPORTS 8,beIN SPORTS (244P),available,video_frame,beIN SPORTS 8,numbered_watermark_matches
+8093614023620795651,beIN SPORTS 9,beIN SPORTS (244P),failed,error_2004_http_404,,unverified_no_video
+8093614023617167351,beIN XTRA 1,beIN SPORTS (244P),available,error_2004_http_404,,unverified_no_video
+8093614023618917296,beIN XTRA 2,beIN SPORTS (244P),failed,error_2004_http_404,,unverified_no_video
+8093614023620117993,beIN XTRA 3,beIN SPORTS (244P),failed,error_2004_http_404,,unverified_no_video
+8093614023622038138,beIN France 1,beIN SPORTS (244P),no_streams,resolve_error,,unverified_no_video
+8093614023622388065,beIN France 2,beIN SPORTS (244P),no_streams,resolve_error,,unverified_no_video
+8093614023624039912,beIN France 3,beIN SPORTS (244P),failed,resolve_error,,unverified_no_video
+8093614023633124847,beIN News,beIN SPORTS (244P),failed,error_2004_http_404,,unverified_no_video
+8093614023634350422,beIN SPORTS,beIN SPORTS (244P),available,video_frame,beIN SPORTS 7,generic_label_ambiguous
+8093614023635190317,beIN English 1,beIN SPORTS (244P),no_streams,resolve_error,,unverified_no_video
+8093614023636065092,beIN English 2,beIN SPORTS (244P),no_streams,resolve_error,,unverified_no_video
+8093614023658213842,beIN English 3,beIN SPORTS (244P),failed,error_2004_http_404,,unverified_no_video

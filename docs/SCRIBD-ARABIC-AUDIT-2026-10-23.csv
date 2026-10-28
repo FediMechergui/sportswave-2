@@ -1,0 +1,24 @@
+channel,url,http_status,result,received_bytes
+ARABIC Bein 10,http://188.227.189.18:8082/TV4010,000,connection_timeout,0
+ARABIC Bein 11,http://188.227.189.18:8082/TV4011,000,connection_timeout,0
+ARABIC Bein 12,http://188.227.189.18:8082/TV4012,000,connection_timeout,0
+ARABIC Bein 13,http://188.227.189.18:8082/TV4013,000,connection_timeout,0
+ARABIC Bein 14,http://188.227.189.18:8082/TV4014,000,connection_timeout,0
+ARABIC Bein 15,http://188.227.189.18:8082/TV4015,000,connection_timeout,0
+ARABIC Bein 2,http://188.227.189.18:8082/TV4017,000,connection_timeout,0
+ARABIC Bein 2 1920*1090,http://188.227.189.18:8082/TV4002,000,connection_timeout,0
+ARABIC Bein 3 1920*1090,http://188.227.189.18:8082/TV4003,000,connection_timeout,0
+ARABIC Bein 4 1920*1090,http://188.227.189.18:8082/TV4004,000,connection_timeout,0
+ARABIC Bein 5 1920*1090,http://188.227.189.18:8082/TV4005,000,connection_timeout,0
+ARABIC Bein 6,http://188.227.189.18:8082/TV4009,000,connection_timeout,0
+ARABIC BEIN 6 1920*1090,http://188.227.189.18:8082/TV4006,000,connection_timeout,0
+ARABIC Bein 7,http://188.227.189.18:8082/TV4007,000,connection_timeout,0
+ARABIC Bein 8,http://188.227.189.18:8082/TV4008,000,connection_timeout,0
+ARABIC Bein 9,http://188.227.189.18:8082/TV4009,000,connection_timeout,0
+ARABIC CVD,http://188.227.189.18:8082/TV4025,000,connection_timeout,0
+ARABIC N SPORT,http://188.227.189.18:8082/TV4136,000,connection_timeout,0
+ARABIC PRO SPORT 1,http://188.227.189.18:8082/TV4133,000,connection_timeout,0
+ARABIC PRO SPORT 2,http://188.227.189.18:8082/TV4134,000,connection_timeout,0
+ARABIC PRO SPORT 3,http://188.227.189.18:8082/TV4135,000,connection_timeout,0
+ARABIC SKY SPORT 1,http://188.227.189.18:8082/TV4284,000,connection_timeout,0
+ARABIC SKY SPORT 4,http://188.227.189.18:8082/TV4130,000,connection_timeout,0

@@ -7,7 +7,7 @@ def get(url,headers=None,limit=1048576):
  req=u.Request(url,headers=headers or {})
  with u.urlopen(req,timeout=12) as r:return r.read(limit),r.headers,r.geturl()
 def api(route):
- b,h,_=get('http://def67.ycnapi.com/api/'+route,{'User-Agent':'okhttp/4.9.0','Accept':'application/json'})
+ b,h,_=get('http://def001.ycnapi.com/api/'+route,{'User-Agent':'okhttp/4.12.0','Accept':'application/json'})
  k=PREFIX+h['t'].encode();return json.loads(bytes(v^k[i%len(k)] for i,v in enumerate(base64.b64decode(b))))
 def media(url,headers,depth=0):
  b,h,final=get(url,headers,262144)
@@ -22,8 +22,11 @@ def media(url,headers,depth=0):
   if key:
    import re
    m=re.search(r'URI="([^"]+)"',key)
-   if m:get(p.urljoin(final,m[1]),headers,1024)
+   if m:
+    key_bytes,_,_=get(p.urljoin(final,m[1]),headers,1024)
+    if re.search(r'(?:^|,)METHOD=AES-128(?:,|$)',key.split(':',1)[1]) and len(key_bytes)!=16:return 'unsupported_aes128_key_length'
   segment,_,_=get(p.urljoin(final,links[-2] if len(links)>1 else links[0]),headers,4096)
+  if segment.startswith((b'\x89PNG\r\n\x1a\n',b'\xff\xd8\xff',b'GIF87a',b'GIF89a')) or (segment.startswith(b'RIFF') and segment[8:12]==b'WEBP'):return 'wrapped_image_segment'
   return 'hls_segment_ok' if segment and not segment.lstrip().lower().startswith((b'<html',b'<!doctype')) else 'invalid_segment'
  if b.lstrip().startswith(b'<') and b'<MPD' in b:return 'dash_manifest_only'
  if b and not b.lstrip().lower().startswith((b'<html',b'<!doctype')) and ('video/' in h.get('Content-Type','') or b[:1]==b'G' or b'ftyp' in b[:64]):return 'media_bytes_ok'

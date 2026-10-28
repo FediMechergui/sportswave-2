@@ -13,7 +13,7 @@ object EventSchedule {
         return when { now<start -> AiringPhase.UPCOMING; now>=end || event.status.lowercase(Locale.ROOT) in setOf("full time","final","finished","cancelled","canceled","postponed") -> AiringPhase.ENDED; else -> AiringPhase.AIRING }
     }
     private fun identity(value: String)=value.lowercase(Locale.ROOT).filter { it.isLetterOrDigit() }
-    private fun contestKey(event: Event)=if(event.away.isBlank()) null else event.sport+"|"+listOf(identity(event.home),identity(event.away)).sorted().joinToString("|")
+    private fun contestKey(event: Event)=if(event.away.isBlank()) null else event.sport+"|"+identity(event.home)+"|"+identity(event.away)
     /** Both participant identities and nearby start times must agree; sport alone never supplies a channel. */
     fun sameContest(a: Event,b: Event): Boolean {
         if(a.away.isBlank() || b.away.isBlank() || a.sport!=b.sport) return false

@@ -18,6 +18,17 @@ class EventScheduleTest {
         assertTrue(EventSchedule.enrich(event,listOf(linked.copy(away="Team C"))).broadcasts.isEmpty())
         assertTrue(EventSchedule.enrich(event,listOf(linked.copy(startUtc="2026-10-23T18:00:00Z"))).broadcasts.isEmpty())
     }
+    @Test fun reversedParticipantsCannotInheritScoresOrBroadcasts() {
+        val reverse=event.copy(id="reverse",home=event.away,away=event.home,score="2-1",broadcasts=listOf(Broadcast(provider="beIN",channelName="beIN SPORTS 9")))
+        assertFalse(EventSchedule.sameContest(event,reverse))
+        assertTrue(EventSchedule.enrich(event,listOf(reverse)).broadcasts.isEmpty())
+        assertEquals(2,EventSchedule.merge(listOf(event,reverse)).size)
+    }
+    @Test fun asianAndAfricanFootballListingsKeepTheirSport() {
+        assertEquals("Football",ScheduleFeeds.sport("Sports General AFC Champions League Elite"))
+        assertEquals("Football",ScheduleFeeds.sport("CAF Confederation Cup Draw"))
+        assertEquals("Basketball",ScheduleFeeds.sport("Basketball Champions League"))
+    }
     @Test fun mergingKeepsEveryAssignedProviderAndCrests() {
         val a=event.copy(broadcasts=listOf(Broadcast(provider="beIN",channelName="beIN SPORTS 1")))
         val b=event.copy(id="second",broadcasts=listOf(Broadcast(provider="Alkass",channelName="Alkass 1")),homeCrest="https://example.com/team.png")
@@ -41,5 +52,17 @@ class EventScheduleTest {
         val source=Source("x2","beIN XTRA 2","Multi-sport","https://example.com/live",provider="beIN")
         assertEquals(listOf(source),BroadcastRouting.matches(event.copy(broadcasts=listOf(Broadcast(provider="beIN",channelName="beIN SPORTS XTRA 2"))),listOf(source)))
         assertTrue(BroadcastRouting.matches(event.copy(broadcasts=listOf(Broadcast(provider="beIN",channelName="beIN SPORTS XTRA 3"))),listOf(source)).isEmpty())
+    }
+    @Test fun arabicAliasesKeepChannelNumbersAndXtraSeparate() {
+        val sources=listOf(Source("x2","beIN XTRA 2","Multi-sport","https://example.com/live",provider="beIN"),Source("s2","beIN SPORTS 2","Multi-sport","https://example.com/two",provider="beIN"))
+        val match=event.copy(broadcasts=listOf(Broadcast(provider="beIN",channelName="بي ان سبورت اكسترا ٢")))
+        assertEquals(listOf(sources.first()),BroadcastRouting.matches(match,sources))
+        assertTrue(BroadcastRouting.matches(match.copy(broadcasts=listOf(Broadcast(provider="beIN",channelName="بي ان سبورت ماكس ٢"))),sources).isEmpty())
+    }
+    @Test fun footballDateUsesLocalKickoffDay() {
+        val a=FootballMatch("a","A","B","","","2026-10-22T23:30:00Z","0-0","Scheduled")
+        val b=a.copy(id="b",start="2026-10-22T18:00:00Z")
+        assertEquals(listOf(a),SportsFeeds.onDate(listOf(a,b),java.time.LocalDate.of(2026,10,23),java.time.ZoneId.of("Africa/Lagos")))
+        assertEquals(listOf(a,b),SportsFeeds.onDate(listOf(a,b),java.time.LocalDate.of(2026,10,22),java.time.ZoneOffset.UTC))
     }
 }

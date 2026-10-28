@@ -2,7 +2,25 @@ package com.sportswave.app
 
 /** Verified public delivery alternatives. Exact catalog IDs prevent cross-channel substitution. */
 object PublicChannelStreams {
+    /** Broadcaster feeds available even before the remote catalog has synchronized. */
+    val sports = listOf(
+        sportsSource("8093614024085928711", "Bahrain Sports 1", "Bahrain", "https://5c7b683162943.streamlock.net/live/ngrp:sportsone_all/playlist.m3u8", "Bahrain Sports"),
+        sportsSource("8093614024087628142", "Bahrain Sports 2", "Bahrain", "https://5c7b683162943.streamlock.net/live/ngrp:bahrainsportstwo_all/playlist.m3u8"),
+        sportsSource("8093614024090866910", "Kuwait Sport", "Kuwait", "https://kwtspta.cdn.mangomolo.com/sp/smil:sp.stream.smil/chunklist.m3u8", "KTV Sport"),
+        sportsSource("8093614024091471159", "Kuwait Sport 2", "Kuwait", "https://kwtsplta.cdn.mangomolo.com/spl/smil:spl.stream.smil/chunklist.m3u8", "KTV Sport Plus"),
+        sportsSource("8093614023844642330", "Jordan Sports", "Jordan", "https://jrtv-live.ercdn.net/jordansporthd/jordansporthd.m3u8", "Jordan Sport"),
+        sportsSource("8093614023881577308", "Oman Sport", "Oman", "https://partneta.cdn.mgmlcdn.com/omsport/smil:omsport.stream.smil/chunklist.m3u8", "Oman Sports TV")
+    )
+    private fun sportsSource(id: String, name: String, provider: String, url: String, vararg aliases: String) =
+        Source("yacine-$id", name, "Multi-sport", url, "application/x-mpegURL", provider=provider, channelId=id, aliases=aliases.toList(), catalogCategory="Arabic sports", integration="yacine", serviceUrl=YacineApi.DEFAULT_ENDPOINT)
     private val streams = mapOf(
+        "8093614024016819212" to "https://cdn1.logichost.in/ajmantv/live/playlist.m3u8",
+        "8093614024668959744" to "https://live.kwikmotion.com/alaraby1live/alaraby_abr/playlist.m3u8",
+        "8093614024257048015" to "https://eazyvwqssi.erbvr.com/alghadtv/alghadtv.m3u8",
+        "8093614025240480712" to "https://starmenajo.com/hls/almasar/index.m3u8",
+        "8093614023930220126" to "https://hlspackager.akamaized.net/live/DB/ALYAUM_TV/HLS/ALYAUM_TV.m3u8",
+        "8093614024047463580" to "https://htvmada.mada.ps:4443/maannews/index.m3u8",
+        "8093614023438743164" to "https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-plus-drama/e37251ec2aac8f6c98f75cd0fa37cd28/index.m3u8",
         "8093614023458564860" to "https://d6izdil55uftn.cloudfront.net/out/v1/0a06d1d6377c47edbd48721ed724bd08/index.m3u8",
         "8093614023559369576" to "https://rt-fra.rttv.com/dvr/rtfrance/playlist.m3u8",
         "8093614023560863457" to "https://live.france24.com/hls/live/2037179-b/F24_FR_HI_HLS/master_5000.m3u8",
@@ -40,9 +58,15 @@ object PublicChannelStreams {
         "8093614023954693392" to "https://cdn-globecast.akamaized.net/live/eds/sudan_tv/hls_roku/index.m3u8",
         "8093614024256066742" to "https://live-news.asharq.com/asharq.m3u8"
     )
+    val replacementCount get() = streams.size+sports.size
+    val channels: List<Source> get() = sports + PublicChannelMetadata.records.map { (id,name,category) ->
+        Source("yacine-$id",name,"Other",streams.getValue(id),"application/x-mpegURL",provider=category,channelId=id,
+            integration="yacine",serviceUrl=YacineApi.DEFAULT_ENDPOINT,catalogCategory=category)
+    }
     fun resolve(source: Source): Source? {
-        if(source.integration!="yacine" || source.serviceUrl.ifBlank { YacineApi.DEFAULT_ENDPOINT }!=YacineApi.DEFAULT_ENDPOINT) return null
-        val url=streams[source.channelId] ?: return null
+        if(source.integration!="yacine" || YacineApi.canonicalEndpoint(source.serviceUrl.ifBlank { YacineApi.DEFAULT_ENDPOINT })!=YacineApi.DEFAULT_ENDPOINT) return null
+        val id=YacineChannelIds.previous(source.channelId)
+        val url=streams[id] ?: sports.firstOrNull { it.channelId==id }?.url ?: return null
         return source.copy(url=url,mime="application/x-mpegURL",headers=emptyMap(),userAgent="SportsWave/1.0",allowHttp=false,licenseUrl="",licenseHeaders=emptyMap(),sessionSnapshot=false)
     }
 }

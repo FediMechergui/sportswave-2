@@ -6,6 +6,17 @@ import org.json.JSONObject
 
 class Store(context: Context, preferenceName: String = "sportswave") {
     private val prefs = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE)
+    private fun playbackKey(source: Source): String {
+        val bundledProviderChannel=PublicChannelStreams.sports.any { it.id==source.id } && YacineApi.canonicalEndpoint(source.serviceUrl) in listOf("",YacineApi.DEFAULT_ENDPOINT)
+        val identity=if(bundledProviderChannel) "${source.id}|${YacineApi.DEFAULT_ENDPOINT}|bundled-sports" else "${source.id}|${source.serviceUrl}|${source.url}|${source.resolverUrl}"
+        return "playback_"+java.security.MessageDigest.getInstance("SHA-256").digest(identity.toByteArray()).joinToString("") { "%02x".format(it) }
+    }
+    fun recordPlayback(source: Source, working: Boolean) { prefs.edit().putString(playbackKey(source),"${System.currentTimeMillis()}|$working").apply() }
+    fun playbackCheck(source: Source): Boolean? = runCatching {
+        val parts=prefs.getString(playbackKey(source),null)?.split('|') ?: return null
+        val age=System.currentTimeMillis()-parts[0].toLong()
+        if(age !in 0L..21_600_000L) null else parts[1].toBooleanStrict()
+    }.getOrNull()
     fun saved(): Set<String> = prefs.getStringSet("saved", emptySet())!!.toSet()
     fun toggle(id: String) { val set = saved().toMutableSet(); if (!set.add(id)) set.remove(id); prefs.edit().putStringSet("saved", set).apply() }
     fun savedEvents(): List<Event> = runCatching {
@@ -18,10 +29,10 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     }
     fun custom(): List<Source> = runCatching { parse(prefs.getString("sources", "[]")!!) }.getOrDefault(emptyList())
     fun all(): List<Source> = (custom() + providerSources() + Catalog.channels + Catalog.samples).distinctBy { it.id }
-    fun providerEndpoint(): String = prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!
+    fun providerEndpoint(): String = YacineApi.canonicalEndpoint(prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!)
     @Synchronized fun setProviderEndpoint(value: String) { require(YacineApi.validEndpoint(value)); val editor=prefs.edit().putString("yacine_endpoint",value).remove("yacine_packages").remove("yacine_synced_at"); prefs.all.keys.filter { it.startsWith("yacine_channels_") }.forEach { editor.remove(it) }; editor.apply() }
     fun selectedPackage(): String = prefs.getString("yacine_package","")!!
-    fun catalogSyncedAt(): Long = prefs.getLong("yacine_synced_at",0)
+    fun catalogSyncedAt(): Long = if(prefs.getString("yacine_catalog_revision","")=="2026-10-28") prefs.getLong("yacine_synced_at",0) else 0
     fun providerPackages(): List<ChannelPackage> = runCatching { val a=JSONArray(prefs.getString("yacine_packages","[]")); (0 until a.length()).map { val o=a.getJSONObject(it); ChannelPackage(o.getString("id"),o.getString("name"),0) } }.getOrDefault(emptyList())
     fun cacheProviderPackages(packages: List<ChannelPackage>, complete: Boolean) {
         val merged=if(complete) packages else (providerPackages()+packages).distinctBy { it.id }
@@ -30,6 +41,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
             val ids=packages.map { it.id }.toSet()
             prefs.all.keys.filter { it.startsWith("yacine_channels_") && it.removePrefix("yacine_channels_") !in ids }.forEach { editor.remove(it) }
             editor.putLong("yacine_synced_at",System.currentTimeMillis())
+            editor.putString("yacine_catalog_revision","2026-10-28")
         }
         editor.apply()
     }

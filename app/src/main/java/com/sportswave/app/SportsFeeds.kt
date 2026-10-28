@@ -30,7 +30,10 @@ object SportsFeeds {
     private fun get(url: String) = JSONArray(read(url))
     fun scoreboard(league: String, date: java.time.LocalDate = java.time.LocalDate.now()): List<FootballMatch> {
         val route = requireNotNull(leagues[league])
-        if(route == "openliga") return football()
+        if(route == "openliga") {
+            val season=if(date.monthValue>=7) date.year else date.year-1
+            return onDate(parseFootball(get("https://api.openligadb.de/getmatchdata/bl1/$season")),date)
+        }
         val dates=date.format(java.time.format.DateTimeFormatter.BASIC_ISO_DATE)
         val data=JSONObject(read("https://site.api.espn.com/apis/site/v2/sports/$route/scoreboard?limit=1000&dates=$dates"))
         if(route.startsWith("tennis/")) return parseTennis(data,league)
@@ -81,6 +84,8 @@ object SportsFeeds {
     }
     private fun JSONArray.objects(): List<JSONObject> = (0 until length()).map { getJSONObject(it) }
     fun football(): List<FootballMatch> = parseFootball(get("https://api.openligadb.de/getmatchdata/bl1"))
+    fun onDate(matches: List<FootballMatch>, date: java.time.LocalDate, zone: java.time.ZoneId = java.time.ZoneId.systemDefault()) =
+        matches.filter { runCatching { Instant.parse(it.start).atZone(zone).toLocalDate()==date }.getOrDefault(false) }
     fun parseFootball(data: JSONArray, now: Instant = Instant.now()): List<FootballMatch> = data.objects().map { o ->
         val home = o.getJSONObject("team1"); val away = o.getJSONObject("team2")
         val result = o.getJSONArray("matchResults").objects().lastOrNull { it.optInt("resultTypeID") == 2 }

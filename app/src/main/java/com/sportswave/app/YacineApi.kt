@@ -13,7 +13,9 @@ data class CatalogSync(val packages: List<ChannelPackage>, val failed: List<Stri
 
 /** Provider metadata and fresh playback descriptors; no native APK code is bundled. */
 object YacineApi {
-    const val DEFAULT_ENDPOINT = "http://def67.ycnapi.com/api/"
+    const val DEFAULT_ENDPOINT = "http://def001.ycnapi.com/api/"
+    const val LEGACY_ENDPOINT = "http://def67.ycnapi.com/api/"
+    fun canonicalEndpoint(value: String): String = if(value==LEGACY_ENDPOINT) DEFAULT_ENDPOINT else value
     private const val RESPONSE_PREFIX = "c!xZj+N9&G@Ev@vw"
 
     fun events(endpoint: String): List<Event> = ScheduleFeeds.parseYacine(request(endpoint,"events").getJSONArray("data"))
@@ -33,7 +35,7 @@ object YacineApi {
 
     private fun request(endpoint: String, route: String): JSONObject {
         require(validEndpoint(endpoint)) { "Invalid Yacine service address." }
-        val connection=URL(endpoint+route).openConnection() as HttpURLConnection
+        val connection=URL(canonicalEndpoint(endpoint)+route).openConnection() as HttpURLConnection
         connection.connectTimeout=12000; connection.readTimeout=18000
         connection.setRequestProperty("Accept","application/json")
         connection.setRequestProperty("User-Agent","okhttp/4.12.0")
@@ -83,24 +85,27 @@ object YacineApi {
         return CatalogSync(leaves,failed)
     }
 
-    fun resolve(source: Source): Source {
+    fun resolve(source: Source, usePublicAlternatives: Boolean = true, streamIndex: Int = 0): Source {
         require(source.channelId.matches(Regex("[0-9]+"))) { "Invalid Yacine channel ID." }
-        PublicChannelStreams.resolve(source)?.let { return it }
+        if(usePublicAlternatives) PublicChannelStreams.resolve(source)?.let { return it }
         runCatching { AlkassApi.resolve(source) }.getOrNull()?.let { return it }
-        val data=request(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT },"channel/${source.channelId}").getJSONArray("data")
-        return parsePlayback(data,source)
+        val id=if(canonicalEndpoint(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT })==DEFAULT_ENDPOINT) YacineChannelIds.current(source.channelId) else source.channelId
+        val data=request(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT },"channel/$id").getJSONArray("data")
+        return parsePlayback(data,source,streamIndex)
     }
 
-    fun parsePlayback(data: JSONArray, source: Source): Source {
+    fun parsePlayback(data: JSONArray, source: Source, streamIndex: Int = 0): Source {
         // Modes 1 and 3 are native direct playback in the inspected player.
-        val streams=(0 until data.length()).map { data.getJSONObject(it) }
-        val stream=streams.firstOrNull { it.optInt("url_type",1) in listOf(1,3) && it.isNull("drm") && Catalog.validMediaUrl(it.optString("url"),true) }
+        val streams=(0 until minOf(data.length(),8)).map { data.getJSONObject(it) }
+        val supported=streams.filter { it.optInt("url_type",1) in listOf(1,3) && it.isNull("drm") && Catalog.validMediaUrl(it.optString("url"),true) }
+        val stream=supported.getOrNull(streamIndex)
             ?: throw IllegalStateException(if(streams.isEmpty()) "This channel has no streams available." else "This channel needs a playback mode that is not supported yet.")
         val url=stream.getString("url")
+        ProviderFeedIdentity.mismatch(source,url)?.let { throw ChannelIdentityException(it,source.name) }
         val headerObject=stream.optJSONObject("headers") ?: JSONObject()
         val headers=headerObject.keys().asSequence().associateWith { headerObject.getString(it) }.toMutableMap()
         stream.optString("referer").takeIf { it.isNotBlank() && it!="null" }?.let { headers["Referer"]=it }
         val ua=stream.optString("user_agent").ifBlank { headers.entries.firstOrNull { it.key.equals("User-Agent",true) }?.value ?: "SportsWave/1.0" }
-        return source.copy(url=url,mime=if(URI(url).path.endsWith(".m3u8",true)) "application/x-mpegURL" else "",headers=headers,userAgent=ua,allowHttp=URI(url).scheme=="http",sessionSnapshot=false)
+        return source.copy(url=url,mime=if(URI(url).path.endsWith(".m3u8",true)) "application/x-mpegURL" else "",headers=headers,userAgent=ua,allowHttp=URI(url).scheme=="http",sessionSnapshot=false,playbackIndex=streamIndex,playbackCount=supported.size)
     }
 }

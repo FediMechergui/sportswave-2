@@ -1,0 +1,81 @@
+﻿id,name,package,current_delivery,current_android,current_identity,earlier_visual_result,earlier_visual_note
+8093614024262419843,beIN SPORTS 1,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,"beIN SPORTS 1 watermark and football footage; normal original-app launch, no proxy"
+8093614024263662330,beIN SPORTS 2,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,"beIN SPORTS 2 watermark, match clock 85:00; dismissed ad with Back"
+8093614024264538533,beIN SPORTS 3,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN SPORTS 3 watermark and football footage. The 36-second timeline alone is not evidence of VOD; earlier clip inference corrected.
+8093614024265220252,beIN SPORTS 4,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN SPORTS 4 watermark and football video; captured HLS has no ENDLIST and a 36-second sliding window; content freshness not established
+8093614024257948855,beIN SPORTS 5,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN SPORTS 5 watermark with football video; ad dismissed using normal close control
+8093614024259441758,beIN SPORTS 6,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN SPORTS 6 watermark; channel ident video; ad closed normally
+8093614024260675800,beIN SPORTS 7,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Selected beIN SPORTS 7; beIN promotional footage visible
+8093614024261343505,beIN SPORTS 8,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Black buffering screen persisted across two observations more than 60 seconds apart; original 1080P entry
+8093614024270801478,beIN SPORTS 9,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,No video; buffering screen and 00:00 timeline persisted during observation
+8093614024250808790,beIN XTRA 1,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,Opened beIN XTRA 1 with its API ID confirmed; late playback appeared with a beIN SPORTS 8 watermark; channel identity not confirmed
+8093614024251429345,beIN XTRA 2,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,Selected beIN XTRA 2; late playback carries beIN SPORTS 7 watermark and LIVE graphic; XTRA identity not confirmed
+8093614024253081192,beIN XTRA 3,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,XTRA 3 stayed on a black buffering screen across initial and later checks
+8093614024271440287,beIN France 1,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Opening France 1 returned to the catalog without playback; original channel API request confirmed
+8093614024272959436,beIN France 2,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,France 2 returned to the catalog without video
+8093614024274451157,beIN France 3,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,France 3 remained black across initial and later checks; no video observed
+8093614024266328938,beIN News,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,beIN News remained black and buffering at the later check
+8093614024268023539,beIN SPORTS,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Generic beIN SPORTS entry: both Multi and 1 source buttons were tried; no video observed
+8093614024321687380,beIN English 1,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,English 1 returned to the catalog without video
+8093614024323602875,beIN English 2,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,English 2 returned to the catalog without video
+8093614024324061426,beIN English 3,beIN SPORTS (1080P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,English 3 stayed buffering across initial and later observations
+8093614023570873384,beIN SPORTS 1,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 1 watermark.
+8093614023571318689,beIN SPORTS 2,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 2 watermark.
+8093614023572795286,beIN SPORTS 3,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Video visible; promo footage at inspection.
+8093614023573666863,beIN SPORTS 4,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 4 watermark.
+8093614023582898564,beIN SPORTS 5,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 5 watermark.
+8093614023584120941,beIN SPORTS 6,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Motorsport video with beIN SPORTS 6 watermark.
+8093614023585474545,beIN SPORTS 7,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 7 LIVE watermark.
+8093614023585806136,beIN SPORTS 8,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Motorsport video with beIN SPORTS 8 watermark.
+8093614023578942207,beIN SPORTS 9,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Player still buffering on later observation.
+8093614023576039269,beIN XTRA 1,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Retried selection; still buffering on later observation.
+8093614023576211642,beIN XTRA 2,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,"Selected XTRA 2, visible beIN SPORTS 7 LIVE watermark."
+8093614023578114883,beIN XTRA 3,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Still buffering on later observation.
+8093614023579399846,beIN France 1,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Selection returned to channel grid; API ID corroborated.
+8093614023581035701,beIN France 2,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Selection returned to channel grid; API ID corroborated.
+8093614023582347436,beIN France 3,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Selection returned to channel grid; API ID corroborated.
+8093614023591508947,beIN News,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Buffering during original-player observation.
+8093614023592670922,beIN SPORTS,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,Generic beIN SPORTS selection displayed beIN SPORTS 7 watermark.
+8093614023593946617,beIN English 1,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No video; returned to channel grid.
+8093614023593958464,beIN English 2,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No video; returned to channel grid.
+8093614023587327268,beIN English 3,beIN SPORTS (720P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffered without video.
+8093614023600141904,beIN SPORTS 1,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football with beIN SPORTS 1 watermark.
+8093614023601056393,beIN SPORTS 2,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football with beIN SPORTS 2 watermark.
+8093614023601624254,beIN SPORTS 3,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football with beIN SPORTS 3 watermark.
+8093614023603285015,beIN SPORTS 4,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN SPORTS 4 video visible; buffering overlay present.
+8093614023595271036,beIN SPORTS 5,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football with beIN SPORTS 5 watermark.
+8093614023596082693,beIN SPORTS 6,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,beIN promo video visible.
+8093614023597576347,beIN SPORTS 7,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Buffering at observation; other qualities displayed video.
+8093614023598343762,beIN SPORTS 8,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Motorsport with beIN SPORTS 8 watermark.
+8093614023607672221,beIN SPORTS 9,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,external_browser,Chrome first-run screen appeared; no channel video verified. Requires recheck.
+8093614023588244493,beIN XTRA 1,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering; Multi and 1 options visible.
+8093614023589269442,beIN XTRA 2,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023590229579,beIN XTRA 3,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023608987956,beIN France 1,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No channel video; grid remained visible.
+8093614023609989095,beIN France 2,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No channel video; grid remained visible.
+8093614023611711950,beIN France 3,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No channel video; grid remained visible.
+8093614023603440345,beIN News,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023604898720,beIN SPORTS,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,Generic beIN SPORTS displayed beIN SPORTS 7 watermark; buffering overlay also visible.
+8093614023606270515,beIN English 1,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No video; original channel grid visible.
+8093614023606673066,beIN English 2,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No video; original channel grid visible.
+8093614023616563102,beIN English 3,beIN SPORTS (360P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023611909154,beIN SPORTS 1,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 1 watermark.
+8093614023613456939,beIN SPORTS 2,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video; low-resolution beIN Sports branding.
+8093614023614887684,beIN SPORTS 3,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 3 watermark.
+8093614023615061485,beIN SPORTS 4,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Football video with beIN SPORTS 4 watermark.
+8093614023624707350,beIN SPORTS 5,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023625578927,beIN SPORTS 6,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Motorsport video; buffering overlay present.
+8093614023627108645,beIN SPORTS 7,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023627790364,beIN SPORTS 8,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible,Motorsport video with beIN SPORTS 8 branding.
+8093614023620795651,beIN SPORTS 9,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023617167351,beIN XTRA 1,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023618917296,beIN XTRA 2,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023620117993,beIN XTRA 3,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.
+8093614023622038138,beIN France 1,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Original channel grid visible without video.
+8093614023622388065,beIN France 2,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Original channel grid visible without video.
+8093614023624039912,beIN France 3,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Black player screen; no video visible.
+8093614023633124847,beIN News,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Repeated selection after emulator restart; still buffering on later observation. API ID confirmed.
+8093614023634350422,beIN SPORTS,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,video_visible_different_brand,Generic beIN SPORTS displayed beIN SPORTS 7 watermark; buffering overlay present.
+8093614023635190317,beIN English 1,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,Original channel grid remained visible without video.
+8093614023636065092,beIN English 2,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,returned_to_catalog,No video; original channel grid visible.
+8093614023658213842,beIN English 3,beIN SPORTS (244P),api_http_404,resolve_error,unverified_no_current_video,did_not_start,Original player buffering without video.

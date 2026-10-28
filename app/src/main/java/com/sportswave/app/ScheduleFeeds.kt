@@ -92,7 +92,7 @@ object ScheduleFeeds {
             "handball" in s -> "Handball"; "volley" in s -> "Volleyball"; "rugby" in s -> "Rugby"; "cricket" in s -> "Cricket"
             listOf("boxing","ufc","mma","wrestling","judo").any { it in s } -> "Combat"
             "cycling" in s || "tour de" in s -> "Cycling"; "athletic" in s -> "Athletics"; "swim" in s -> "Swimming"; "golf" in s -> "Golf"
-            listOf("football","soccer","uefa","fifa","ligue","liga","premier league","sudamericana","libertadores").any { it in s } -> "Football"
+            listOf("football","soccer","uefa","fifa","ligue","liga","premier league","sudamericana","libertadores","afc champions league","caf champions league","caf confederation cup").any { it in s } -> "Football"
             else -> "Other"
         }
     }

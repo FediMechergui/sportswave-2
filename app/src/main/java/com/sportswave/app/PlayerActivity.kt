@@ -42,6 +42,8 @@ class PlayerActivity : Activity() {
     private var generation = 0
     private var automaticRenewals = 0
     private val attemptedSources = mutableSetOf<String>()
+    private val providerFallbacks = mutableSetOf<String>()
+    private var streamChoice = 0
     private val dark = Color.rgb(12,15,20)
     private val red = Color.rgb(255,77,67)
     private val muted = Color.rgb(153,162,176)
@@ -87,7 +89,7 @@ class PlayerActivity : Activity() {
         bar.addView(label(original?.name ?: "Source unavailable",16,Color.WHITE,true).apply { maxLines=1; ellipsize=android.text.TextUtils.TruncateAt.END },LinearLayout.LayoutParams(0,-2,1f))
         bar.addView(icon(if(fullscreen) "Collapse" else "Fullscreen","Toggle fullscreen") { toggleFullscreen() })
         status=label("Preparing your stream…",12,muted).apply { setPadding(dp(20),dp(12),dp(20),dp(8)); accessibilityLiveRegion=View.ACCESSIBILITY_LIVE_REGION_POLITE }
-        retry=button("Retry playback") { automaticRenewals=0; attemptedSources.clear(); position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
+        retry=button("Retry playback") { automaticRenewals=0; attemptedSources.clear(); providerFallbacks.clear(); streamChoice=0; position=0; load() }.apply { visibility=View.GONE; setTextColor(red) }
         val feedback=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; addView(status); addView(retry) }
         feedbackView=feedback
         if(fullscreen) {
@@ -128,7 +130,7 @@ class PlayerActivity : Activity() {
     }
     private fun chooseBroadcast() {
         AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(alternatives.map { "${it.catalogCategory.ifBlank { it.provider }} · ${it.name}" }.toTypedArray()) { _,index ->
-            original=alternatives[index]; automaticRenewals=0; attemptedSources.clear(); position=0; shouldPlay=true; render(); load()
+            original=alternatives[index]; automaticRenewals=0; attemptedSources.clear(); providerFallbacks.clear(); streamChoice=0; position=0; shouldPlay=true; render(); load()
         }.show()
     }
     private fun applySystemBars() {
@@ -165,11 +167,21 @@ class PlayerActivity : Activity() {
         retry.visibility=View.GONE
         feedbackView?.visibility=View.VISIBLE
         status.text=if(source.resolverUrl.isNotBlank() || source.integration=="yacine") "Requesting a fresh playback session…" else "Connecting to your source…"
+        val usePublic=source.id !in providerFallbacks
         executor.execute {
-            val result=runCatching { PlaybackResolver.resolve(source) }
+            val result=runCatching { PlaybackResolver.resolve(source,usePublic,streamChoice) }
             runOnUiThread {
                 if(isDestroyed || isFinishing || stopped || request!=generation) return@runOnUiThread
                 result.onSuccess { prepare(it) }.onFailure {
+                    Store(this).recordPlayback(source,false)
+                    if(it is ChannelIdentityException) {
+                        status.text=it.message
+                        retry.visibility=View.VISIBLE
+                        feedbackView?.visibility=View.VISIBLE
+                        return@onFailure
+                    }
+                    val next=source.takeIf { it.integration=="yacine" }?.let { ChannelCatalog.nextAlternative(it,alternatives,attemptedSources) }
+                    if(next!=null) { original=next; streamChoice=0; position=0; render(); load(); return@onFailure }
                     status.text="Couldn't resolve playback. Check your provider or connection."
                     retry.visibility=View.VISIBLE
                     feedbackView?.visibility=View.VISIBLE
@@ -186,9 +198,27 @@ class PlayerActivity : Activity() {
             instance.setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(),true)
             instance.setHandleAudioBecomingNoisy(true)
             instance.addListener(object:Player.Listener {
+                override fun onRenderedFirstFrame() { if(player===instance && !stopped) original?.let { Store(this@PlayerActivity).recordPlayback(it,true) } }
                 override fun onPlaybackStateChanged(playbackState:Int) { updateStatus() }
                 override fun onIsPlayingChanged(isPlaying:Boolean) { updateStatus() }
                 override fun onPlayerError(error:PlaybackException) {
+                    if(player!==instance || stopped) return
+                    val listing=original
+                    if(listing!=null && ProviderRecovery.shouldTryOriginalProvider(listing,source.url,providerFallbacks)) {
+                        providerFallbacks.add(listing.id)
+                        val failedGeneration=generation
+                        status.text="Trying the provider feed for this channel…"
+                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { position=0; load() } }
+                        return
+                    }
+                    if(source.integration=="yacine" && source.playbackIndex+1<source.playbackCount) {
+                        streamChoice=source.playbackIndex+1
+                        automaticRenewals=0
+                        val failedGeneration=generation
+                        status.text="Trying the next feed for this channel…"
+                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { position=0; load() } }
+                        return
+                    }
                     val failedResponse=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull()
                     val networkUnavailable=error.errorCode in listOf(PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED,PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT)
                     if(original?.integration=="yacine" && ProviderRecovery.shouldRetry(failedResponse?.responseCode,error.errorCode==PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW,automaticRenewals,networkUnavailable)) {
@@ -203,10 +233,11 @@ class PlayerActivity : Activity() {
                     if(next!=null) {
                         val failedGeneration=generation
                         status.text="Trying another quality for this channel…"
-                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { original=next; position=0; render(); load() } }
+                        playerView.post { if(!isDestroyed && !isFinishing && !stopped && generation==failedGeneration) { original=next; streamChoice=0; position=0; render(); load() } }
                         return
                     }
                     val response=generateSequence(error as Throwable?) { it.cause }.filterIsInstance<androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException>().firstOrNull()
+                    original?.let { Store(this@PlayerActivity).recordPlayback(it,false) }
                     status.text=if(original?.integration=="yacine" && response?.responseCode==503 && response.responseBody.toString(Charsets.UTF_8).trim()=="No URLs available") "The provider has no feed available for this channel. Try again later." else "Playback unavailable (${response?.responseCode?.let { "HTTP $it" } ?: error.errorCodeName}). Retry or check your provider."
                     retry.visibility=View.VISIBLE
                     feedbackView?.visibility=View.VISIBLE

@@ -10,7 +10,11 @@ object BroadcastRouting {
     private fun normalized(value: String): String {
         names[value]?.let { return it }
         val result=Normalizer.normalize(value, Normalizer.Form.NFKC)
-        .lowercase(Locale.ROOT).replace("bein sports xtra","bein xtra").replace("bein sports en ","bein english ").replace("bein sports fr ","bein france ")
+        .lowercase(Locale.ROOT)
+        .replace("بي إن سبورت","bein sports").replace("بي ان سبورت","bein sports").replace("بين سبورت","bein sports")
+        .replace("إكسترا","xtra").replace("اكسترا","xtra").replace("ماكس","max").replace("الكأس","alkass").replace("الكاس","alkass")
+        .map { if(it in '٠'..'٩') '0'+(it-'٠') else it }.joinToString("")
+        .replace("bein sports xtra","bein xtra").replace("bein sports en ","bein english ").replace("bein sports fr ","bein france ")
         .replace("bein sports news","bein news").replace(quality, "")
         .replace(punctuation, "")
         if(names.size>=4096) names.clear()
@@ -25,8 +29,8 @@ object BroadcastRouting {
             sources.filter { source ->
                 val providerMatches = ref.provider.isBlank() || normalized(ref.provider)==normalized(source.provider)
                 providerMatches && when {
-                    ref.sourceId.isNotBlank() -> ref.sourceId==source.id
-                    ref.channelId.isNotBlank() -> ref.channelId==source.channelId
+                    ref.sourceId.isNotBlank() -> ref.sourceId==source.id || (source.integration=="yacine" && ref.sourceId.startsWith("yacine-") && YacineChannelIds.current(ref.sourceId.removePrefix("yacine-"))==YacineChannelIds.current(source.channelId))
+                    ref.channelId.isNotBlank() -> ref.channelId==source.channelId || (source.integration=="yacine" && YacineChannelIds.current(ref.channelId)==YacineChannelIds.current(source.channelId))
                     ref.channelName.isNotBlank() -> (source.aliases+source.name).any { normalized(it)==normalized(ref.channelName) }
                     else -> false
                 }

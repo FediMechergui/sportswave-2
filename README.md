@@ -4,6 +4,8 @@
 
 Native Android sports discovery, calendar, and internal video player. Kotlin, native Android views, and AndroidX Media3. Android 8.0+; no companion player required.
 
+Latest release: [SportsWave 2 v1.0.13](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.13). Restores the current provider endpoint and migrated channel IDs, adds same-channel stream fallback, and stops known mislabeled feeds. SPORTS 1–8 decoded at 720P in the emulator; SPORTS 9 and genuine Arabic XTRA/MAX remain unresolved. See the [28 October recovery report](docs/BEIN-RECOVERY-2026-10-28.md) for verification and limits.
+
 ## Build
 
 Open the repository in Android Studio, set the SDK directory in ignored `local.properties`, and run:
