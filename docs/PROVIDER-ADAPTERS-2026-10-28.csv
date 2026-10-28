@@ -1,0 +1,19 @@
+adapter,url,status,json_type,json_records,raw_match_cards,html_title
+KorahLive,https://q.korahlive.online/,URLError,,,,
+Livekora,https://www.livekora.vip/,200,,,16,موقع Livekora.vip مشاهدة مباريات | كورة لايف - livekora vip
+Yalla,https://yallashootkoora.online/ar/,200,,,29,يلا شوت كورة | yalla shoot | yallashoot | يلاشوت بث مباشر مباريات اليوم | kora
+FilGoal,https://www.filgoal.com/matches?date=2026-10-28,200,,,58,FilGoal | جدول مباريات اليوم - 28 أكتوبر 2026
+Raceweek,https://raceweek.io/,200,,,0,"raceweek.io — 2026 Motorsport Calendar | F1, WEC, IMSA, MotoGP, IndyCar, NASCAR, WRC, DTM & more"
+Raceweek F1,https://raceweek.io/f1/,200,,,0,2026 F1 Calendar — Formula 1 Race Dates & Times | raceweek.io
+OpenLiga Bundesliga,https://api.openligadb.de/getmatchdata/bl1,200,list,9,0,
+OpenLiga DEL,https://api.openligadb.de/getmatchdata/del,200,list,7,0,
+ESPN football,https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard?dates=20261028&limit=1000,200,dict,156,0,
+ESPN NBA,https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates=20261028,200,dict,12,0,
+ESPN NHL,https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard?dates=20261028,200,dict,4,0,
+ESPN F1,https://site.api.espn.com/apis/site/v2/sports/racing/f1/scoreboard?dates=2026&limit=1000,200,dict,25,0,
+Streamed API,https://streamed.pk/api/matches/all,200,,,0,Streamed Closure
+Streamed mirror API,https://streamed.st/api/matches/all,200,,,0,Streamed Closure
+DaddyLive current,https://thedaddy.pk/,200,,,0,HOME | DaddyLiveHD - Live Sports Streaming Free - DaddyLive.PK - DLHD
+YasirTV,https://yasirtv.com/,URLError,,,,
+Alba Arryadia,https://pl.matchlivehd.com/albaplayer/arryadia/,200,,,0,Arryadia
+Alba beIN4,https://pl.matchlivehd.com/albaplayer/bein4/,200,,,0,bein 4 ()

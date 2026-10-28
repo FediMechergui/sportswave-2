@@ -8,6 +8,8 @@ Latest release: [SportsWave 2 v1.0.13](https://github.com/FediMechergui/sportswa
 
 The subsequent [VIPRow investigation](docs/VIPROW-INVESTIGATION-2026-10-28.md) documents additional event coverage, sampled browser playback, and a reproduced host-policy defect in the linked reference app. VIPRow is not included in the v1.0.13 APK.
 
+The [broader provider investigation](docs/OTHER-PROVIDERS-2026-10-28.md) checks all 93 directory entries, the other catalogue adapters and player families, and additional beIN/SNRT/StreamCenter candidates. It distinguishes page availability, actual video, channel identity and current-event coverage.
+
 ## Build
 
 Open the repository in Android Studio, set the SDK directory in ignored `local.properties`, and run:
