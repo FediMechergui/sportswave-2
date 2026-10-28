@@ -6,6 +6,8 @@ Native Android sports discovery, calendar, and internal video player. Kotlin, na
 
 Latest release: [SportsWave 2 v1.0.13](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.13). Restores the current provider endpoint and migrated channel IDs, adds same-channel stream fallback, and stops known mislabeled feeds. SPORTS 1–8 decoded at 720P in the emulator; SPORTS 9 and genuine Arabic XTRA/MAX remain unresolved. See the [28 October recovery report](docs/BEIN-RECOVERY-2026-10-28.md) for verification and limits.
 
+The subsequent [VIPRow investigation](docs/VIPROW-INVESTIGATION-2026-10-28.md) documents additional event coverage, sampled browser playback, and a reproduced host-policy defect in the linked reference app. VIPRow is not included in the v1.0.13 APK.
+
 ## Build
 
 Open the repository in Android Studio, set the SDK directory in ignored `local.properties`, and run:

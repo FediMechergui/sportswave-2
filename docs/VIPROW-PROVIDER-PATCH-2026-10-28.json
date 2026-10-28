@@ -1,0 +1,5 @@
+[
+  {"op":"add","path":"/providers/1/hosts/-","value":"thedaddy.pk"},
+  {"op":"add","path":"/providers/1/resourceHosts/-","value":"thedaddy.pk"},
+  {"op":"add","path":"/providers/2/resourceHosts/-","value":"edge.wedd48c.top"}
+]
