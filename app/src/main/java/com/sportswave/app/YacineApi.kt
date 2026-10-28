@@ -10,6 +10,7 @@ import android.util.Base64
 
 data class ChannelPackage(val id: String, val name: String, val children: Int)
 data class CatalogSync(val packages: List<ChannelPackage>, val failed: List<String>)
+class ProviderHttpException(val status: Int): IllegalStateException("Yacine service unavailable ($status).")
 
 /** Provider metadata and fresh playback descriptors; no native APK code is bundled. */
 object YacineApi {
@@ -17,6 +18,7 @@ object YacineApi {
     const val LEGACY_ENDPOINT = "http://def67.ycnapi.com/api/"
     fun canonicalEndpoint(value: String): String = if(value==LEGACY_ENDPOINT) DEFAULT_ENDPOINT else value
     private const val RESPONSE_PREFIX = "c!xZj+N9&G@Ev@vw"
+    private val currentPackages=java.util.concurrent.ConcurrentHashMap<String,Pair<Long,List<Source>>>()
 
     fun events(endpoint: String): List<Event> = ScheduleFeeds.parseYacine(request(endpoint,"events").getJSONArray("data"))
 
@@ -41,7 +43,7 @@ object YacineApi {
         connection.setRequestProperty("User-Agent","okhttp/4.12.0")
         connection.useCaches=false
         try {
-            check(connection.responseCode in 200..299) { "Yacine service unavailable (${connection.responseCode})." }
+            if(connection.responseCode !in 200..299) throw ProviderHttpException(connection.responseCode)
             val bytes=connection.inputStream.use { input ->
                 val out=java.io.ByteArrayOutputStream(); val buffer=ByteArray(8192)
                 while(true) { val n=input.read(buffer); if(n<0) break; out.write(buffer,0,n); check(out.size()<=4_000_000) { "Provider response too large." } }
@@ -90,8 +92,32 @@ object YacineApi {
         if(usePublicAlternatives) PublicChannelStreams.resolve(source)?.let { return it }
         runCatching { AlkassApi.resolve(source) }.getOrNull()?.let { return it }
         val id=if(canonicalEndpoint(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT })==DEFAULT_ENDPOINT) YacineChannelIds.current(source.channelId) else source.channelId
-        val data=request(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT },"channel/$id").getJSONArray("data")
+        val endpoint=canonicalEndpoint(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT })
+        val data=try { request(endpoint,"channel/$id").getJSONArray("data") } catch(error: ProviderHttpException) {
+            if(error.status!=404 || endpoint!=DEFAULT_ENDPOINT || source.catalogCategory.isBlank()) throw error
+            val bundled=PublicChannelMetadata.sportsRecords.singleOrNull { it.first==YacineChannelIds.previous(source.channelId) }
+            val identity=bundled?.let { source.copy(name=it.second,catalogCategory=it.third) } ?: source
+            val key=endpoint+identity.catalogCategory
+            val cached=currentPackages[key]?.takeIf { System.currentTimeMillis()-it.first<120_000 }?.second
+            val records=cached ?: run {
+                var parent="";var path="";var selected:ChannelPackage?=null
+                for(part in identity.catalogCategory.split(" / ")) {
+                    val level=packages(endpoint,parent)
+                    val match=level.singleOrNull { it.name==part } ?: throw error
+                    parent=match.id;path=if(path.isBlank()) part else "$path / $part";selected=match.copy(name=path)
+                }
+                val category=selected ?: throw error
+                channels(endpoint,category).also { currentPackages[key]=System.currentTimeMillis() to it }
+            }
+            val fresh=matchingRecord(identity,records) ?: throw error
+            if(fresh.channelId==id) throw error
+            request(endpoint,"channel/${fresh.channelId}").getJSONArray("data")
+        }
         return parsePlayback(data,source,streamIndex)
+    }
+
+    fun matchingRecord(source: Source,records: List<Source>): Source? = records.singleOrNull {
+        it.name==source.name && it.catalogCategory==source.catalogCategory && canonicalEndpoint(it.serviceUrl)==canonicalEndpoint(source.serviceUrl.ifBlank { DEFAULT_ENDPOINT })
     }
 
     fun parsePlayback(data: JSONArray, source: Source, streamIndex: Int = 0): Source {

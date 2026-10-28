@@ -65,7 +65,9 @@ object PublicChannelStreams {
     }
     fun resolve(source: Source): Source? {
         if(source.integration!="yacine" || YacineApi.canonicalEndpoint(source.serviceUrl.ifBlank { YacineApi.DEFAULT_ENDPOINT })!=YacineApi.DEFAULT_ENDPOINT) return null
-        val id=YacineChannelIds.previous(source.channelId)
+        val id=YacineChannelIds.previous(source.channelId).takeIf { known -> streams.containsKey(known) || sports.any { it.channelId==known } }
+            ?: (PublicChannelMetadata.records+PublicChannelMetadata.sportsRecords).singleOrNull { (_,name,category) -> name==source.name && category==source.catalogCategory }?.first
+            ?: return null
         val url=streams[id] ?: sports.firstOrNull { it.channelId==id }?.url ?: return null
         return source.copy(url=url,mime="application/x-mpegURL",headers=emptyMap(),userAgent="SportsWave/1.0",allowHttp=false,licenseUrl="",licenseHeaders=emptyMap(),sessionSnapshot=false)
     }

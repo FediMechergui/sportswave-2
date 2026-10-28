@@ -20,14 +20,17 @@ android {
         applicationId = "com.sportswave.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 15
-        versionName = "1.0.14"
+        versionCode = 16
+        versionName = "1.0.15"
         testInstrumentationRunner = "com.sportswave.app.tests.CatalogInstrumentation"
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
 }
 dependencies {
+    implementation("org.jsoup:jsoup:1.18.3")
+    implementation("androidx.webkit:webkit:1.17.1")
+    testImplementation("org.json:json:20240303")
     implementation("com.caverock:androidsvg-aar:1.4")
     implementation("androidx.media3:media3-exoplayer:1.9.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.9.0")

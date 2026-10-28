@@ -229,9 +229,9 @@ class MainActivity : Activity() {
                 if(isDestroyed || request!=calendarGeneration) return@runOnUiThread
                 calendarLoading=false
                 result.onSuccess { loaded ->
-                    val retained=cached.filter { (it.listingSource=="beIN MENA guide" && "beIN guide" in loaded.errors) || (it.listingSource=="Yacine calendar" && "Yacine calendar" in loaded.errors) }
+                    val retained=cached.filter { (it.listingSource=="beIN MENA guide" && "beIN guide" in loaded.errors) || it.listingSource in loaded.errors || ("Additional providers" in loaded.errors && it.listingSource !in setOf("beIN MENA guide","Yacine calendar")) }
                     calendarEvents=EventSchedule.merge(loaded.events+retained)
-                    if(loaded.errors.size<2) store.cacheSchedule(date,calendarEvents)
+                    if(loaded.events.isNotEmpty() || loaded.errors.isEmpty()) store.cacheSchedule(date,calendarEvents)
                     calendarError=if(loaded.errors.isEmpty()) "" else "${loaded.errors.joinToString(" and ")} unavailable.${if(retained.isNotEmpty()) " Showing saved listings for that provider." else ""}"
                 }.onFailure { calendarError="Calendar unavailable. Showing saved listings." }
                 if(tab in listOf("Schedule","Discover","Saved","Live") && !demoSchedule) render(keepScroll=true)
@@ -274,7 +274,7 @@ class MainActivity : Activity() {
         if(!demoSchedule && calendarError.isNotBlank()) padded(body,text(calendarError,12,red),bottom=12)
         if(!demoSchedule && footballLoading && football.isEmpty()) padded(body,text("Loading provider fixtures…",12,muted),bottom=12)
         if(!demoSchedule && footballError.isNotBlank()) padded(body,button("Fixture feed unavailable · Retry") { loadFootball() },bottom=12)
-        val events = eventList().filter { it.kickoff(today).toLocalDate() == selected && (sport == "All sports" || it.sport == sport) && "${it.home} ${it.away} ${it.competition} ${it.sport}".contains(query.trim(),true) }.sortedWith(compareBy<Event> { if(selected==today) when(EventSchedule.phase(it)) { AiringPhase.AIRING -> 0; AiringPhase.UPCOMING -> 1; AiringPhase.ENDED -> 2 } else 0 }.thenBy { it.kickoff(today) })
+        val events = eventList().filter { (if(it.demo) it.kickoff(today).toLocalDate()==selected else ExtraScheduleFeeds.onDate(it,selected)) && (sport == "All sports" || it.sport == sport) && "${it.home} ${it.away} ${it.competition} ${it.sport}".contains(query.trim(),true) }.sortedWith(compareBy<Event> { if(selected==today) when(EventSchedule.phase(it)) { AiringPhase.AIRING -> 0; AiringPhase.UPCOMING -> 1; AiringPhase.ENDED -> 2 } else 0 }.thenBy { it.kickoff(today) })
         if (events.isEmpty()) empty(if(calendarLoading) "Loading the calendar" else "No events for this selection", "Try another date or sport. Listings appear when a broadcaster publishes them.") else events.take(eventPageSize).forEach { eventRow(it) }
         if(events.size>eventPageSize) padded(body,button("Show more events (${events.size-eventPageSize})") { eventPageSize+=40; render(keepScroll=true) },bottom=12)
         padded(body, text("${java.time.ZoneId.systemDefault().id} · Calendar and broadcast availability vary by region.", 11, muted), 17)
@@ -289,7 +289,7 @@ class MainActivity : Activity() {
     private fun eventRow(event: Event) {
         val matches=BroadcastRouting.matches(event,renderSources)
         val phase=EventSchedule.phase(event)
-        val watchable=!event.demo && phase==AiringPhase.AIRING && matches.isNotEmpty()
+        val watchable=!event.demo && phase==AiringPhase.AIRING && (matches.isNotEmpty() || event.watchPages.isNotEmpty())
         val card=column().apply {
             background=android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x22FFFFFF),shape(panel,15),null)
             setPadding(dp(16),dp(14),dp(12),dp(14)); isClickable=true; isFocusable=true
@@ -297,7 +297,7 @@ class MainActivity : Activity() {
             contentDescription="${event.home} ${event.away}, ${event.sport}, ${if(watchable) "Watch now" else phase.name.lowercase()}"
         }
         val heading=row()
-        val timing=when { event.demo -> "Sample"; phase==AiringPhase.AIRING -> "On air"; phase==AiringPhase.ENDED -> "Ended"; else -> event.kickoff(today).format(timeFormat) }
+        val timing=when { event.demo -> "Sample"; event.listingSource=="Raceweek" -> "Meeting dates"; phase==AiringPhase.AIRING && event.watchPages.isNotEmpty() && (event.endUtc.isBlank() || event.listingSource in setOf("VIPRow","Livekora","Yalla","StreamCenter")) -> "Scheduled now"; phase==AiringPhase.AIRING -> "On air"; phase==AiringPhase.ENDED -> "Ended"; else -> event.kickoff(today).format(timeFormat) }
         heading.addView(text("${event.sport} · $timing",11,if(phase==AiringPhase.AIRING) red else muted,true),LinearLayout.LayoutParams(0,-2,1f))
         heading.addView(drawIcon("Saved","Save ${event.home}",store.saved().contains(event.id)) { store.toggleEvent(event); render(keepScroll=true) }.apply { isSelected=store.saved().contains(event.id); alpha=if(isSelected) 1f else .65f },LinearLayout.LayoutParams(dp(44),dp(44)))
         card.addView(heading)
@@ -309,16 +309,30 @@ class MainActivity : Activity() {
         }
         if(event.score.isNotBlank() && event.score!="—") { card.addView(text(event.score,19,Color.WHITE,true).apply { fontFeatureSettings="tnum" }); space(card,8) }
         card.addView(text(event.competition,11,muted)); space(card,10)
-        val names=ChannelCatalog.unique(matches).map { it.name }
+        val names=(ChannelCatalog.unique(matches).map { it.name }+event.watchPages.map { it.label.ifBlank { it.provider } }).distinct()
         card.addView(text(when { watchable -> "Watch now · ${names.first()}${if(names.size>1) " +${names.size-1}" else ""}"; names.isNotEmpty() -> "${names.first()} · ${if(phase==AiringPhase.ENDED) "Broadcast ended" else "Starts ${event.kickoff(today).format(timeFormat)}"}"; event.broadcasts.isNotEmpty() -> "${event.broadcasts.first().channelName} · Channel not in catalog"; else -> "Broadcast not listed" },12,if(watchable) red else muted,watchable))
         padded(body,card,bottom=10)
     }
     private fun openEvent(event:Event) {
         val matches=BroadcastRouting.matches(event,store.all())
-        if(!event.demo && EventSchedule.phase(event)==AiringPhase.AIRING && matches.isNotEmpty()) play(matches.first(),eventAlternatives(matches),event)
+        if(!event.demo && EventSchedule.phase(event)==AiringPhase.AIRING && (matches.isNotEmpty() || event.watchPages.isNotEmpty())) chooseEventPlayback(event,matches)
         else eventDetail(event)
     }
     private fun eventAlternatives(matches:List<Source>):List<Source> = matches.flatMap { source -> if(source.integration=="yacine") ChannelCatalog.alternatives(source,store.providerSources()) else listOf(source) }.distinctBy { it.id }
+    private fun chooseEventPlayback(event: Event,matches: List<Source>) {
+        val native=ChannelCatalog.unique(matches)
+        val pages=event.watchPages.distinct()
+        if(native.size+pages.size==1) {
+            if(native.isNotEmpty()) play(native.first(),eventAlternatives(matches),event)
+            else WebPlaybackActivity.open(this,pages.first(),event.home+if(event.away.isNotBlank()) " vs ${event.away}" else "")
+            return
+        }
+        val labels=native.map { "Channel · ${it.name}" }+pages.map { "Web player · ${it.label.ifBlank { it.provider }}" }
+        AlertDialog.Builder(this).setTitle("Choose this event's provider").setItems(labels.toTypedArray()) { _,i ->
+            if(i<native.size) play(native[i],eventAlternatives(matches),event)
+            else WebPlaybackActivity.open(this,pages[i-native.size],event.home+if(event.away.isNotBlank()) " vs ${event.away}" else "")
+        }.setNegativeButton("Cancel",null).show()
+    }
     private fun eventDetail(event: Event) {
         val content=column().apply { setPadding(dp(22),dp(12),dp(22),dp(12)) }
         content.addView(text(event.sport,11,red,true)); space(content,14)
@@ -326,14 +340,14 @@ class MainActivity : Activity() {
         content.addView(text(event.competition,13,muted)); space(content,8)
         content.addView(text(event.kickoff(today).format(DateTimeFormatter.ofPattern("EEE d MMM · HH:mm z")),13,muted)); space(content,12)
         val matches=BroadcastRouting.matches(event,store.all()); val phase=EventSchedule.phase(event)
-        val message=when { event.demo -> "Illustrative event. Player tests are separate videos."; phase==AiringPhase.UPCOMING -> "Starts at ${event.kickoff(today).format(timeFormat)}. Open this event when the broadcast begins."; phase==AiringPhase.ENDED -> "This broadcast window has ended."; matches.isEmpty() -> if(event.broadcasts.isEmpty()) "The broadcaster has not listed a channel for this event." else "The listed channel is not available in your channel catalog. Refresh Channels to check again."; else -> "Watch on ${ChannelCatalog.unique(matches).joinToString { it.name }}." }
+        val message=when { event.demo -> "Illustrative event. Player tests are separate videos."; phase==AiringPhase.UPCOMING -> "Starts at ${event.kickoff(today).format(timeFormat)}. Open this event when the broadcast begins."; phase==AiringPhase.ENDED -> "This broadcast window has ended."; event.watchPages.isNotEmpty() -> "Published web providers: ${event.watchPages.joinToString { it.label.ifBlank { it.provider } }}. Player and programme availability may vary."; matches.isEmpty() -> if(event.broadcasts.isEmpty()) "The broadcaster has not listed a channel for this event." else "The listed channel is not available in your channel catalog. Refresh Channels to check again."; else -> "Watch on ${ChannelCatalog.unique(matches).joinToString { it.name }}." }
         content.addView(text(message,13,muted)); space(content,12)
         if(event.listingSource.isNotBlank()) content.addView(text("Listing: ${event.listingSource}",11,muted))
         if(event.description.isNotBlank() && event.description!=event.home) { space(content,10); content.addView(text(event.description,12,muted)) }
         val scroll=ScrollView(this).apply { addView(content) }
         val dialog=AlertDialog.Builder(this).setView(scroll).setNegativeButton("Close",null).create()
-        if(!event.demo && phase==AiringPhase.AIRING && matches.isNotEmpty()) {
-            space(content,18); content.addView(button("Watch now",true) { dialog.dismiss(); play(matches.first(),eventAlternatives(matches),event) })
+        if(!event.demo && phase==AiringPhase.AIRING && (matches.isNotEmpty() || event.watchPages.isNotEmpty())) {
+            space(content,18); content.addView(button("Watch now",true) { dialog.dismiss(); chooseEventPlayback(event,matches) })
             if(ChannelCatalog.unique(matches).size>1) { space(content,8); content.addView(button("Choose broadcast") { dialog.dismiss(); chooseBroadcast(matches) }) }
         }
         dialog.show()
@@ -477,7 +491,7 @@ class MainActivity : Activity() {
     }
     private fun crest(url:String,name:String): FrameLayout {
         val box=FrameLayout(this).apply { contentDescription="$name crest" }
-        val initials=text(name.split(" ").take(2).mapNotNull { it.firstOrNull() }.joinToString(""),10,muted,true).apply { gravity=Gravity.CENTER }
+        val initials=text(ParticipantNames.initials(name),10,muted,true).apply { gravity=Gravity.CENTER }
         box.addView(initials,FrameLayout.LayoutParams(-1,-1))
         val image=ImageView(this).apply { scaleType=ImageView.ScaleType.FIT_CENTER; importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO }
         box.addView(image,FrameLayout.LayoutParams(-1,-1))
@@ -590,5 +604,5 @@ class MainActivity : Activity() {
     }
     private fun openGuide() { startActivity(Intent(Intent.ACTION_VIEW,Uri.parse("https://www.beinsports.com/en-mena/tv-guide"))) }
     private fun chooseBroadcast(sources:List<Source>) { AlertDialog.Builder(this).setTitle("Available broadcasts").setItems(sources.map { "${it.provider.ifBlank { "Channel" }} · ${it.name}" }.toTypedArray()) { _,index -> play(sources[index],sources) }.setNegativeButton("Cancel",null).show() }
-    private fun play(source:Source,alternatives:List<Source> = listOf(source),event:Event?=null) { startActivity(Intent(this,PlayerActivity::class.java).putExtra("sourceId",source.id).putExtra("alternatives",alternatives.map { it.id }.toTypedArray()).putExtra("eventTitle",event?.let { it.home+if(it.away.isNotBlank()) " vs ${it.away}" else "" })) }
+    private fun play(source:Source,alternatives:List<Source> = listOf(source),event:Event?=null) { if(source.integration=="web") { WebPlaybackActivity.open(this,WatchPage("direct",source.url,label=source.name),source.name);return }; startActivity(Intent(this,PlayerActivity::class.java).putExtra("sourceId",source.id).putExtra("alternatives",alternatives.map { it.id }.toTypedArray()).putExtra("eventTitle",event?.let { it.home+if(it.away.isNotBlank()) " vs ${it.away}" else "" })) }
 }

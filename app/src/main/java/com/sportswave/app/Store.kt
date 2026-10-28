@@ -32,7 +32,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
     fun providerEndpoint(): String = YacineApi.canonicalEndpoint(prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!)
     @Synchronized fun setProviderEndpoint(value: String) { require(YacineApi.validEndpoint(value)); val editor=prefs.edit().putString("yacine_endpoint",value).remove("yacine_packages").remove("yacine_synced_at"); prefs.all.keys.filter { it.startsWith("yacine_channels_") }.forEach { editor.remove(it) }; editor.apply() }
     fun selectedPackage(): String = prefs.getString("yacine_package","")!!
-    fun catalogSyncedAt(): Long = if(prefs.getString("yacine_catalog_revision","")=="2026-10-28") prefs.getLong("yacine_synced_at",0) else 0
+    fun catalogSyncedAt(): Long = if(prefs.getString("yacine_catalog_revision","")=="2026-10-29") prefs.getLong("yacine_synced_at",0) else 0
     fun providerPackages(): List<ChannelPackage> = runCatching { val a=JSONArray(prefs.getString("yacine_packages","[]")); (0 until a.length()).map { val o=a.getJSONObject(it); ChannelPackage(o.getString("id"),o.getString("name"),0) } }.getOrDefault(emptyList())
     fun cacheProviderPackages(packages: List<ChannelPackage>, complete: Boolean) {
         val merged=if(complete) packages else (providerPackages()+packages).distinctBy { it.id }
@@ -41,7 +41,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
             val ids=packages.map { it.id }.toSet()
             prefs.all.keys.filter { it.startsWith("yacine_channels_") && it.removePrefix("yacine_channels_") !in ids }.forEach { editor.remove(it) }
             editor.putLong("yacine_synced_at",System.currentTimeMillis())
-            editor.putString("yacine_catalog_revision","2026-10-28")
+            editor.putString("yacine_catalog_revision","2026-10-29")
         }
         editor.apply()
     }
@@ -55,7 +55,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
             val o = a.getJSONObject(i)
             val refs=o.optJSONArray("broadcasts") ?: JSONArray()
             val broadcasts=(0 until refs.length()).map { j -> val r=refs.getJSONObject(j); Broadcast(r.optString("provider"),r.optString("channelId"),r.optString("channelName"),r.optString("sourceId")) }
-            Event(o.getString("id"), o.getString("sport"), o.optString("competition"), o.getString("home"), o.optString("away"), 0, 0, imageFor(o.getString("sport")), startUtc = o.getString("startUtc"), endUtc = o.optString("endUtc"), sourceId = o.optString("sourceId"), demo = false, broadcasts=broadcasts)
+            Event(o.getString("id"), o.getString("sport"), o.optString("competition"), o.getString("home"), o.optString("away"), 0, 0, imageFor(o.getString("sport")), startUtc = o.getString("startUtc"), endUtc = o.optString("endUtc"), sourceId = o.optString("sourceId"), demo = false, broadcasts=broadcasts,watchPages=WebProviders.parsePages(o.optJSONArray("watchPages")))
         }
     }.getOrDefault(emptyList())
     private fun imageFor(sport: String) = when(sport) { "Basketball", "Handball", "Combat" -> "basketball.jpg"; "Tennis", "Padel", "Volleyball" -> "tennis.jpg"; "Motorsport", "Cycling" -> "racing.jpg"; else -> "football.jpg" }
@@ -87,6 +87,7 @@ class Store(context: Context, preferenceName: String = "sportswave") {
                 listOf("id", "sport", "home", "startUtc").forEach { require(e.getString(it).isNotBlank()) { "Event ${i+1} needs $it." } }
                 val start = java.time.Instant.parse(e.getString("startUtc"))
                 if (e.optString("endUtc").isNotBlank()) require(java.time.Instant.parse(e.getString("endUtc")).isAfter(start)) { "Event end must follow start." }
+                WebProviders.parsePages(e.optJSONArray("watchPages"))
                 val refs=e.optJSONArray("broadcasts") ?: JSONArray()
                 require(refs.length()<=30) { "An event can reference up to 30 broadcasts." }
                 for(j in 0 until refs.length()) {
@@ -111,7 +112,8 @@ class Store(context: Context, preferenceName: String = "sportswave") {
             val url = o.optString("url")
             val resolver = o.optString("resolverUrl")
             val integration=o.optString("integration")
-            require(integration.isBlank() || integration=="yacine") { "Unknown source integration." }
+            require(integration in setOf("","yacine","web")) { "Unknown source integration." }
+            require(integration!="web" || WebProviders.playerRule(url)!=null) { "Unsupported web player." }
             val nativeProvider=integration=="yacine" && o.optString("channelId").matches(Regex("[0-9]+")) && YacineApi.validEndpoint(o.optString("serviceUrl"))
             require(integration!="yacine" || nativeProvider) { "Yacine sources need a numeric channel ID and a valid service address." }
             require(nativeProvider || (url.isNotBlank() && Catalog.validMediaUrl(url,o.optBoolean("allowHttp"))) || (resolver.isNotBlank() && Catalog.validUrl(resolver))) { "Source ${i + 1} needs a valid media URL or HTTPS resolver." }

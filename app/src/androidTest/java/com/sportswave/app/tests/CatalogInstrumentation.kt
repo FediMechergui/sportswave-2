@@ -88,11 +88,12 @@ class CatalogInstrumentation : Instrumentation() {
     private var auditPublic=false
     private var auditCatalog:String?=null
     private var auditCalendar=false
+    private var auditDate: java.time.LocalDate?=null
     private var auditStreamIndex=0
     private var auditScores=false
     private var uiFixtureMode:String?=null
     private var auditSourceIds=emptySet<String>()
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditDate=arguments?.getString("auditDate")?.let { java.time.LocalDate.parse(it) }; auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
@@ -113,9 +114,12 @@ class CatalogInstrumentation : Instrumentation() {
             }
             if(uiFixtureMode!=null) { CalendarUiFixtures.apply(targetContext,uiFixtureMode!!); finish(Activity.RESULT_OK,Bundle().apply { putString("stream","UI fixtures: $uiFixtureMode") }); return }
             if(auditCalendar) {
-                val data=com.sportswave.app.ScheduleFeeds.load(java.time.LocalDate.now(),Store(targetContext).providerEndpoint())
+                val data=com.sportswave.app.ScheduleFeeds.load(auditDate ?: java.time.LocalDate.now(),Store(targetContext).providerEndpoint())
                 check(data.events.isNotEmpty()) { "No live calendar data returned" }
                 val report=JSONObject().put("count",data.events.size).put("errors",JSONArray(data.errors)).put("sports",JSONArray(data.events.map { it.sport }.distinct())).put("listings",JSONArray(data.events.take(12).map { com.sportswave.app.ScheduleFeeds.eventJson(it) }))
+                report.put("sourceCounts",JSONObject(data.events.groupingBy { it.listingSource }.eachCount()))
+                report.put("webEvents",data.events.count { it.watchPages.isNotEmpty() })
+                report.put("webSamples",JSONArray(data.events.filter { it.watchPages.isNotEmpty() }.sortedByDescending { it.startUtc }.take(50).map { com.sportswave.app.ScheduleFeeds.eventJson(it) }))
                 java.io.File(targetContext.filesDir,"calendar-audit.json").writeText(report.toString(2))
                 finish(Activity.RESULT_OK,Bundle().apply { putString("stream",report.toString()) }); return
             }
@@ -161,6 +165,11 @@ class CatalogInstrumentation : Instrumentation() {
             store.recordPlayback(bundled,true)
             check(store.playbackCheck(bundled.copy(integration="yacine",url="",serviceUrl=com.sportswave.app.YacineApi.DEFAULT_ENDPOINT))==true)
             check(store.events().single().sourceId=="test")
+            val webPage=com.sportswave.app.WatchPage("viprow","https://viprow.im/sports/football/","123","VIPRow")
+            event.put("watchPages",com.sportswave.app.WebProviders.pagesJson(listOf(webPage)))
+            store.import(catalog.toString())
+            check(store.events().single().watchPages==listOf(webPage))
+            event.put("watchPages",JSONArray())
             event.put("sourceId","").put("broadcasts",JSONArray().put(JSONObject().put("provider","Example broadcaster").put("channelName","Test source")))
             source.put("provider","Example broadcaster").put("aliases",JSONArray().put("Channel One"))
             store.import(catalog.toString())

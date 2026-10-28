@@ -30,13 +30,13 @@ object EventSchedule {
                 val old=result[index]
                 result[index]=old.copy(broadcasts=(old.broadcasts+event.broadcasts).distinct(),
                     sourceId=old.sourceId.ifBlank { event.sourceId },homeCrest=old.homeCrest.ifBlank { event.homeCrest },awayCrest=old.awayCrest.ifBlank { event.awayCrest },
-                    score=old.score.ifBlank { event.score },status=old.status.ifBlank { event.status },endUtc=old.endUtc.ifBlank { event.endUtc })
+                    score=old.score.ifBlank { event.score },status=old.status.ifBlank { event.status },endUtc=old.endUtc.ifBlank { event.endUtc },watchPages=(old.watchPages+event.watchPages).distinct())
             }
         }
         return result.sortedBy { it.startUtc }
     }
     fun enrich(event: Event, calendar: List<Event>): Event {
         val matches=calendar.filter { sameContest(event,it) }
-        return event.copy(broadcasts=(event.broadcasts+matches.flatMap { it.broadcasts }).distinct(),endUtc=event.endUtc.ifBlank { matches.firstOrNull()?.endUtc ?: "" })
+        return event.copy(broadcasts=(event.broadcasts+matches.flatMap { it.broadcasts }).distinct(),endUtc=event.endUtc.ifBlank { matches.firstOrNull()?.endUtc ?: "" },watchPages=(event.watchPages+matches.flatMap { it.watchPages }).distinct())
     }
 }

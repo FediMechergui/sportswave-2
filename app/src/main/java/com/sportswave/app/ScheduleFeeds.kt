@@ -14,12 +14,12 @@ data class ScheduleResult(val events: List<Event>, val errors: List<String>)
 object ScheduleFeeds {
     fun eventJson(e: Event): JSONObject = JSONObject().put("id",e.id).put("sport",e.sport).put("competition",e.competition).put("home",e.home).put("away",e.away).put("startUtc",e.startUtc).put("endUtc",e.endUtc)
         .put("homeCrest",e.homeCrest).put("awayCrest",e.awayCrest).put("status",e.status).put("listingSource",e.listingSource).put("description",e.description).put("sourceId",e.sourceId).put("demo",e.demo).put("score",e.score)
-        .put("broadcasts",JSONArray(e.broadcasts.map { JSONObject().put("provider",it.provider).put("channelId",it.channelId).put("channelName",it.channelName).put("sourceId",it.sourceId) }))
+        .put("broadcasts",JSONArray(e.broadcasts.map { JSONObject().put("provider",it.provider).put("channelId",it.channelId).put("channelName",it.channelName).put("sourceId",it.sourceId) })).put("watchPages",WebProviders.pagesJson(e.watchPages))
     fun eventFromJson(o: JSONObject): Event {
         val refs=o.optJSONArray("broadcasts") ?: JSONArray()
         return Event(o.getString("id"),o.getString("sport"),o.optString("competition"),o.getString("home"),o.optString("away"),0,0,imageFor(o.getString("sport")),startUtc=o.getString("startUtc"),endUtc=o.optString("endUtc"),demo=o.optBoolean("demo"),sourceId=o.optString("sourceId"),score=o.optString("score"),
             homeCrest=o.optString("homeCrest"),awayCrest=o.optString("awayCrest"),status=o.optString("status"),listingSource=o.optString("listingSource"),description=o.optString("description"),
-            broadcasts=(0 until refs.length()).map { val r=refs.getJSONObject(it); Broadcast(r.optString("provider"),r.optString("channelId"),r.optString("channelName"),r.optString("sourceId")) })
+            broadcasts=(0 until refs.length()).map { val r=refs.getJSONObject(it); Broadcast(r.optString("provider"),r.optString("channelId"),r.optString("channelName"),r.optString("sourceId")) },watchPages=WebProviders.parsePages(o.optJSONArray("watchPages")))
     }
     private fun get(url: String): JSONObject {
         val c=URL(url).openConnection() as HttpsURLConnection
@@ -33,12 +33,14 @@ object ScheduleFeeds {
         } finally { c.disconnect() }
     }
     fun load(date: LocalDate, endpoint: String): ScheduleResult {
-        val pool=java.util.concurrent.Executors.newFixedThreadPool(2)
+        val pool=java.util.concurrent.Executors.newFixedThreadPool(3)
         try {
             val jobs=listOf("beIN guide" to pool.submit<List<Event>> { bein(date) },"Yacine calendar" to pool.submit<List<Event>> { YacineApi.events(endpoint) })
+            val extra=pool.submit<ScheduleResult> { ExtraScheduleFeeds.load(date) }
             val errors=mutableListOf<String>(); val events=mutableListOf<Event>()
             jobs.forEach { (name,job) -> runCatching { job.get() }.onSuccess { events.addAll(it) }.onFailure { errors.add(name) } }
-            return ScheduleResult(EventSchedule.merge(events.filter { runCatching { it.kickoff(date).toLocalDate()==date }.getOrDefault(false) }),errors)
+            runCatching { extra.get(100,java.util.concurrent.TimeUnit.SECONDS) }.onSuccess { events+=it.events;errors+=it.errors }.onFailure { errors+="Additional providers";extra.cancel(true) }
+            return ScheduleResult(EventSchedule.merge(events.filter { ExtraScheduleFeeds.onDate(it,date) }),errors)
         } finally { pool.shutdownNow() }
     }
     private fun bein(date: LocalDate): List<Event> {
@@ -89,6 +91,9 @@ object ScheduleFeeds {
             "padel" in s -> "Padel"; listOf("tennis","atp ","wta ","wimbledon").any { it in s } -> "Tennis"
             listOf("formula","motogp","motorsport","grand prix","nascar","indycar","superbike","rally","dtm").any { it in s } -> "Motorsport"
             "basket" in s || "nba" in s -> "Basketball"; "american football" in s || "nfl" in s -> "American football"
+            "baseball" in s || "mlb" in s -> "Baseball"; "ice hockey" in s || "nhl" in s -> "Ice hockey"
+            "horse racing" in s || "equestrian" in s || "global champions tour" in s -> "Horse racing"
+            "australian football" in s || "aussie rules" in s -> "Aussie rules"; "darts" in s -> "Darts"; "snooker" in s -> "Snooker"
             "handball" in s -> "Handball"; "volley" in s -> "Volleyball"; "rugby" in s -> "Rugby"; "cricket" in s -> "Cricket"
             listOf("boxing","ufc","mma","wrestling","judo").any { it in s } -> "Combat"
             "cycling" in s || "tour de" in s -> "Cycling"; "athletic" in s -> "Athletics"; "swim" in s -> "Swimming"; "golf" in s -> "Golf"

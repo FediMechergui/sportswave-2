@@ -47,4 +47,12 @@ object PublicChannelMetadata {
         Triple("8093614025240480712", "Al Masar TV", "ARABIC CHANNELS / LIBYA"),
         Triple("8093614025301693421", "Medi 1 TV Afrique", "ARABIC CHANNELS / MOROCCO")
     )
+    val sportsRecords = listOf(
+        Triple("8093614023844642330", "Jordan Sports", "ARABIC CHANNELS / JORDAN"),
+        Triple("8093614024090866910", "Kuwait Sport", "ARABIC CHANNELS / KUWAIT"),
+        Triple("8093614024091471159", "Kuwait Sport 2", "ARABIC CHANNELS / KUWAIT"),
+        Triple("8093614024085928711", "Bahrain Sports", "ARABIC CHANNELS / BAHRAIN"),
+        Triple("8093614024087628142", "Bahrain Sports 2", "ARABIC CHANNELS / BAHRAIN"),
+        Triple("8093614023881577308", "Oman Sport", "ARABIC CHANNELS / OMAN")
+    )
 }
