@@ -48,6 +48,9 @@ object ExtraScheduleFeeds {
             "Livekora" to { cached("livekora") { parseLivekora(get("https://www.livekora.vip/",setOf("www.livekora.vip","livekora.vip"))) } },
             "Yalla" to { cached("yalla-$date") { val today=LocalDate.now();val path=when(date) { today->"/ar/";today.minusDays(1)->"/ar/yesterday-matches/";today.plusDays(1)->"/ar/tomorrow-matches/";else->return@cached emptyList<Event>() };parseYalla(get("https://yallashootkoora.online$path")) } },
             "FilGoal" to { cached("filgoal-$date") { parseFilGoal(get("https://www.filgoal.com/matches?date=$date"),date) } },
+            "ESPN Football" to { cached("football-$date") { espnDays("soccer/all","Football","ESPN Football",date) } },
+            "ESPN NBA" to { cached("nba-$date") { espnDays("basketball/nba","Basketball","ESPN NBA",date) } },
+            "ESPN NFL" to { cached("nfl-$date") { espnDays("football/nfl","American football","ESPN NFL",date) } },
             "ESPN F1" to { cached("f1-${date.year}",3_600_000) { parseEspn(JSONObject(get("https://site.api.espn.com/apis/site/v2/sports/racing/f1/scoreboard?dates=${date.year}&limit=1000")),"Motorsport","ESPN F1") } },
             "ESPN NHL" to { cached("nhl-$date") { espnDays("hockey/nhl","Ice hockey","ESPN NHL",date) } },
             "ESPN MLB" to { cached("mlb-$date") { espnDays("baseball/mlb","Baseball","ESPN MLB",date) } },
@@ -155,20 +158,28 @@ object ExtraScheduleFeeds {
         }
         error("Channel player discovery exceeded redirect limit")
     }
+    private fun image(element: org.jsoup.nodes.Element?):String {
+        if(element==null) return ""
+        return listOf("data-src","data-lazy-src","src").map { element.attr(it) }.map { if(it.startsWith("//")) "https:$it" else it }.firstOrNull { Catalog.validUrl(it) && !it.contains("placeholder",true) }.orEmpty()
+    }
     fun parseLivekora(html: String): List<Event> {
         val doc=Jsoup.parse(html,"https://www.livekora.vip/")
         return doc.select(".match-container").mapNotNull { card -> runCatching {
             val home=card.selectFirst(".right-team .team-name")?.text().orEmpty();val away=card.selectFirst(".left-team .team-name")?.text().orEmpty();require(home.isNotBlank() && away.isNotBlank())
             val start=Instant.parse(card.selectFirst(".date[data-start]")!!.attr("data-start"))
             val url=card.parents().firstOrNull { it.tagName()=="a" }?.absUrl("href").orEmpty();val page=WatchPage("livekora",url,label="Livekora");require(WebProviders.validPage(page))
-            Event("livekora-${start.epochSecond}-${home.hashCode()}-${away.hashCode()}","Football",card.select(".match-info li").getOrNull(2)?.text().orEmpty(),home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="Livekora",watchPages=listOf(page))
+            Event("livekora-${start.epochSecond}-${home.hashCode()}-${away.hashCode()}","Football",card.select(".match-info li").getOrNull(2)?.text().orEmpty(),home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="Livekora",watchPages=listOf(page),homeCrest=image(card.selectFirst(".right-team img")),awayCrest=image(card.selectFirst(".left-team img")))
         }.getOrNull() }
     }
     fun parseYalla(html: String): List<Event> = Jsoup.parse(html).select("a.AY_Match[data-kickoff-utc][href]").mapNotNull { card -> runCatching {
         val page=WatchPage("yalla",card.attr("href"),label="Yalla");require(WebProviders.validPage(page))
         val home=card.selectFirst(".TM1 .TM_Name")?.text().orEmpty();val away=card.selectFirst(".TM2 .TM_Name")?.text().orEmpty();require(home.isNotBlank() && away.isNotBlank())
+        for((side,name) in listOf("home" to home,"away" to away)) {
+            val slug=card.attr("data-$side-slug")
+            if(slug.matches(Regex("[a-z0-9-]{2,100}"))) TeamIdentity.register("Football",TeamIdentity.key("Football",slug.replace('-',' ')),listOf(name))
+        }
         val start=java.time.OffsetDateTime.parse(card.attr("data-kickoff-utc")).toInstant()
-        Event("yalla-${card.attr("data-match-id")}","Football",card.select(".MT_Info li").getOrNull(2)?.text().orEmpty(),home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="Yalla",watchPages=listOf(page))
+        Event("yalla-${card.attr("data-match-id")}","Football",card.select(".MT_Info li").getOrNull(2)?.text().orEmpty(),home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="Yalla",watchPages=listOf(page),homeCrest=image(card.selectFirst(".TM1 img")),awayCrest=image(card.selectFirst(".TM2 img")),description=card.select(".MT_Info li").firstOrNull()?.text().orEmpty())
     }.getOrNull() }
     fun parseFilGoal(html: String,date: LocalDate): List<Event> {
         val viewer=Jsoup.parse(html).selectFirst("#match-list-viewer") ?: error("FilGoal fixture markup unavailable")
@@ -182,7 +193,7 @@ object ExtraScheduleFeeds {
                 val raw=Regex("\\b[0-9]{2}-[0-9]{2}-[0-9]{4} - [0-9]{2}:[0-9]{2}\\b").find(card.select(".match-aux").text())?.value ?: return@runCatching null
                 val start=LocalDateTime.parse(raw,DateTimeFormatter.ofPattern("dd-MM-yyyy - HH:mm")).atZone(ZoneId.of("Africa/Cairo")).toInstant()
                 val label=card.selectFirst(".status")?.text().orEmpty();val status=when { "انتهت" in label->"finished";"تأجيل" in label || "مؤجل" in label->"postponed";"إلغاء" in label || "ملغ" in label->"cancelled";else->"Schedule time only" }
-                Event("filgoal-$id","Football",league,home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="FilGoal",status=status)
+                Event("filgoal-$id","Football",league,home,away,0,0,"football.jpg",startUtc=start.toString(),demo=false,listingSource="FilGoal",status=status,homeCrest=image(card.selectFirst(".f img")),awayCrest=image(card.selectFirst(".s img")))
             }.getOrNull() }
         }
     }
@@ -198,7 +209,7 @@ object ExtraScheduleFeeds {
                 val session=c.optJSONObject("type")?.optString("abbreviation").orEmpty()
                 val status=c.optJSONObject("status")?.optJSONObject("type") ?: event.optJSONObject("status")?.optJSONObject("type")
                 val phase=when { status?.optBoolean("completed")==true->"finished";status?.optString("state")=="in"->"live";else->"scheduled" }
-                result+=Event("${provider.replace(" ","-")}-${event.getString("id")}-${c.getString("id")}",sport,provider,if(sport=="Motorsport") event.getString("name")+" · "+session else name(home).ifBlank { event.getString("name") },if(sport=="Motorsport") "" else name(away),0,0,ScheduleFeeds.imageFor(sport),startUtc=start.toString(),demo=false,listingSource=provider,status=phase,
+                result+=Event("${provider.replace(" ","-")}-${event.getString("id")}-${c.getString("id")}",sport,provider,if(sport=="Motorsport") event.getString("name")+" · "+session else name(home).ifBlank { event.getString("name") },if(sport=="Motorsport") "" else name(away),0,0,ScheduleFeeds.imageFor(sport),startUtc=start.toString(),demo=false,listingSource=provider,status=phase,homeCrest=home?.optJSONObject("team")?.optString("logo").orEmpty(),awayCrest=away?.optJSONObject("team")?.optString("logo").orEmpty(),
                     score=if(sport!="Motorsport" && phase in setOf("live","finished")) "${home?.optString("score").orEmpty()} – ${away?.optString("score").orEmpty()}" else "")
             }
         }

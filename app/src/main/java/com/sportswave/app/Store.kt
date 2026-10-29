@@ -23,10 +23,15 @@ class Store(context: Context, preferenceName: String = "sportswave") {
         val a=JSONArray(prefs.getString("saved_event_details","[]")); (0 until a.length()).map { ScheduleFeeds.eventFromJson(a.getJSONObject(it)) }
     }.getOrDefault(emptyList())
     fun toggleEvent(event: Event) {
-        val ids=saved().toMutableSet(); val details=savedEvents().filter { it.id!=event.id }.toMutableList()
-        if(ids.add(event.id)) details.add(event) else ids.remove(event.id)
+        val ids=saved().toMutableSet(); val previous=savedEvents()
+        val matches=previous.filter { it.id==event.id || EventSchedule.sameContest(event,it) }
+        val wasSaved=event.id in ids || matches.any { it.id in ids }
+        ids.remove(event.id);matches.forEach { ids.remove(it.id) }
+        val details=previous.filterNot { old -> matches.any { it.id==old.id } }.toMutableList()
+        if(!wasSaved) { ids.add(event.id);details.add(event) }
         prefs.edit().putStringSet("saved",ids).putString("saved_event_details",JSONArray(details.map { ScheduleFeeds.eventJson(it) }).toString()).apply()
     }
+    fun isEventSaved(event:Event):Boolean = event.id in saved() || savedEvents().any { it.id in saved() && EventSchedule.sameContest(event,it) }
     fun custom(): List<Source> = runCatching { parse(prefs.getString("sources", "[]")!!) }.getOrDefault(emptyList())
     fun all(): List<Source> = (custom() + providerSources() + Catalog.channels + Catalog.samples).distinctBy { it.id }
     fun providerEndpoint(): String = YacineApi.canonicalEndpoint(prefs.getString("yacine_endpoint",YacineApi.DEFAULT_ENDPOINT)!!)

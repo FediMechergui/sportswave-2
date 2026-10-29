@@ -1,0 +1,930 @@
+[
+ {
+  "sport": "Football",
+  "names": [
+   "Barcelona",
+   "FC Barcelona",
+   "برشلونة",
+   "برشلونه"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Real Madrid",
+   "ريال مدريد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Atletico Madrid",
+   "Atlético de Madrid",
+   "أتلتيكو مدريد",
+   "اتلتيكو مدريد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Athletic Club",
+   "Athletic Bilbao",
+   "أتلتيك بيلباو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Real Betis",
+   "ريال بيتيس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Celta Vigo",
+   "سيلتا فيجو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Real Sociedad",
+   "ريال سوسييداد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Villarreal",
+   "فياريال"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Sevilla",
+   "إشبيلية"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Valencia",
+   "فالنسيا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Liverpool",
+   "ليفربول"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Manchester City",
+   "Man City",
+   "مانشستر سيتي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Manchester United",
+   "Man United",
+   "Man Utd",
+   "مانشستر يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Arsenal",
+   "أرسنال",
+   "ارسنال"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Chelsea",
+   "تشيلسي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Tottenham Hotspur",
+   "Tottenham",
+   "توتنهام"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Newcastle United",
+   "نيوكاسل يونايتد",
+   "نيوكاسل"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Leeds United",
+   "ليدز يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Brighton & Hove Albion",
+   "Brighton",
+   "برايتون"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Crystal Palace",
+   "كريستال بالاس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Bournemouth",
+   "بورنموث"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Aston Villa",
+   "أستون فيلا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Nottingham Forest",
+   "نوتينغهام فورست",
+   "نوتنجهام فورست"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Juventus",
+   "يوفنتوس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Internazionale",
+   "Inter Milan",
+   "Inter",
+   "إنتر",
+   "انتر ميلان"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "AC Milan",
+   "Milan",
+   "ميلان"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "AS Roma",
+   "Roma",
+   "روما"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Napoli",
+   "نابولي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Lazio",
+   "لاتسيو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Fiorentina",
+   "فيورنتينا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Bologna",
+   "بولونيا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Udinese",
+   "أودينيزي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Bayern Munich",
+   "Bayern München",
+   "بايرن ميونخ"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Borussia Dortmund",
+   "بوروسيا دورتموند"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Bayer Leverkusen",
+   "باير ليفركوزن"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "RB Leipzig",
+   "لايبزيج",
+   "لايبزيغ"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Eintracht Frankfurt",
+   "آينتراخت فرانكفورت",
+   "اينتراخت فرانكفورت"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Paris Saint-Germain",
+   "PSG",
+   "باريس سان جيرمان"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Marseille",
+   "Olympique Marseille",
+   "مارسيليا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Lyon",
+   "Olympique Lyonnais",
+   "ليون"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "AS Monaco",
+   "Monaco",
+   "موناكو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Lille",
+   "ليل"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Rennes",
+   "رين"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Strasbourg",
+   "ستراسبورج"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Ajax Amsterdam",
+   "Ajax",
+   "أياكس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "PSV Eindhoven",
+   "PSV",
+   "آيندهوفن"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Benfica",
+   "بنفيكا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "FC Porto",
+   "Porto",
+   "بورتو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Sporting CP",
+   "Sporting Lisbon",
+   "سبورتنج لشبونة",
+   "سبورتينغ لشبونة"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Galatasaray",
+   "جالاتا سراي",
+   "غلطة سراي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Fenerbahce",
+   "فنربخشة"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Al Hilal",
+   "Al Hilal FC",
+   "الهلال السعودي",
+   "الهلال FC"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Al Nassr",
+   "النصر السعودي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Al Ittihad",
+   "الاتحاد السعودي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Al Ahli",
+   "الأهلي السعودي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Al Ahly",
+   "الأهلي المصري"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Zamalek",
+   "الزمالك"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Esperance Sportive de Tunis",
+   "Esperance Tunis",
+   "الترجي التونسي",
+   "الترجي الرياضي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Club Africain",
+   "النادي الإفريقي",
+   "النادي الافريقي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Etoile du Sahel",
+   "النجم الساحلي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Wydad Casablanca",
+   "Wydad AC",
+   "الوداد الرياضي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Raja Casablanca",
+   "Raja CA",
+   "الرجاء الرياضي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "santos",
+   "سانتوس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "palmeiras",
+   "بالميراس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "fluminense",
+   "فلومينينسي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "internacional",
+   "إنترناسيونال"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "inter miami cf",
+   "إنتر ميامي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "fc cincinnati",
+   "سينسيناتي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "charlotte fc",
+   "شارلوت"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "cf montreal",
+   "سي إف مونتريال"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "new england revolution",
+   "نيو إنجلاند ريفولوشن"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "new york red bulls",
+   "نيويورك ريد بولز"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "new york city fc",
+   "نيويورك سيتي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "atlanta united",
+   "أتلانتا يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "toronto fc",
+   "تورونتو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "d c united",
+   "دي سي يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "bahia",
+   "باهيا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "sao paulo",
+   "ساو باولو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "austin fc",
+   "أوستن"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "real salt lake",
+   "ريال سالت ليك"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "chicago fire fc",
+   "شيكاغو فاير"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "orlando city sc",
+   "أورلاندو سيتي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "fc dallas",
+   "دالاس"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "columbus crew",
+   "كولومبوس كرو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "minnesota united fc",
+   "مينيسوتا يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "sporting kansas city",
+   "سبورتينغ كانساس سيتي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "remo",
+   "ريمو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "botafogo",
+   "بوتافوغو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "cs sfaxien",
+   "النادي الرياضي الصفاقسي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "esperance de tunis",
+   "الترجي الرياضي التونسي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "modern sport",
+   "مودرن سبورت"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "al ahly",
+   "الأهلي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "pyramids fc",
+   "بيراميدز"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "wadi degla",
+   "وادي دجلة"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "frosinone italy",
+   "فروسينوني"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "lecce",
+   "ليتشي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "al riyadh",
+   "الرياض"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "al qadsiah",
+   "القادسية"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "al nassr",
+   "النصر"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "al kholood",
+   "الخلود"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "fiorentina",
+   "فيورنتينا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "atalanta",
+   "أتالانتا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "everton",
+   "إيفرتون"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "newcastle united",
+   "نيوكاسل يونايتد"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "maghreb de fes",
+   "المغرب الفاسي"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "rs berkane",
+   "نهضة بركان"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "auriense",
+   "Auriense"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "deportivo la coruna spain",
+   "ديبورتيفو لاكورونيا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "ribadesella cf",
+   "Ribadesella CF"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "racing de santander spain",
+   "راسينغ سانتاندير"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "sporting hortaleza",
+   "Sporting Hortaleza"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "sevilla",
+   "إشبيلية"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "ae prat",
+   "أيه.إي. برات"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "athletic club",
+   "أتلتيك بلباو"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "benfica",
+   "بنفيكا"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "gil vicente",
+   "جيل فيسنتي"
+  ]
+ },
+ {
+  "sport": "Basketball",
+  "names": [
+   "Philadelphia 76ers",
+   "Philadelphie 76ers"
+  ]
+ },
+ {
+  "sport": "Basketball",
+  "names": [
+   "Los Angeles Lakers",
+   "LA Lakers"
+  ]
+ },
+ {
+  "sport": "Basketball",
+  "names": [
+   "LA Clippers",
+   "Los Angeles Clippers"
+  ]
+ },
+ {
+  "sport": "Basketball",
+  "names": [
+   "New Orleans Pelicans",
+   "La Nouvelle Orléans Pelicans"
+  ]
+ },
+ {
+  "sport": "Ice hockey",
+  "names": [
+   "New York Rangers",
+   "NY Rangers"
+  ]
+ },
+ {
+  "sport": "Ice hockey",
+  "names": [
+   "New York Islanders",
+   "NY Islanders"
+  ]
+ },
+ {
+  "sport": "American football",
+  "names": [
+   "New York Giants",
+   "NY Giants"
+  ]
+ },
+ {
+  "sport": "American football",
+  "names": [
+   "New York Jets",
+   "NY Jets"
+  ]
+ },
+ {
+  "sport": "American football",
+  "names": [
+   "Los Angeles Chargers",
+   "LA Chargers"
+  ]
+ },
+ {
+  "sport": "American football",
+  "names": [
+   "Los Angeles Rams",
+   "LA Rams"
+  ]
+ },
+ {
+  "sport": "Football",
+  "names": [
+   "Lion City Sailors",
+   "Home United"
+  ],
+  "source": "https://www.lioncitysailorsfc.sg/the-club/"
+ }
+]

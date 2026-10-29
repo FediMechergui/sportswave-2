@@ -20,8 +20,8 @@ android {
         applicationId = "com.sportswave.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 17
-        versionName = "1.0.16"
+        versionCode = 18
+        versionName = "1.0.17"
         testInstrumentationRunner = "com.sportswave.app.tests.CatalogInstrumentation"
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }

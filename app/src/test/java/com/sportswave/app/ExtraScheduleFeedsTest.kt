@@ -8,6 +8,13 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class ExtraScheduleFeedsTest {
+    @Test fun yallaPreservesPublishedLogosAndNonBeinFixtureLink() {
+        val html="""<a class="AY_Match" data-match-id="45" data-kickoff-utc="2026-10-29T18:00:00Z" href="https://yallashootkoora.online/ar/match/a-b-45/"><div class="TM1"><div class="TM_Name">A</div><img src="https://example.com/a.webp"></div><div class="TM2"><div class="TM_Name">B</div><img src="https://example.com/b.webp"></div><div class="MT_Info"><li>SSC</li><li>Commentary</li><li>Saudi league</li></div></a>"""
+        val event=ExtraScheduleFeeds.parseYalla(html).single()
+        assertEquals("https://example.com/a.webp",event.homeCrest)
+        assertEquals("SSC",event.description);assertEquals("yalla",event.watchPages.single().provider)
+        assertTrue(event.broadcasts.isEmpty()) // A page label alone must not assign a catalog channel.
+    }
     @Test fun expandedSportsAreNotMisclassifiedAsFootballOrOther() {
         assertEquals("Baseball",ScheduleFeeds.sport("MLB World Series"))
         assertEquals("Ice hockey",ScheduleFeeds.sport("Ice hockey NHL"))

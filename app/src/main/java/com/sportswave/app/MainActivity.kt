@@ -51,8 +51,8 @@ class MainActivity : Activity() {
     private var raceLoading = false
     private var liveSport = "Football"
     private val imageWorkers = java.util.concurrent.Executors.newFixedThreadPool(3)
-    private val crestCache = android.util.LruCache<String, android.graphics.Bitmap>(48)
-    private val missingCrests = mutableSetOf<String>()
+    private val crestCache = android.util.LruCache<String, android.graphics.Bitmap>(128)
+    private val missingCrests = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
     private var channelPackages = emptyList<ChannelPackage>()
     private var providerPackageId = ""
     private var providerChannels = emptyList<Source>()
@@ -83,6 +83,12 @@ class MainActivity : Activity() {
         window.navigationBarColor = bg
         window.decorView.systemUiVisibility = 0
         render()
+        Thread {
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
+            runCatching { SportsBranding.initialize(applicationContext) }.onSuccess {
+                runOnUiThread { if(!isDestroyed && !isFinishing) render(keepScroll=true) }
+            }
+        }.start()
         loadFootball()
         loadCalendar()
         loadYacine()
@@ -297,13 +303,14 @@ class MainActivity : Activity() {
             contentDescription="${event.home} ${event.away}, ${event.sport}, ${if(watchable) "Watch now" else phase.name.lowercase()}"
         }
         val heading=row()
+        SportsBranding.glyph(this,event.sport)?.let { mark -> heading.addView(ImageView(this).apply { setImageBitmap(mark); contentDescription=event.sport },LinearLayout.LayoutParams(dp(20),dp(20)).apply { marginEnd=dp(8) }) }
         val timing=when { event.demo -> "Sample"; event.listingSource=="Raceweek" -> "Meeting dates"; phase==AiringPhase.AIRING && event.watchPages.isNotEmpty() && (event.endUtc.isBlank() || event.listingSource in setOf("VIPRow","Livekora","Yalla","StreamCenter")) -> "Scheduled now"; phase==AiringPhase.AIRING -> "On air"; phase==AiringPhase.ENDED -> "Ended"; else -> event.kickoff(today).format(timeFormat) }
         heading.addView(text("${event.sport} · $timing",11,if(phase==AiringPhase.AIRING) red else muted,true),LinearLayout.LayoutParams(0,-2,1f))
-        heading.addView(drawIcon("Saved","Save ${event.home}",store.saved().contains(event.id)) { store.toggleEvent(event); render(keepScroll=true) }.apply { isSelected=store.saved().contains(event.id); alpha=if(isSelected) 1f else .65f },LinearLayout.LayoutParams(dp(44),dp(44)))
+        heading.addView(drawIcon("Saved","Save ${event.home}",store.isEventSaved(event)) { store.toggleEvent(event); render(keepScroll=true) }.apply { isSelected=store.isEventSaved(event); alpha=if(isSelected) 1f else .65f },LinearLayout.LayoutParams(dp(44),dp(44)))
         card.addView(heading)
         listOf(event.home to event.homeCrest,event.away to event.awayCrest).filter { it.first.isNotBlank() }.forEach { (name,url) ->
             val participant=row()
-            if(event.away.isNotBlank()) participant.addView(crest(url,name),LinearLayout.LayoutParams(dp(30),dp(30)).apply { marginEnd=dp(10) })
+            if(event.away.isNotBlank()) participant.addView(crest(url,name,event.sport),LinearLayout.LayoutParams(dp(30),dp(30)).apply { marginEnd=dp(10) })
             participant.addView(text(name,if(event.away.isBlank()) 17 else 15,Color.WHITE,true),LinearLayout.LayoutParams(0,-2,1f))
             card.addView(participant); space(card,7)
         }
@@ -404,7 +411,7 @@ class MainActivity : Activity() {
     private fun saved() {
         padded(body,text("Worth coming back for.",30,Color.WHITE,true),bottom=10)
         padded(body,text("Your saved events, all in one place.",13,muted),bottom=22)
-        val selected=(eventList()+store.events()+Catalog.events+store.savedEvents()).distinctBy { it.id }.filter { store.saved().contains(it.id) }
+        val selected=EventSchedule.merge((eventList()+store.events()+Catalog.events+store.savedEvents()).filter { store.isEventSaved(it) })
         if(selected.isEmpty()) empty("Your front-row collection", "Tap the heart on any event to save it here.") else selected.forEach { eventRow(it) }
     }
     private fun empty(title: String, message: String) {
@@ -489,18 +496,20 @@ class MainActivity : Activity() {
         } }
         dialog.show()
     }
-    private fun crest(url:String,name:String): FrameLayout {
+    private fun crest(url:String,name:String,sport:String=""): FrameLayout {
         val box=FrameLayout(this).apply { contentDescription="$name crest" }
         val initials=text(ParticipantNames.initials(name),10,muted,true).apply { gravity=Gravity.CENTER }
         box.addView(initials,FrameLayout.LayoutParams(-1,-1))
         val image=ImageView(this).apply { scaleType=ImageView.ScaleType.FIT_CENTER; importantForAccessibility=View.IMPORTANT_FOR_ACCESSIBILITY_NO }
         box.addView(image,FrameLayout.LayoutParams(-1,-1))
         fun show(bitmap:android.graphics.Bitmap) { image.setImageBitmap(bitmap); initials.visibility=View.GONE }
-        val cached=crestCache.get(url)
+        val candidates=(listOf(url)+SportsBranding.logos(sport,name)).filter { Catalog.validUrl(it) }.distinct()
+        val cacheKey=candidates.firstOrNull().orEmpty()
+        val cached=crestCache.get(cacheKey)
         if(cached!=null) show(cached)
-        else if(Catalog.validUrl(url) && !missingCrests.contains(url)) imageWorkers.execute {
-            val bitmap=runCatching {
-                val connection=java.net.URL(url).openConnection() as javax.net.ssl.HttpsURLConnection
+        else if(candidates.any { !missingCrests.contains(it) }) imageWorkers.execute {
+            val bitmap=candidates.filterNot { missingCrests.contains(it) }.firstNotNullOfOrNull { candidate -> runCatching {
+                val connection=java.net.URL(candidate).openConnection() as javax.net.ssl.HttpsURLConnection
                 connection.connectTimeout=8000; connection.readTimeout=8000
                 try {
                     check(connection.responseCode in 200..299)
@@ -517,8 +526,8 @@ class MainActivity : Activity() {
                         android.graphics.Bitmap.createBitmap(128,128,android.graphics.Bitmap.Config.ARGB_8888).also { svg.renderToCanvas(android.graphics.Canvas(it)) }
                     }
                 } finally { connection.disconnect() }
-            }.getOrNull()
-            runOnUiThread { if(!isDestroyed) { if(bitmap!=null) { crestCache.put(url,bitmap); show(bitmap) } else missingCrests.add(url) } }
+            }.onFailure { missingCrests.add(candidate) }.getOrNull() }
+            runOnUiThread { if(!isDestroyed && bitmap!=null) { crestCache.put(cacheKey,bitmap); show(bitmap) } }
         }
         return box
     }
@@ -571,7 +580,7 @@ class MainActivity : Activity() {
                 box.addView(text("${local.format(DateTimeFormatter.ofPattern("EEE d MMM · HH:mm"))} · ${m.status}",10,muted)); space(box,14)
                 val teams=row()
                 val names=column()
-                listOf(m.home to m.homeCrest,m.away to m.awayCrest).forEach { (name,url) -> val team=row(); team.addView(crest(url,name),LinearLayout.LayoutParams(dp(28),dp(28))); team.addView(text(name,13,Color.WHITE,true).apply { setPadding(dp(10),0,0,0) }); names.addView(team); space(names,8) }
+                listOf(m.home to m.homeCrest,m.away to m.awayCrest).forEach { (name,url) -> val team=row(); team.addView(crest(url,name,m.sport),LinearLayout.LayoutParams(dp(28),dp(28))); team.addView(text(name,13,Color.WHITE,true).apply { setPadding(dp(10),0,0,0) }); names.addView(team); space(names,8) }
                 teams.addView(names,LinearLayout.LayoutParams(0,-2,1f))
                 teams.addView(text(m.score,20,Color.WHITE,true)); box.addView(teams)
                 if(m.scoreDetail.isNotBlank()) { space(box,10); box.addView(text(m.scoreDetail,12,muted)) }

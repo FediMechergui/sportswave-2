@@ -127,11 +127,14 @@ class CatalogInstrumentation : Instrumentation() {
             }
             if(uiFixtureMode!=null) { CalendarUiFixtures.apply(targetContext,uiFixtureMode!!); finish(Activity.RESULT_OK,Bundle().apply { putString("stream","UI fixtures: $uiFixtureMode") }); return }
             if(auditCalendar) {
+                com.sportswave.app.SportsBranding.initialize(targetContext)
                 val data=com.sportswave.app.ScheduleFeeds.load(auditDate ?: java.time.LocalDate.now(),Store(targetContext).providerEndpoint())
                 check(data.events.isNotEmpty()) { "No live calendar data returned" }
                 val report=JSONObject().put("count",data.events.size).put("errors",JSONArray(data.errors)).put("sports",JSONArray(data.events.map { it.sport }.distinct())).put("listings",JSONArray(data.events.take(12).map { com.sportswave.app.ScheduleFeeds.eventJson(it) }))
                 report.put("sourceCounts",JSONObject(data.events.groupingBy { it.listingSource }.eachCount()))
                 report.put("webEvents",data.events.count { it.watchPages.isNotEmpty() })
+                report.put("crestEvents",data.events.count { it.homeCrest.isNotBlank() })
+                report.put("remainingDuplicatePairs",data.events.indices.sumOf { i -> (i+1 until data.events.size).takeWhile { j -> java.time.Duration.between(java.time.Instant.parse(data.events[i].startUtc),java.time.Instant.parse(data.events[j].startUtc)).toMinutes()<=45 }.count { j -> com.sportswave.app.EventSchedule.sameContest(data.events[i],data.events[j]) } })
                 report.put("webSamples",JSONArray(data.events.filter { it.watchPages.isNotEmpty() }.sortedByDescending { it.startUtc }.take(50).map { com.sportswave.app.ScheduleFeeds.eventJson(it) }))
                 java.io.File(targetContext.filesDir,"calendar-audit.json").writeText(report.toString(2))
                 finish(Activity.RESULT_OK,Bundle().apply { putString("stream",report.toString()) }); return
@@ -147,6 +150,13 @@ class CatalogInstrumentation : Instrumentation() {
             }
             prefs.edit().clear().commit()
             val store=Store(targetContext,"sportswave-tests")
+            com.sportswave.app.SportsBranding.initialize(targetContext)
+            for((sport,team) in listOf("Football" to "ريال مدريد","Basketball" to "Los Angeles Lakers","Ice hockey" to "Anaheim Ducks","Baseball" to "Arizona Diamondbacks","American football" to "Arizona Cardinals","Rugby" to "Argentina")) check(com.sportswave.app.SportsBranding.logos(sport,team).isNotEmpty()) { "Missing branding: $sport / $team" }
+            for(sport in com.sportswave.app.Catalog.sports) check(com.sportswave.app.SportsBranding.glyph(targetContext,sport.name)!=null) { "Missing sport icon: ${sport.name}" }
+            check(com.sportswave.app.SportsBranding.logos("Basketball","Philadelphia","NBA")==com.sportswave.app.SportsBranding.logos("Basketball","Philadelphia 76ers"))
+            val adelaide=com.sportswave.app.Catalog.events.first().copy(id="adelaide-guide",home="Adelaide United FC (AUS)",away="Lion City Sailors FC (SGP)",competition="Sports General",demo=false,startUtc="2026-10-29T07:35:00Z",listingSource="beIN MENA guide")
+            val homeUnited=adelaide.copy(id="adelaide-viprow",home="Adelaide United",away="Home United",competition="Asia - AFC Champions League Two",startUtc="2026-10-29T07:45:00Z",listingSource="VIPRow")
+            check(com.sportswave.app.EventSchedule.merge(listOf(adelaide,homeUnited)).size==1) { "Observed Adelaide / Home United duplicate was not merged" }
             val raceListing=JSONObject().put("id","race").put("title","Grand Prix qualifying").put("channelId","mena").put("channel",JSONObject().put("name","beIN SPORTS 6")).put("startDate","2026-10-22T18:00:00Z").put("endDate","2026-10-22T19:00:00Z").put("live",true)
             val parsed=com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(raceListing),setOf("mena")).single()
             check(parsed.sport=="Motorsport" && parsed.broadcasts.single().channelName=="beIN SPORTS 6")
@@ -155,6 +165,10 @@ class CatalogInstrumentation : Instrumentation() {
             check(Store(targetContext,"sportswave-tests").savedEvents().single()==parsed)
             store.toggleEvent(parsed)
             check(com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(raceListing),setOf("other-region")).isEmpty())
+            val favorite=parsed.copy(id="favorite-first",sport="Football",home="Barcelona",away="Real Madrid",listingSource="First provider")
+            val equivalent=favorite.copy(id="favorite-other",home="برشلونة",away="ريال مدريد",listingSource="Second provider")
+            store.toggleEvent(favorite);check(store.isEventSaved(equivalent))
+            store.toggleEvent(equivalent);check(!store.isEventSaved(favorite) && store.savedEvents().isEmpty())
             check(com.sportswave.app.ScheduleFeeds.parseBein(JSONArray().put(JSONObject(raceListing.toString()).put("live",false)),setOf("mena")).isEmpty())
             store.cacheSchedule(java.time.LocalDate.of(2026,10,22),listOf(parsed))
             check(store.schedule(java.time.LocalDate.of(2026,10,22)).single()==parsed)
