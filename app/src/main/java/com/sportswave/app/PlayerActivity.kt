@@ -43,6 +43,9 @@ class PlayerActivity : Activity() {
     private var automaticRenewals = 0
     private val attemptedSources = mutableSetOf<String>()
     private val providerFallbacks = mutableSetOf<String>()
+    private val recoveryHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var bufferingTimeout: Runnable? = null
+    private fun cancelBufferingTimeout() { bufferingTimeout?.let { recoveryHandler.removeCallbacks(it) }; bufferingTimeout=null }
     private var streamChoice = 0
     private val dark = Color.rgb(12,15,20)
     private val red = Color.rgb(255,77,67)
@@ -157,6 +160,7 @@ class PlayerActivity : Activity() {
     override fun onConfigurationChanged(newConfig:Configuration) { super.onConfigurationChanged(newConfig); fullscreen=newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE; render() }
     override fun onStart() { super.onStart(); stopped=false; if(player==null) load() }
     private fun load() {
+        cancelBufferingTimeout()
         val source=original
         if(source==null) { status.text="This channel is no longer in your collection."; return }
         attemptedSources.add(source.id)
@@ -192,17 +196,34 @@ class PlayerActivity : Activity() {
     private fun prepare(source:Source) {
         try {
             require(Catalog.validMediaUrl(source.url,source.allowHttp)) { "Unsupported playback URL." }
-            val http=DefaultHttpDataSource.Factory().setUserAgent(source.userAgent).setDefaultRequestProperties(source.headers).setConnectTimeoutMs(12000).setReadTimeoutMs(15000).setAllowCrossProtocolRedirects(false)
+            val http=DefaultHttpDataSource.Factory().setUserAgent(source.userAgent).setDefaultRequestProperties(source.headers).setConnectTimeoutMs(12000).setReadTimeoutMs(15000).setAllowCrossProtocolRedirects(source.allowHttp)
             val instance=ExoPlayer.Builder(this).setMediaSourceFactory(DefaultMediaSourceFactory(http)).build()
             player=instance
             instance.setAudioAttributes(AudioAttributes.Builder().setUsage(C.USAGE_MEDIA).setContentType(C.AUDIO_CONTENT_TYPE_MOVIE).build(),true)
             instance.setHandleAudioBecomingNoisy(true)
             instance.addListener(object:Player.Listener {
+                private var failureHandled=false
+                private fun watchBuffering() {
+                    cancelBufferingTimeout()
+                    if(player!==instance || stopped || failureHandled || !instance.playWhenReady || instance.playbackState!=Player.STATE_BUFFERING) return
+                    val timeout=Runnable {
+                        bufferingTimeout=null
+                        if(player===instance && !stopped && instance.playWhenReady && instance.playbackState==Player.STATE_BUFFERING && !failureHandled) {
+                            instance.stop()
+                            onPlayerError(PlaybackException("The feed did not become playable within 30 seconds.",null,PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT))
+                        }
+                    }
+                    bufferingTimeout=timeout
+                    recoveryHandler.postDelayed(timeout,30_000)
+                }
                 override fun onRenderedFirstFrame() { if(player===instance && !stopped) original?.let { Store(this@PlayerActivity).recordPlayback(it,true) } }
-                override fun onPlaybackStateChanged(playbackState:Int) { updateStatus() }
+                override fun onPlaybackStateChanged(playbackState:Int) { watchBuffering(); updateStatus() }
+                override fun onPlayWhenReadyChanged(playWhenReady:Boolean,reason:Int) { watchBuffering() }
                 override fun onIsPlayingChanged(isPlaying:Boolean) { updateStatus() }
                 override fun onPlayerError(error:PlaybackException) {
-                    if(player!==instance || stopped) return
+                    if(player!==instance || stopped || failureHandled) return
+                    failureHandled=true
+                    cancelBufferingTimeout()
                     val listing=original
                     if(listing!=null && ProviderRecovery.shouldTryOriginalProvider(listing,source.url,providerFallbacks)) {
                         providerFallbacks.add(listing.id)
@@ -276,10 +297,11 @@ class PlayerActivity : Activity() {
     private fun speed() { AlertDialog.Builder(this).setTitle("Playback speed").setItems(arrayOf("0.75×","1× · Normal","1.25×","1.5×","2×")) { _,i -> player?.setPlaybackSpeed(floatArrayOf(.75f,1f,1.25f,1.5f,2f)[i]) }.show() }
     override fun onSaveInstanceState(outState:Bundle) { outState.putString("selectedSource",original?.id); outState.putBoolean("fullscreen",fullscreen); outState.putLong("position",if(player?.isCurrentMediaItemLive==true) 0 else player?.currentPosition ?: position); outState.putBoolean("play",player?.playWhenReady ?: shouldPlay); super.onSaveInstanceState(outState) }
     override fun onStop() {
+        cancelBufferingTimeout()
         stopped=true; generation++
         player?.let { position=if(it.isCurrentMediaItemLive) 0 else it.currentPosition; shouldPlay=it.playWhenReady; it.release() }
         player=null; if(::playerView.isInitialized) playerView.player=null
         super.onStop()
     }
-    override fun onDestroy() { executor.shutdownNow(); player?.release(); super.onDestroy() }
+    override fun onDestroy() { cancelBufferingTimeout(); executor.shutdownNow(); player?.release(); super.onDestroy() }
 }

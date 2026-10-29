@@ -4,7 +4,7 @@
 
 Native Android sports discovery, calendar, and internal video player. Kotlin, native Android views, and AndroidX Media3. Android 8.0+; no companion player required.
 
-Latest release: [SportsWave 2 v1.0.15](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.15). Integrates VIPRow event discovery, additional public calendars, reviewed in-app web players, server selection and SNRT Arryadia. See the [integration verification report](docs/PROVIDER-INTEGRATION-2026-10-29.md) for tested playback and upstream failures.
+Latest release: [SportsWave 2 v1.0.16](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.16). Fixes indefinite native-player buffering and permits CDN protocol redirects for sources explicitly configured to allow HTTP. The alternate beIN SPORTS 1 / 720P descriptor decoded video on Android after this change. See the [buffering investigation](docs/BUFFERING-FIX-2026-10-29.md) and [provider integration report](docs/PROVIDER-INTEGRATION-2026-10-29.md).
 
 The subsequent [VIPRow investigation](docs/VIPROW-INVESTIGATION-2026-10-28.md) documents additional event coverage, sampled browser playback, and a reproduced host-policy defect in the linked reference app. VIPRow event discovery and reviewed player routing are included starting with v1.0.15.
 

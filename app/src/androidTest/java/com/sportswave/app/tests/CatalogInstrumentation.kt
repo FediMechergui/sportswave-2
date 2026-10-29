@@ -34,7 +34,18 @@ class CatalogInstrumentation : Instrumentation() {
         check(sources.size==if(auditCatalog!=null && auditSourceIds.isEmpty()) catalog.size else if(auditSourceIds.isEmpty()) com.sportswave.app.PublicChannelStreams.replacementCount else auditSourceIds.size) { "The complete requested catalog is required for this audit." }
         val results=JSONArray()
         for(candidate in sources) {
-            val source=runCatching { com.sportswave.app.PlaybackResolver.resolve(candidate,streamIndex=auditStreamIndex) }.getOrNull()
+            val resolution=runCatching { com.sportswave.app.PlaybackResolver.resolve(candidate,streamIndex=auditStreamIndex) }
+            resolution.exceptionOrNull()?.let { error ->
+                val reason=when(error) {
+                    is com.sportswave.app.ProviderHttpException -> "provider_http_${error.status}"
+                    is java.net.UnknownHostException -> "dns_failure"
+                    is java.net.SocketTimeoutException -> "network_timeout"
+                    is com.sportswave.app.ChannelIdentityException -> "channel_identity_mismatch"
+                    else -> error.javaClass.simpleName
+                }
+                sendStatus(0,Bundle().apply { putString("stream","${candidate.name}: resolve_failure=$reason\n") })
+            }
+            val source=resolution.getOrNull()
             if(source==null) {
                 results.put(JSONObject().put("id",candidate.channelId).put("name",candidate.name).put("package",candidate.catalogCategory).put("result","resolve_error"))
                 sendStatus(0,Bundle().apply { putString("stream","${candidate.name}: resolve_error\n") }); continue
@@ -48,7 +59,7 @@ class CatalogInstrumentation : Instrumentation() {
             runOnMainSync {
                 texture=android.graphics.SurfaceTexture(false)
                 surface=android.view.Surface(texture)
-                val http=androidx.media3.datasource.DefaultHttpDataSource.Factory().setUserAgent(source.userAgent).setDefaultRequestProperties(source.headers).setConnectTimeoutMs(12000).setReadTimeoutMs(15000).setAllowCrossProtocolRedirects(false)
+                val http=androidx.media3.datasource.DefaultHttpDataSource.Factory().setUserAgent(source.userAgent).setDefaultRequestProperties(source.headers).setConnectTimeoutMs(12000).setReadTimeoutMs(15000).setAllowCrossProtocolRedirects(source.allowHttp)
                 player=androidx.media3.exoplayer.ExoPlayer.Builder(targetContext).setMediaSourceFactory(androidx.media3.exoplayer.source.DefaultMediaSourceFactory(http)).build().apply {
                     setVideoSurface(surface)
                     addListener(object:androidx.media3.common.Player.Listener {
@@ -87,17 +98,19 @@ class CatalogInstrumentation : Instrumentation() {
     private var sessionCatalog:String?=null
     private var auditPublic=false
     private var auditCatalog:String?=null
+    private var auditBuffering=false
     private var auditCalendar=false
     private var auditDate: java.time.LocalDate?=null
     private var auditStreamIndex=0
     private var auditScores=false
     private var uiFixtureMode:String?=null
     private var auditSourceIds=emptySet<String>()
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditDate=arguments?.getString("auditDate")?.let { java.time.LocalDate.parse(it) }; auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditBuffering=arguments?.getString("auditBuffering")=="true"; auditDate=arguments?.getString("auditDate")?.let { java.time.LocalDate.parse(it) }; auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
+            if(auditBuffering) { BufferingAudit.run(this); return }
             if(auditScores) {
                 val rows=JSONArray(); var failures=0
                 val today=java.time.LocalDate.now()
