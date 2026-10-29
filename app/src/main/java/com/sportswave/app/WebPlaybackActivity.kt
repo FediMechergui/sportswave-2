@@ -41,6 +41,7 @@ class WebPlaybackActivity: Activity() {
     private var previousOrientation=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     private val worker=Executors.newSingleThreadExecutor()
     private val blocked=java.util.Collections.synchronizedSet(mutableSetOf<String>())
+    private val attemptedPlayers=mutableSetOf<String>()
 
     companion object {
         fun open(activity: Activity,page: WatchPage,title: String) {
@@ -66,7 +67,7 @@ class WebPlaybackActivity: Activity() {
         surface=FrameLayout(this);layout.addView(surface,LinearLayout.LayoutParams(-1,0,1f))
         loading=ProgressBar(this);surface.addView(loading,FrameLayout.LayoutParams(-2,-2,android.view.Gravity.CENTER))
         val controls=LinearLayout(this)
-        listOf("Servers" to { showChoices() },"Retry" to { if(choices.isEmpty()) discover() else play(selected) },"Refresh servers" to { discover() }).forEach { (name,action) -> controls.addView(label(name).apply { setTextColor(Color.rgb(255,77,67));isClickable=true;setOnClickListener { action() } },LinearLayout.LayoutParams(0,dp(52),1f)) }
+        listOf("Servers" to { showChoices() },"Retry" to { attemptedPlayers.clear();if(choices.isEmpty()) discover() else play(selected) },"Refresh servers" to { discover() }).forEach { (name,action) -> controls.addView(label(name).apply { setTextColor(Color.rgb(255,77,67));isClickable=true;setOnClickListener { action() } },LinearLayout.LayoutParams(0,dp(52),1f)) }
         layout.addView(controls);root.addView(layout,FrameLayout.LayoutParams(-1,-1));setContentView(root)
         discover()
     }
@@ -85,7 +86,7 @@ class WebPlaybackActivity: Activity() {
     private fun disposePlayer() { hideFullscreen();val old=browser;browser=null;old?.let { surface.removeView(it);runCatching { it.stopLoading();it.loadUrl("about:blank") };it.destroy() } }
     private fun error(message: String) { loading.visibility=View.GONE;status.text=message }
     private fun discover() {
-        generation++;val request=generation;selected=0;choices=emptyList();blocked.clear();disposeMetadata();disposePlayer()
+        generation++;val request=generation;selected=0;choices=emptyList();blocked.clear();attemptedPlayers.clear();disposeMetadata();disposePlayer()
         loading.visibility=View.VISIBLE;status.text="Finding published players · ${page.label.ifBlank { page.provider }}…"
         if(page.provider=="direct" && WebProviders.playerRule(page.url)?.id!="daddy") { choices=listOf(WebPlayerChoice(page.url,WebProviders.playerRule(page.url)!!.id,page.label));play(0);return }
         if(page.provider in setOf("streamcenter","direct")) {
@@ -144,15 +145,19 @@ class WebPlaybackActivity: Activity() {
     }
     private fun showChoices() {
         if(choices.isEmpty()) { error("No players loaded. Use Refresh servers.");return }
-        AlertDialog.Builder(this).setTitle("Published servers · language may be unverified").setItems(choices.map { "${it.label} · ${it.provider}" }.toTypedArray()) { _,i -> play(i) }.setNegativeButton("Cancel",null).show()
+        AlertDialog.Builder(this).setTitle("Published servers · language may be unverified").setItems(choices.map { "${it.label} · ${it.provider}" }.toTypedArray()) { _,i -> attemptedPlayers.clear();play(i) }.setNegativeButton("Cancel",null).show()
     }
     private fun play(index: Int) {
         selected=index;disposePlayer();blocked.clear()
         val choice=choices.getOrNull(index) ?: return
         val entry=choice.url;check(WebProviders.playerRule(entry)!=null)
+        attemptedPlayers.add(entry)
+        var failed=false
         loading.visibility=View.VISIBLE
         status.text="${choice.label} · Provider programming may differ. Use Servers if video stalls."
         val view=newBrowser();browser=view;surface.addView(view,0,FrameLayout.LayoutParams(-1,-1))
+        val earlyScripts=androidx.webkit.WebViewFeature.isFeatureSupported(androidx.webkit.WebViewFeature.DOCUMENT_START_SCRIPT)
+        if(earlyScripts) androidx.webkit.WebViewCompat.addDocumentStartJavaScript(view,WebPlayerHealth.script,WebProviders.rules.flatMap { it.hosts }.map { "https://$it" }.toSet())
         if(choice.provider=="alba" && androidx.webkit.WebViewFeature.isFeatureSupported(androidx.webkit.WebViewFeature.DOCUMENT_START_SCRIPT)) {
             androidx.webkit.WebViewCompat.addDocumentStartJavaScript(view,"if(typeof window.chrome==='undefined')window.chrome={};",setOf("https://pl.matchlivehd.com"))
         }
@@ -163,12 +168,25 @@ class WebPlaybackActivity: Activity() {
                 if(!allowed && blocked.add(r.url.host.orEmpty()) && applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE!=0) android.util.Log.i("SportsWaveWeb","Blocked host=${r.url.host} main=${r.isForMainFrame}")
                 return if(allowed) null else emptyResponse()
             }
-            override fun onPageFinished(v: WebView,url: String) { if(browser===v) loading.visibility=View.GONE }
+            override fun onPageFinished(v: WebView,url: String) { if(browser===v) { loading.visibility=View.GONE;if(!earlyScripts) v.evaluateJavascript(WebPlayerHealth.script,null) } }
             override fun onReceivedError(v: WebView,r: WebResourceRequest,e: android.webkit.WebResourceError) { if(r.isForMainFrame && browser===v) error("Player page unavailable. Use Servers or Retry.") }
-            override fun onReceivedHttpError(v: WebView,r: WebResourceRequest,e: WebResourceResponse) { if(browser!==v) return;if(r.isForMainFrame) error("Player page returned HTTP ${e.statusCode}. Use Servers.") else status.text="Provider request failed (HTTP ${e.statusCode}). Switch server if video stalls." }
+            override fun onReceivedHttpError(v: WebView,r: WebResourceRequest,e: WebResourceResponse) { if(browser!==v || failed) return;if(r.isForMainFrame) { failed=true;error("Player page returned HTTP ${e.statusCode}. Use Servers.") } else status.text="Provider request failed (HTTP ${e.statusCode}). Switch server if video stalls." }
             override fun onRenderProcessGone(v: WebView,detail: android.webkit.RenderProcessGoneDetail): Boolean { if(browser===v) { disposePlayer();error("Web player stopped. Use Retry to reopen it.") };return true }
         }
         view.webChromeClient=object: WebChromeClient() {
+            override fun onConsoleMessage(message:android.webkit.ConsoleMessage):Boolean {
+                val code=WebPlayerHealth.code(message.message()) ?: return false
+                if(browser!==view || stopped || failed || (message.sourceId()!=WebPlayerHealth.SOURCE && !WebProviders.allowsPlayerResource(entry,message.sourceId()))) return false
+                failed=true
+                val reason=WebPlayerHealth.message(code)
+                val next=WebPlayerHealth.next(choices,attemptedPlayers)
+                if(applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE!=0) android.util.Log.i("SportsWaveWeb","JW code=$code; next=${next ?: -1}")
+                if(next==null) error("$reason. Use Servers, Retry or Refresh servers.") else {
+                    status.text="$reason. Trying another published server…"
+                    view.postDelayed({ if(browser===view && !stopped && !isDestroyed && !isFinishing) play(next) },1200)
+                }
+                return true
+            }
             override fun onCreateWindow(v: WebView?,dialog: Boolean,gesture: Boolean,result: android.os.Message?)=false
             override fun onPermissionRequest(request: android.webkit.PermissionRequest) { request.deny() }
             override fun onShowCustomView(v: View,callback: CustomViewCallback) {
@@ -180,7 +198,7 @@ class WebPlaybackActivity: Activity() {
             override fun onHideCustomView() { hideFullscreen() }
         }
         view.loadUrl(entry)
-        view.postDelayed({ if(browser===view) { loading.visibility=View.GONE;status.text="${choice.label} · If video is blank or buffering, use Servers or Retry." } },25000)
+        view.postDelayed({ if(browser===view && !failed) { loading.visibility=View.GONE;status.text="${choice.label} · If video is blank or buffering, use Servers or Retry." } },25000)
     }
     private fun hideFullscreen() {
         customView?.let { root.removeView(it);requestedOrientation=previousOrientation };customView=null;val callback=customCallback;customCallback=null;callback?.onCustomViewHidden()

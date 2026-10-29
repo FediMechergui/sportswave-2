@@ -99,17 +99,19 @@ class CatalogInstrumentation : Instrumentation() {
     private var auditPublic=false
     private var auditCatalog:String?=null
     private var auditBuffering=false
+    private var auditWebRecovery=false
     private var auditCalendar=false
     private var auditDate: java.time.LocalDate?=null
     private var auditStreamIndex=0
     private var auditScores=false
     private var uiFixtureMode:String?=null
     private var auditSourceIds=emptySet<String>()
-    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditBuffering=arguments?.getString("auditBuffering")=="true"; auditDate=arguments?.getString("auditDate")?.let { java.time.LocalDate.parse(it) }; auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
+    override fun onCreate(arguments: Bundle?) { super.onCreate(arguments); auditWebRecovery=arguments?.getString("auditWebRecovery")=="true"; auditBuffering=arguments?.getString("auditBuffering")=="true"; auditDate=arguments?.getString("auditDate")?.let { java.time.LocalDate.parse(it) }; auditStreamIndex=arguments?.getString("auditStreamIndex")?.toInt() ?: 0; require(auditStreamIndex in 0..7); uiFixtureMode=arguments?.getString("uiFixtures"); sessionCatalog=arguments?.getString("sessionCatalog"); auditPublic=arguments?.getString("auditPublic")=="true"; auditCatalog=arguments?.getString("auditCatalog"); auditCalendar=arguments?.getString("auditCalendar")=="true"; auditScores=arguments?.getString("auditScores")=="true"; auditSourceIds=arguments?.getString("auditSources")?.split(",")?.toSet() ?: emptySet(); require(auditSourceIds.size<=100 && auditSourceIds.all { it.matches(Regex("[a-zA-Z0-9_-]{1,80}")) }); start() }
     override fun onStart() {
         val result=Bundle()
         val prefs=targetContext.getSharedPreferences("sportswave-tests",0)
         try {
+            if(auditWebRecovery) { WebRecoveryAudit.run(this); return }
             if(auditBuffering) { BufferingAudit.run(this); return }
             if(auditScores) {
                 val rows=JSONArray(); var failures=0

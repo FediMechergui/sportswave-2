@@ -4,7 +4,7 @@
 
 Native Android sports discovery, calendar, and internal video player. Kotlin, native Android views, and AndroidX Media3. Android 8.0+; no companion player required.
 
-Latest release: [SportsWave 2 v1.0.17](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.17). Merges duplicate fixtures across providers, adds multilingual and league-specific team identities, expands logos and extends the calendar beyond beIN. See the [calendar update](docs/CALENDAR-IDENTITY-2026-10-29.md) and [logo sources](docs/SPORTS-LOGO-SOURCES.md).
+Latest release: [SportsWave 2 v1.0.18](https://github.com/FediMechergui/sportswave-2/releases/tag/v1.0.18). Captures JW Player failures and tries another published server for the same event, with bounded retries and clear error codes. See the [JW recovery report](docs/JW-PLAYER-RECOVERY-2026-10-29.md). Includes the duplicate-fixture and sports-logo improvements from v1.0.17.
 
 The subsequent [VIPRow investigation](docs/VIPROW-INVESTIGATION-2026-10-28.md) documents additional event coverage, sampled browser playback, and a reproduced host-policy defect in the linked reference app. VIPRow event discovery and reviewed player routing are included starting with v1.0.15.
 
