@@ -1,4 +1,8 @@
 .gradle/
+desktop/bin/
+desktop/obj/
+desktop/node_modules/
+*.csproj.user
 .kotlin/
 __pycache__/
 **/build/

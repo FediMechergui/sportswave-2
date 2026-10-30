@@ -1,0 +1,51 @@
+[
+  {
+    "id": "yacine-8093614024085928711",
+    "name": "Bahrain Sports 1",
+    "sport": "Multi-sport",
+    "url": "https://5c7b683162943.streamlock.net/live/ngrp:sportsone_all/playlist.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "yacine-8093614024087628142",
+    "name": "Bahrain Sports 2",
+    "sport": "Multi-sport",
+    "url": "https://5c7b683162943.streamlock.net/live/ngrp:bahrainsportstwo_all/playlist.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "yacine-8093614024090866910",
+    "name": "Kuwait Sport",
+    "sport": "Multi-sport",
+    "url": "https://kwtspta.cdn.mangomolo.com/sp/smil:sp.stream.smil/chunklist.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "yacine-8093614024091471159",
+    "name": "Kuwait Sport 2",
+    "sport": "Multi-sport",
+    "url": "https://kwtsplta.cdn.mangomolo.com/spl/smil:spl.stream.smil/chunklist.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "yacine-8093614023844642330",
+    "name": "Jordan Sports",
+    "sport": "Multi-sport",
+    "url": "https://jrtv-live.ercdn.net/jordansporthd/jordansporthd.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "yacine-8093614023881577308",
+    "name": "Oman Sport",
+    "sport": "Multi-sport",
+    "url": "https://partneta.cdn.mgmlcdn.com/omsport/smil:omsport.stream.smil/chunklist.m3u8",
+    "mime": "application/x-mpegURL"
+  },
+  {
+    "id": "sample-hls",
+    "name": "HLS playback test (not live sports)",
+    "sport": "Other",
+    "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "mime": "application/x-mpegURL"
+  }
+]

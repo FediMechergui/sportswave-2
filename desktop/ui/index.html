@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src https: data:; media-src https: blob:; connect-src https:; worker-src blob:; frame-src 'none'; object-src 'none'; base-uri 'none'">
+<title>SportsWave</title><link rel="stylesheet" href="style.css"></head><body>
+<aside><div class="brand"><span>≋</span> sportswave</div><small>WINDOWS PREVIEW · 0.1</small><nav><button data-tab="schedule" class="selected">▦ &nbsp; Schedule</button><button data-tab="live">◉ &nbsp; Live scores</button><button data-tab="channels">▷ &nbsp; Channels</button><button data-tab="saved">♡ &nbsp; Saved</button></nav><p class="foot">Every sport.<br>One place to follow.</p></aside>
+<main><header><div><p class="eyebrow">YOUR FRONT ROW</p><h1 id="title">The schedule</h1></div><button id="import">Import catalog</button></header>
+<section class="toolbar"><input type="date" id="date"><select id="sport"><option>All sports</option><option>Football</option><option>Basketball</option><option>Tennis</option><option>Motorsport</option><option>American football</option><option>Ice hockey</option><option>Baseball</option></select><input id="search" placeholder="Search teams, events or channels"><button id="refresh">Refresh</button></section>
+<p id="notice" role="status">Loading public schedules…</p><div id="content"></div><p class="muted">Public ESPN data · Times shown in your PC timezone · Channel availability depends on the source.</p></main>
+<dialog id="player"><div class="playerbar"><strong id="playing"></strong><button id="close">Close ✕</button></div><video id="video" controls playsinline></video><p id="playerstatus" role="status"></p><button id="retry">Retry playback</button></dialog>
+<script src="hls.min.js"></script><script src="app.js"></script></body></html>
